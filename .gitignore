@@ -44,7 +44,7 @@ secrets.yml
 src/main/java/com/example/demo/config/secret/*
 Guide.md
 demo/bin
-src/*/resources/application.yml
+src/**/resources/application.yml
 gradlew
 nohup.out
 logs/
