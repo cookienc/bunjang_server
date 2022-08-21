@@ -18,4 +18,8 @@ public class UserService {
 	public void update(Long userId, PatchUserRequest request) {
 		userDao.update(userId, request);
 	}
+
+	public void delete(Long userId) {
+		userDao.delete(userId);
+	}
 }
