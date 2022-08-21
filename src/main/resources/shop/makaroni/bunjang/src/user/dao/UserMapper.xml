@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.makaroni.bunjang.src.user.dao.UserMapper">
+    <update id="update">
+        update user
+        <set>
+            <if test="request.storeName != null and request.storeName != ''">
+                storeName=#{request.storeName},
+            </if>
+            <if test="request.storeUrl != null and request.storeUrl != ''">
+                storeUrl=#{request.storeUrl},
+            </if>
+            <if test="request.contactStart != null">
+                contactStart=#{request.contactStart},
+            </if>
+            <if test="request.contactEnd != null">
+                contactEnd=#{request.contactEnd},
+            </if>
+            <if test="request.description != null and request.description != ''">
+                description=#{request.description},
+            </if>
+            <if test="request.policy != null and request.policy != ''">
+                policy=#{request.policy},
+            </if>
+            <if test="request.precaution != null and request.precaution != ''">
+                precaution=#{request.precaution},
+            </if>
+        </set>
+        where idx=#{userId};
+    </update>
+</mapper>
