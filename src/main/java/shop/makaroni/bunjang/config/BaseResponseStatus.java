@@ -31,6 +31,11 @@ public enum BaseResponseStatus {
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
 
 
+    // items
+    ITEM_NO_EXIST(false, 2021, "존재하지 않는 상품 아이디 값입니다."),
+
+
+
 
     /**
      * 3000 : Response 오류
