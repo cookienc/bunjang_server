@@ -2,6 +2,7 @@ package shop.makaroni.bunjang.src.provider;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.FollowDao;
@@ -13,7 +14,7 @@ import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 
 import java.util.NoSuchElementException;
 
-//Provider : Read의 비즈니스 로직 처리
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -30,6 +31,8 @@ public class UserProvider {
 		Integer wishListCount = wishListDao.countWishList(userId);
 		Integer followerCount = followDao.countFollowers(userId);
 		Integer followingcount =  followDao.countFollowings(userId);
+		log.info("reviewCount = {}", reviewCount);
+		log.info("user.image = {}", user.getStoreImage());
 
 		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount);
 	}

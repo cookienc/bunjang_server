@@ -34,8 +34,10 @@ public class MyStoreResponse {
 		return MyStoreResponse.builder()
 				.storeId(user.getIdx())
 				.storeName(user.getStoreName())
+				.storeImage(user.getStoreImage())
 				.isCertificated(user.getIsCertificated())
 				.wishLists(wishListCount)
+				.reviews(reviewCount)
 				.followers(followerCount)
 				.followings(followingcount)
 				.build();
