@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class PatchUserRequest {
+	String image;
 	String storeName;
 	String storeUrl;
 	Integer contactStart;
@@ -12,7 +13,8 @@ public class PatchUserRequest {
 	String policy;
 	String precaution;
 
-	public PatchUserRequest(String storeName, String storeUrl, Integer contactStart, Integer contactEnd, String description, String policy, String precaution) {
+	public PatchUserRequest(String image, String storeName, String storeUrl, Integer contactStart, Integer contactEnd, String description, String policy, String precaution) {
+		this.image = image;
 		this.storeName = storeName;
 		this.storeUrl = storeUrl;
 		this.contactStart = contactStart;

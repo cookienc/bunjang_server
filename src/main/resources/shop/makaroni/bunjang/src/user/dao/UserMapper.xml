@@ -6,6 +6,9 @@
     <update id="update">
         update user
         <set>
+            <if test="request.image != null and request.image != ''">
+                image=#{request.image},
+            </if>
             <if test="request.storeName != null and request.storeName != ''">
                 storeName=#{request.storeName},
             </if>
@@ -28,6 +31,7 @@
                 precaution=#{request.precaution},
             </if>
         </set>
-        where idx=#{userId};
+        where idx=#{userId}
+        and status='Y';
     </update>
 </mapper>
