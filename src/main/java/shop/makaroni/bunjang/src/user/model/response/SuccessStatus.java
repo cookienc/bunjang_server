@@ -10,7 +10,7 @@ public enum SuccessStatus {
 
 	private static class Messages {
 		public static String PATCH_SUCCESS = "변경되었습니다.";
-		public static String WITHDRAWAL_SUCCESS = "회원 탈되 되었습니다.";
+		public static String WITHDRAWAL_SUCCESS = "회원 탈퇴 되었습니다.";
 	}
 
 	private HttpStatus status;
