@@ -13,8 +13,9 @@ public class ReviewDao {
 	private final NamedParameterJdbcTemplate template;
 
 	public Integer countStoreReview(Long userId) {
-		var sql = "select count(*) from ReviewUser ru " +
-				"where ru.storeIdx=:userId " +
+		var sql = "select count(*) from Review r " +
+				"inner join Item i on i.idx = r.itemIdx " +
+				"where i.sellerIdx=:userId" +
 				"and status='Y'";
 		return template.queryForObject(sql, Map.of("userId", userId), Integer.class);
 	}
