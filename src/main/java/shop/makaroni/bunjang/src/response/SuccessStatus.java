@@ -1,4 +1,4 @@
-package shop.makaroni.bunjang.src.user.model.response;
+package shop.makaroni.bunjang.src.response;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

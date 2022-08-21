@@ -1,4 +1,4 @@
-package shop.makaroni.bunjang.src.user.model;
+package shop.makaroni.bunjang.src.domain.user;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,13 +23,14 @@ public class User {
     private String description;
     private String policy;
     private String precaution;
+    private String hit;
 
     private String createdAt;
     private String updatedAt;
     private String status;
 
     @Builder
-    public User(Long idx, String loginId, String password, String storeName, String contactStart, String contactEnd, Boolean isCertificated, String storeUrl, String storeImage, String description, String policy, String precaution, String createdAt, String updatedAt, String status) {
+    public User(Long idx, String loginId, String password, String storeName, String contactStart, String contactEnd, Boolean isCertificated, String storeUrl, String storeImage, String description, String policy, String precaution, String hit, String createdAt, String updatedAt, String status) {
         this.idx = idx;
         this.loginId = loginId;
         this.password = password;
@@ -42,6 +43,7 @@ public class User {
         this.description = description;
         this.policy = policy;
         this.precaution = precaution;
+        this.hit = hit;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.status = status;

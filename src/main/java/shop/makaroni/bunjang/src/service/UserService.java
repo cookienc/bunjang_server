@@ -1,11 +1,11 @@
-package shop.makaroni.bunjang.src.user;
+package shop.makaroni.bunjang.src.service;
 
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.makaroni.bunjang.src.user.dao.UserDao;
-import shop.makaroni.bunjang.src.user.model.dto.PatchUserRequest;
+import shop.makaroni.bunjang.src.dao.UserDao;
+import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
 
 
 @Service
