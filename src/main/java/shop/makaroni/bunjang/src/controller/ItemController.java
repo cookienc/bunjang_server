@@ -29,6 +29,7 @@ public class ItemController {
         this.itemService = itemService;
     }
 
+
     @ResponseBody
     @GetMapping("/{itemIdx}")
     public BaseResponse<GetItemRes> getItem(@PathVariable("itemIdx") int itemIdx) {
@@ -45,10 +46,20 @@ public class ItemController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    @ResponseBody
+    @GetMapping("/all")
+    public BaseResponse<List<GetSearchRes>> getItems() {
+        try {
+            return new BaseResponse<>(itemProvider.getItems());
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
     @ResponseBody
     @GetMapping("")
     public BaseResponse<List<GetSearchRes>> getSearch(@RequestParam(required = true) String name,
-                                                      @RequestParam(required = true, defaultValue="C") char sort,
+                                                      @RequestParam(required = false, defaultValue="C") char sort,
                                                       @RequestParam(required = true) int count) {
         try {
             if (name == null) {

@@ -57,18 +57,34 @@ public class ItemDao {
 						rs.getString("name"),
 						rs.getString("location"),
 						rs.getString("time"),
-						rs.getInt("hit"),
-						rs.getInt("stock"),0,0,
+						String.valueOf(rs.getInt("hit")),
+						String.valueOf(rs.getInt("stock")),
+						String.valueOf(0),String.valueOf(0),
 						rs.getBoolean("isNew"),
 						rs.getBoolean("delivery"),
 						rs.getBoolean("exchange"),
 						rs.getString("content"),
 						rs.getString("category"),
-						rs.getInt("brand"),
-						rs.getInt("seller"),
+						String.valueOf(rs.getInt("brand")),
+						String.valueOf(rs.getInt("seller")),
 						rs.getString("status").charAt(0),
 						null, null),
 				itemIdx);
+
+	}
+	public List<GetSearchRes> getItems(){
+		String query;
+			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item\n" +
+					"order by idx asc";
+
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetSearchRes(
+						rs.getString("price"),
+						rs.getString("name"),
+						rs.getBoolean("safePay"),
+						rs.getBoolean("isAd")
+				)
+		);
 
 	}
 
@@ -120,7 +136,7 @@ public class ItemDao {
 		Object[] reqParams;
 		String[] param={name, name+"%", "%"+name+"%", "%"+name, "%"+name+"%"};
 		if (sort == 'C') {
-			query = "select price, name, safePay, isAd from Item\n" +
+			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item\n" +
 					"where name like ?\n" +
 					"order by\n" +
 					"    (case \n" +
@@ -145,7 +161,7 @@ public class ItemDao {
 		}
 		else if(sort == 'R'){
 			reqParams = new Object[]{param[4], count};
-			query = "select price, name, safePay, isAd from Item where name like ? order by updatedAt desc limit ?;";
+			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item where name like ? order by updatedAt desc limit ?;";
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
 							rs.getString("price"),
@@ -157,7 +173,7 @@ public class ItemDao {
 			);
 		}
 		else if(sort == 'L'){
-			query = "select price, name, safePay, isAd from Item where name like ? order by price asc limit ?;";
+			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item where name like ? order by price asc limit ?;";
 			reqParams = new Object[]{param[4], count};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
@@ -170,7 +186,7 @@ public class ItemDao {
 			);
 		}
 		else{
-			query = "select price, name, safePay, isAd from Item where name like ? order by price desc limit ?;";
+			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item where name like ? order by price desc limit ?;";
 			reqParams = new Object[]{param[4], count};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(

@@ -35,13 +35,21 @@ public class ItemProvider {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
-
-	public int getItemWishCnt(int itemIdx){
-		return itemDao.getItemWishCnt(itemIdx);
+	public List<GetSearchRes> getItems() throws  BaseException{
+		List<GetSearchRes> getItemRes = null;
+		try{
+			getItemRes = itemDao.getItems();
+			return getItemRes;
+		}catch(Exception exception){
+			throw new BaseException(RESPONSE_ERROR);
+		}
+	}
+	public String getItemWishCnt(int itemIdx){
+		return String.valueOf(itemDao.getItemWishCnt(itemIdx));
 	}
 
-	public int getItemChatCnt(int itemIdx){
-		return itemDao.getItemChatCnt(itemIdx);
+	public String getItemChatCnt(int itemIdx){
+		return String.valueOf(itemDao.getItemChatCnt(itemIdx));
 	}
 
 	public List<String> getItemTags(int itemIdx){
