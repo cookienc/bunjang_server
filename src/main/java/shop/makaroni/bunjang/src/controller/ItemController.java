@@ -10,6 +10,8 @@ import shop.makaroni.bunjang.src.provider.ItemProvider;
 import shop.makaroni.bunjang.src.service.ItemService;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 
+import java.util.List;
+
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 
@@ -40,6 +42,26 @@ public class ItemController {
             return new BaseResponse<>(getItemRes);
         } catch (BaseException exception) {
             exception.printStackTrace();
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+    @ResponseBody
+    @GetMapping("")
+    public BaseResponse<List<GetSearchRes>> getSearch(@RequestParam(required = true) String name,
+                                                      @RequestParam(required = true, defaultValue="C") char sort,
+                                                      @RequestParam(required = true) int count) {
+        try {
+            if (name == null) {
+                throw new BaseException(ITEM_NO_NAME);
+            }
+            if(count == 0){
+                throw new BaseException(ITEM_NO_COUNT);
+            }
+            if(sort != 'C' && sort != 'R' && sort != 'L' && sort != 'H'){
+                return new BaseResponse<>(ITEM_INVALID_SORT);
+            }
+            return new BaseResponse<>(itemProvider.getSearch(name, sort, count));
+        } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }

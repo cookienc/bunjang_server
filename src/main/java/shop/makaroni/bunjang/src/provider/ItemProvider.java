@@ -3,8 +3,10 @@ package shop.makaroni.bunjang.src.provider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import shop.makaroni.bunjang.config.BaseException;
+import shop.makaroni.bunjang.config.BaseResponse;
 import shop.makaroni.bunjang.src.dao.ItemDao;
 import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
+import shop.makaroni.bunjang.src.domain.item.model.GetSearchRes;
 
 import java.sql.Array;
 import java.util.List;
@@ -47,5 +49,14 @@ public class ItemProvider {
 	}
 	public List<String> getItemImages(int itemIdx){
 		return itemDao.getItemImages(itemIdx);
+	}
+
+	public List<GetSearchRes> getSearch(String name, char sort, int count) throws BaseException {
+		try{
+			List<GetSearchRes> getSearchRes = itemDao.getSearchRes(name, sort, count);
+			return getSearchRes;
+		}catch(Exception exception){
+			throw new BaseException(RESPONSE_ERROR);
+		}
 	}
 }

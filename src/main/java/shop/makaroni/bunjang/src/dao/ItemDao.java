@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
+import shop.makaroni.bunjang.src.domain.item.model.GetSearchRes;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -113,4 +114,74 @@ public class ItemDao {
 	public List<Item> getMyStoreItem(Long userId, String condition) {
 		return itemMapper.getMyStoreItem(userId, condition);
 	}
+	public List<GetSearchRes> getSearchRes(String name, char sort, int count){
+		String query;
+		Object[] reqParams;
+		String[] param={name, name+"%", "%"+name+"%", "%"+name, "%"+name+"%"};
+		if (sort == 'C') {
+			query = "select price, name, safePay, isAd from Item\n" +
+					"where name like ?\n" +
+					"order by\n" +
+					"    (case \n" +
+					"        when name = ? then 0\n" +
+					"        when name like ? then 1\n" +
+					"        when name like ? then 2\n" +
+					"        when name like ? then 3\n" +
+					"        else 4\n" +
+					"    end) limit ?;";
+			reqParams = new Object[]{param[4], param[0], param[1], param[2], param[3], count};
+
+			return this.jdbcTemplate.query(query,
+					(rs, rowNum) -> new GetSearchRes(
+							rs.getString("price"),
+							rs.getString("name"),
+							rs.getBoolean("safePay"),
+							rs.getBoolean("isAd")
+					),
+					reqParams
+			);
+
+		}
+		else if(sort == 'R'){
+			reqParams = new Object[]{param[4], count};
+			query = "select price, name, safePay, isAd from Item where name like ? order by updatedAt desc limit ?;";
+			return this.jdbcTemplate.query(query,
+					(rs, rowNum) -> new GetSearchRes(
+							rs.getString("price"),
+							rs.getString("name"),
+							rs.getBoolean("safePay"),
+							rs.getBoolean("isAd")
+					),
+					reqParams
+			);
+		}
+		else if(sort == 'L'){
+			query = "select price, name, safePay, isAd from Item where name like ? order by price asc limit ?;";
+			reqParams = new Object[]{param[4], count};
+			return this.jdbcTemplate.query(query,
+					(rs, rowNum) -> new GetSearchRes(
+							rs.getString("price"),
+							rs.getString("name"),
+							rs.getBoolean("safePay"),
+							rs.getBoolean("isAd")
+					),
+					reqParams
+			);
+		}
+		else{
+			query = "select price, name, safePay, isAd from Item where name like ? order by price desc limit ?;";
+			reqParams = new Object[]{param[4], count};
+			return this.jdbcTemplate.query(query,
+					(rs, rowNum) -> new GetSearchRes(
+							rs.getString("price"),
+							rs.getString("name"),
+							rs.getBoolean("safePay"),
+							rs.getBoolean("isAd")
+					),
+					reqParams
+			);
+		}
+
+	}
+
 }
