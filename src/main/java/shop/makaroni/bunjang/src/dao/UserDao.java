@@ -30,17 +30,17 @@ public class UserDao {
 
 		template.update(sql, Map.of("userId", userId));
 	}
-	public Optional<User> getMyStore(Long userId) {
-		var sql = "select idx, storeName, isCertificated, storeImage from User u " +
-				"where u.idx=:userId " +
-				"and u.status='Y'";
-		try {
-			User user = template.queryForObject(sql, Map.of("userId", userId), BeanPropertyRowMapper.newInstance(User.class));
-			return Optional.of(user);
-		} catch (EmptyResultDataAccessException e) {
-			return Optional.empty();
-		}
-	}
+//	public Optional<User> getMyStore(Long userId) {
+//		var sql = "select idx, storeName, isCertificated, storeImage from User u " +
+//				"where u.idx=:userId " +
+//				"and u.status='Y'";
+//		try {
+//			User user = template.queryForObject(sql, Map.of("userId", userId), BeanPropertyRowMapper.newInstance(User.class));
+//			return Optional.of(user);
+//		} catch (EmptyResultDataAccessException e) {
+//			return Optional.empty();
+//		}
+//	}
 
 	public Optional<User> findById(Long userId) {
 		var sql = "select * from User where idx=:userId";

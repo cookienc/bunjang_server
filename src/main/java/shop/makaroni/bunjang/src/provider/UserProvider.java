@@ -30,7 +30,8 @@ public class UserProvider {
 	private final ItemDao itemDao;
 
 	public MyStoreResponse getMyStore(Long userId) {
-		User user = userDao.getMyStore(userId).orElseThrow(NoSuchElementException::new);
+
+		User user = findById(userId);
 		Integer reviewCount = reviewDao.countStoreReview(userId);
 		Integer wishListCount = wishListDao.countMyWishList(userId);
 		Integer followerCount = followDao.countMyFollowers(userId);
@@ -40,9 +41,16 @@ public class UserProvider {
 	}
 
 	public List<StoreSaleResponse> getMyStoreItem(Long userId, String condition) {
+		findById(userId);
 		List<Item> item = itemDao.getMyStoreItem(userId, condition);
 		return item.stream()
 				.map(StoreSaleResponse::of)
 				.collect(Collectors.toList());
+	}
+
+	public User findById(Long userId) {
+		User user = userDao.findById(userId).orElseThrow(NoSuchElementException::new);
+		user.validate();
+		return user;
 	}
 }

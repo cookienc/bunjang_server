@@ -46,7 +46,6 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     public ResponseEntity<ResponseInfo> update(@PathVariable("userId") Long userId, @Valid @RequestBody PatchUserRequest request) {
-
         userService.update(userId, request);
         return ResponseEntity.ok(ResponseInfo.of(PATCH_SUCCESS));
     }
