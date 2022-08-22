@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import shop.makaroni.bunjang.src.domain.user.StoreSaleResponse;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
 import shop.makaroni.bunjang.src.provider.UserProvider;
