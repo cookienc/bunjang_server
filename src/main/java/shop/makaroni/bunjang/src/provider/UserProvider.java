@@ -38,12 +38,12 @@ public class UserProvider {
 		Integer followerCount = followDao.countMyFollowers(userId);
 		Integer followingcount =  followDao.countMyFollowings(userId);
 
-		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, getMyStoreItem(userId, State.SELLING.getState()));
+		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, getMyStoreItem(userId, State.SELLING.getState(), 0, 5, "asc"));
 	}
 
-	public List<StoreSaleResponse> getMyStoreItem(Long userId, String condition) {
+	public List<StoreSaleResponse> getMyStoreItem(Long userId, String condition, Integer start, Integer offset, String sortCond) {
 		findById(userId);
-		List<Item> item = itemDao.getMyStoreItem(userId, condition);
+		List<Item> item = itemDao.getMyStoreItem(userId, condition, start, offset, sortCond);
 		return item.stream()
 				.map(StoreSaleResponse::of)
 				.collect(Collectors.toList());

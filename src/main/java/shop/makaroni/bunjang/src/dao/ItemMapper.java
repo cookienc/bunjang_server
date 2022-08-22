@@ -8,5 +8,9 @@ import java.util.List;
 
 @Mapper
 public interface ItemMapper {
-	List<Item> getMyStoreItem(@Param("userId") Long userId, @Param("condition") String condition);
+	List<Item> getMyStoreItem(@Param("userId") Long userId,
+							  @Param("condition") String condition,
+							  @Param("start") Integer start,
+							  @Param("offset") Integer offset,
+							  @Param("sortCond") String sortCond);
 }

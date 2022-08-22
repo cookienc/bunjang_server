@@ -111,8 +111,8 @@ public class ItemDao {
 				itemIdx);
 	}
 
-	public List<Item> getMyStoreItem(Long userId, String condition) {
-		return itemMapper.getMyStoreItem(userId, condition);
+	public List<Item> getMyStoreItem(Long userId, String condition, Integer start, Integer offset, String sortCond) {
+		return itemMapper.getMyStoreItem(userId, condition, start, offset, sortCond);
 	}
 	public List<GetSearchRes> getSearchRes(String name, char sort, int count){
 		String query;

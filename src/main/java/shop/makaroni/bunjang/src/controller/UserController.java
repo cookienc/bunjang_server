@@ -39,9 +39,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/items")
-    public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId, @RequestParam("condition") String condition) {
+    public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId,
+                                                                  @RequestParam("condition") String condition,
+                                                                  @RequestParam(value = "pageNum", defaultValue = "0") Integer start,
+                                                                  @RequestParam(value = "offset", defaultValue = "5") Integer offset,
+                                                                  @RequestParam(value = "sortCond", defaultValue = "asc") String sortCond) {
         State.valid(condition);
-        return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition));
+        return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition, start, offset, sortCond));
     }
 
     @PatchMapping("/{userId}")
