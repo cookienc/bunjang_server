@@ -41,4 +41,14 @@ public class UserDao {
 			return Optional.empty();
 		}
 	}
+
+	public Optional<User> findById(Long userId) {
+		var sql = "select * from User where idx=:userId";
+		try {
+			User user = template.queryForObject(sql, Map.of("userId", userId), BeanPropertyRowMapper.newInstance(User.class));
+			return Optional.of(user);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
+	}
 }

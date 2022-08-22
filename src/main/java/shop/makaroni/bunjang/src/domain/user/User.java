@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shop.makaroni.bunjang.src.domain.item.State;
+import shop.makaroni.bunjang.src.response.ErrorCode;
+import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
 
 @Getter
 @Setter
@@ -48,4 +51,10 @@ public class User {
         this.updatedAt = updatedAt;
         this.status = status;
     }
+
+	public void validate() {
+        if (this.status.equals(State.DELETE.getState())) {
+            throw new AlreadyDeletedException(ErrorCode.ALREADY_DELETED_EXCEPTION.getMessages());
+        }
+	}
 }

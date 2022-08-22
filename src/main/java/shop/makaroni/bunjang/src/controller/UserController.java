@@ -15,12 +15,10 @@ import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
-import shop.makaroni.bunjang.src.response.exception.InvalidInputEx;
 import shop.makaroni.bunjang.src.service.UserService;
 
 import java.util.List;
 
-import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.PATCH_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.WITHDRAWAL_SUCCESS;
 
@@ -39,11 +37,7 @@ public class UserController {
 
     @GetMapping("/{userId}/items")
     public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId, @RequestParam("condition") String condition) {
-
-        if (State.valid(condition)) {
-            throw new InvalidInputEx(INVALID_INPUT_EXCEPTION.getMessages());
-        }
-
+        State.valid(condition);
         return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition));
     }
 
