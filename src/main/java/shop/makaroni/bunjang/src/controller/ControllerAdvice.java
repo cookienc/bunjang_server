@@ -64,7 +64,7 @@ public class ControllerAdvice {
 
 	private void printLog(Exception e, HttpServletRequest request) {
 		log.warn(e.getClass() + " 발생");
-		log.warn("errors = {}", e.getStackTrace());
+		log.warn("errors = {}", (Object[]) e.getStackTrace());
 		log.warn("path = {}", request.getRequestURI());
 	}
 }
