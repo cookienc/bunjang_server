@@ -9,15 +9,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
+import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
+import shop.makaroni.bunjang.src.response.exception.InvalidInputEx;
 import shop.makaroni.bunjang.src.service.UserService;
 
 import java.util.List;
 
+import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.PATCH_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.WITHDRAWAL_SUCCESS;
 
@@ -37,6 +40,9 @@ public class UserController {
     @GetMapping("/{userId}/items")
     public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId, @RequestParam("condition") String condition) {
 
+        if (State.valid(condition)) {
+            throw new InvalidInputEx(INVALID_INPUT_EXCEPTION.getMessages());
+        }
 
         return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition));
     }
