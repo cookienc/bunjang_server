@@ -10,6 +10,7 @@ import shop.makaroni.bunjang.src.domain.item.model.GetSearchRes;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -74,9 +75,7 @@ public class ItemDao {
 	}
 	public List<GetSearchRes> getItems(){
 		String query;
-		query = "select Item.idx itemIdx, path, price, name, safePay, isAd " +
-				"from Item left join " +
-				"(select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx";
+		query = "select Item.idx itemIdx, path, price, name, safePay, isAd from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx";
 
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetSearchRes(
@@ -85,7 +84,7 @@ public class ItemDao {
 						rs.getString("name"),
 						rs.getBoolean("safePay"),
 						rs.getBoolean("isAd"),
-						null)
+						Collections.singletonList(rs.getString("path")))
 		);
 
 	}
@@ -138,7 +137,9 @@ public class ItemDao {
 		Object[] reqParams;
 		String[] param={name, name+"%", "%"+name+"%", "%"+name, "%"+name+"%"};
 		if (sort == 'C') {
-			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item\n" +
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
+//					"select idx itemIdx,concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item\n" +
 					"where name like ?\n" +
 					"order by\n" +
 					"    (case \n" +
@@ -157,7 +158,7 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							null
+							Collections.singletonList(rs.getString("path"))
 					),
 					reqParams
 			);
@@ -165,7 +166,9 @@ public class ItemDao {
 		}
 		else if(sort == 'R'){
 			reqParams = new Object[]{param[4], count};
-			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item where name like ? order by updatedAt desc limit ?;";
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
+					"where name like ? order by updatedAt desc limit ?;";
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
 							String.valueOf(rs.getInt("itemIdx")),
@@ -173,13 +176,15 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							null
+							Collections.singletonList(rs.getString("path"))
 					),
 					reqParams
 			);
 		}
 		else if(sort == 'L'){
-			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item where name like ? order by price asc limit ?;";
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
+					"where name like ? order by price asc limit ?;";
 			reqParams = new Object[]{param[4], count};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
@@ -188,13 +193,15 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							null
+							Collections.singletonList(rs.getString("path"))
 					),
 					reqParams
 			);
 		}
 		else{
-			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item where name like ? order by price desc limit ?;";
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
+					"where name like ? order by price desc limit ?;";
 			reqParams = new Object[]{param[4], count};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
@@ -203,7 +210,7 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							null
+							Collections.singletonList(rs.getString("path"))
 					),
 					reqParams
 			);
