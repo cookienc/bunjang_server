@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.makaroni.bunjang.src.domain.user.User;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class MyStoreResponse {
@@ -16,10 +18,10 @@ public class MyStoreResponse {
 	private String reviews;
 	private String followers;
 	private String followings;
+	private List<StoreSaleResponse> itemsResponses;
 
 	@Builder
-
-	public MyStoreResponse(String storeId, String storeName, Boolean isCertificated, String storeImage, String wishLists, String reviews, String followers, String followings) {
+	public MyStoreResponse(String storeId, String storeName, Boolean isCertificated, String storeImage, String wishLists, String reviews, String followers, String followings, List<StoreSaleResponse> itemsResponses) {
 		this.storeId = storeId;
 		this.storeName = storeName;
 		this.isCertificated = isCertificated;
@@ -28,9 +30,10 @@ public class MyStoreResponse {
 		this.reviews = reviews;
 		this.followers = followers;
 		this.followings = followings;
+		this.itemsResponses = itemsResponses;
 	}
 
-	public static MyStoreResponse of(User user, Integer reviewCount, Integer wishListCount, Integer followerCount, Integer followingcount) {
+	public static MyStoreResponse of(User user, Integer reviewCount, Integer wishListCount, Integer followerCount, Integer followingcount, List<StoreSaleResponse> myStoreItem) {
 		return MyStoreResponse.builder()
 				.storeId(String.valueOf(user.getIdx()))
 				.storeName(user.getStoreName())
@@ -40,6 +43,7 @@ public class MyStoreResponse {
 				.reviews(String.valueOf(reviewCount))
 				.followers(String.valueOf(followerCount))
 				.followings(String.valueOf(followingcount))
+				.itemsResponses(myStoreItem)
 				.build();
 	}
 }

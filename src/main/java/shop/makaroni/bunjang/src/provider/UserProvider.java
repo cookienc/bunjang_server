@@ -10,6 +10,7 @@ import shop.makaroni.bunjang.src.dao.ReviewDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.dao.WishListDao;
 import shop.makaroni.bunjang.src.domain.item.Item;
+import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
@@ -37,7 +38,7 @@ public class UserProvider {
 		Integer followerCount = followDao.countMyFollowers(userId);
 		Integer followingcount =  followDao.countMyFollowings(userId);
 
-		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount);
+		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, getMyStoreItem(userId, State.SELLING.getState()));
 	}
 
 	public List<StoreSaleResponse> getMyStoreItem(Long userId, String condition) {
