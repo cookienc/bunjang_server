@@ -8,12 +8,12 @@ import org.springframework.validation.FieldError;
 @Setter
 public class BeanErrorResponse {
 	private String code;
-	private String filed;
+	private String field;
 	private String message;
 
-	public BeanErrorResponse(String code, String filed, String message) {
+	public BeanErrorResponse(String code, String field, String message) {
 		this.code = code;
-		this.filed = filed;
+		this.field = field;
 		this.message = message;
 	}
 

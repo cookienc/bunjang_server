@@ -9,9 +9,9 @@ public class PatchUserRequest {
 	String storeName;
 	String storeUrl;
 
-	@Range(min=0, max = 24)
+	@Range(min=0, max = 24, message = "0과 24사이로 입력해주세요.")
 	Integer contactStart;
-	@Range(min=0, max = 24)
+	@Range(min=0, max = 24, message = "0과 24사이로 입력해주세요.")
 	Integer contactEnd;
 
 	String description;
