@@ -12,7 +12,7 @@ public class WishListDao {
 
 	private final NamedParameterJdbcTemplate template;
 
-	public Integer countWishList(Long userId) {
+	public Integer countMyWishList(Long userId) {
 		var sql = "select count(*) from WishList wl " +
 				"where wl.userIdx=:userId " +
 				"and status='Y'";

@@ -12,17 +12,17 @@ public class FollowDao {
 
 	private final NamedParameterJdbcTemplate template;
 
-	public Integer countFollowers(Long userId) {
+	public Integer countMyFollowers(Long userId) {
 		var sql = "select count(*) from Follow f " +
 				"where f.userIdx=:userId " +
-				"and status='Y'";
+				"and f.status='Y'";
 		return template.queryForObject(sql, Map.of("userId", userId), Integer.class);
 	}
 
-	public Integer countFollowings(Long userId) {
+	public Integer countMyFollowings(Long userId) {
 		var sql = "select count(*) from Follow f " +
 				"where f.storeIdx=:userId " +
-				"and status='Y'";
+				"and f.status='Y'";
 		return template.queryForObject(sql, Map.of("userId", userId), Integer.class);
 	}
 }
