@@ -4,7 +4,7 @@
 
 <mapper namespace="shop.makaroni.bunjang.src.dao.UserMapper">
     <update id="update">
-        update user
+        update User
         <set>
             <if test="request.image != null and request.image != ''">
                 image=#{request.image},
