@@ -8,15 +8,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ResponseInfo {
-	private Integer code;
+	private String code;
 	private String message;
 
-	public ResponseInfo(Integer code, String message) {
+	public ResponseInfo(String code, String message) {
 		this.code = code;
 		this.message = message;
 	}
 
 	public static ResponseInfo of(SuccessStatus status) {
-		return new ResponseInfo(status.getStatus().value(), status.getMessage());
+		return new ResponseInfo(String.valueOf(status.getStatus().value()), status.getMessage());
 	}
 }

@@ -11,7 +11,7 @@ import static shop.makaroni.bunjang.config.Constant.CANNOT_FIND_LOCATION;
 @Getter
 @NoArgsConstructor
 public class StoreSaleResponse {
-	Long itemIdx;
+	String itemIdx;
 	String itemName;
 	String price;
 	String location;
@@ -19,7 +19,7 @@ public class StoreSaleResponse {
 	String time;
 
 	@Builder
-	public StoreSaleResponse(Long itemIdx, String itemName, String price, String location, String image, String time) {
+	public StoreSaleResponse(String itemIdx, String itemName, String price, String location, String image, String time) {
 		this.itemIdx = itemIdx;
 		this.itemName = itemName;
 		this.price = price;
@@ -30,7 +30,7 @@ public class StoreSaleResponse {
 
 	public static StoreSaleResponse of(Item item) {
 		return StoreSaleResponse.builder()
-				.itemIdx(item.getIdx())
+				.itemIdx(String.valueOf(item.getIdx()))
 				.itemName(item.getName())
 				.price(Formatter.changeWon(item.getPrice()))
 				.location(item.getLocation() == null ? CANNOT_FIND_LOCATION.getMessages() : item.getLocation())

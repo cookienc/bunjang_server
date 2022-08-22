@@ -8,18 +8,18 @@ import shop.makaroni.bunjang.src.domain.user.User;
 @Getter
 @NoArgsConstructor
 public class MyStoreResponse {
-	private Long storeId;
+	private String storeId;
 	private String storeName;
 	private Boolean isCertificated;
 	private String storeImage;
-	private Integer wishLists;
-	private Integer reviews;
-	private Integer followers;
-	private Integer followings;
+	private String wishLists;
+	private String reviews;
+	private String followers;
+	private String followings;
 
 	@Builder
 
-	public MyStoreResponse(Long storeId, String storeName, Boolean isCertificated, String storeImage, Integer wishLists, Integer reviews, Integer followers, Integer followings) {
+	public MyStoreResponse(String storeId, String storeName, Boolean isCertificated, String storeImage, String wishLists, String reviews, String followers, String followings) {
 		this.storeId = storeId;
 		this.storeName = storeName;
 		this.isCertificated = isCertificated;
@@ -32,14 +32,14 @@ public class MyStoreResponse {
 
 	public static MyStoreResponse of(User user, Integer reviewCount, Integer wishListCount, Integer followerCount, Integer followingcount) {
 		return MyStoreResponse.builder()
-				.storeId(user.getIdx())
+				.storeId(String.valueOf(user.getIdx()))
 				.storeName(user.getStoreName())
 				.storeImage(user.getStoreImage())
 				.isCertificated(user.getIsCertificated())
-				.wishLists(wishListCount)
-				.reviews(reviewCount)
-				.followers(followerCount)
-				.followings(followingcount)
+				.wishLists(String.valueOf(wishListCount))
+				.reviews(String.valueOf(reviewCount))
+				.followers(String.valueOf(followerCount))
+				.followings(String.valueOf(followingcount))
 				.build();
 	}
 }
