@@ -4,6 +4,7 @@ package shop.makaroni.bunjang.src.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
 
 import javax.sql.DataSource;
@@ -11,7 +12,11 @@ import java.util.List;
 
 @Repository
 public class ItemDao {
+
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private ItemMapper itemMapper;
 
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
@@ -103,4 +108,7 @@ public class ItemDao {
 				itemIdx);
 	}
 
+	public List<Item> getMyStoreItem(Long userId, String condition) {
+		return itemMapper.getMyStoreItem(userId, condition);
+	}
 }
