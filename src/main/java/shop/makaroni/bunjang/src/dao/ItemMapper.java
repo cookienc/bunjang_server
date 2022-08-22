@@ -12,4 +12,9 @@ public interface ItemMapper {
 	List<Item> getMyStoreItem(@Param("userId") Long userId,
 							  @Param("condition") String condition,
 							  @Param("pagingCond") PagingCond pagingCond);
+
+	List<Item> searchStoreItemByName(@Param("userId") Long userId,
+									 @Param("itemName") String itemName,
+									 @Param("condition") String condition,
+									 @Param("pagingCond") PagingCond pagingCond);
 }

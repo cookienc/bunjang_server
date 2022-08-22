@@ -26,4 +26,29 @@
             i.createdAt ${pagingCond.dateSort}
         limit #{pagingCond.start}, #{pagingCond.offset};
     </select>
+
+    <select id="searchStoreItemByName" resultType="shop.makaroni.bunjang.src.domain.item.Item">
+        select  i.idx idx,
+                i.name name,
+                i.price price,
+                ii.path image,
+                i.location location,
+                (case
+                    when timestampdiff(minute , i.updatedAt, now()) &lt; 1 then concat(timestampdiff(second, i.updatedAt, now()), '초 전')
+                    when timestampdiff(hour, i.updatedAt, now()) &lt; 1 then concat(timestampdiff(minute, i.updatedAt, now()), '분 전')
+                    when timestampdiff(hour, i.updatedAt, now()) &lt; 24 then concat(timestampdiff(hour, i.updatedAt, now()), '시간 전')
+                    when timestampdiff(day, i.updatedAt, now()) &lt; 31 then concat(timestampdiff(day, i.updatedAt, now()), '일 전')
+                    when timestampdiff(week, i.updatedAt, now()) &lt; 4 then concat(timestampdiff(week, i.updatedAt, now()), '주 전')
+                    when timestampdiff(month,i.updatedAt, now()) &lt; 12 then concat(timestampdiff(month, i.updatedAt, now()), '개월 전')
+                        else concat(timestampdiff(year, i.updatedAt, now()), '년 전')
+                end) as updatedAt
+        from Item i
+            inner join (select ii.itemIdx itemIdx, max(ii.path) path from ItemImage ii group by ii.itemIdx) as ii on ii.itemIdx = i.idx
+        where i.sellerIdx = #{userId}
+        and i.status = #{condition}
+        and i.name like concat('%', #{itemName}, '%')
+        order by
+            i.createdAt ${pagingCond.dateSort}
+        limit #{pagingCond.start}, #{pagingCond.offset};
+    </select>
 </mapper>

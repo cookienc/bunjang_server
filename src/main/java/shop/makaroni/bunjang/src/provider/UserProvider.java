@@ -5,15 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.FollowDao;
-import shop.makaroni.bunjang.src.dao.ItemDao;
 import shop.makaroni.bunjang.src.dao.ReviewDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.dao.WishListDao;
 import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.State;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
 import java.util.List;
@@ -29,7 +28,6 @@ public class UserProvider {
 	private final ReviewDao reviewDao;
 	private final WishListDao wishListDao;
 	private final FollowDao followDao;
-	private final ItemDao itemDao;
 
 	public MyStoreResponse getMyStore(Long userId) {
 
@@ -44,7 +42,15 @@ public class UserProvider {
 
 	public List<StoreSaleResponse> getMyStoreItem(Long userId, String condition, PagingCond pagingCond) {
 		findById(userId);
-		List<Item> item = itemDao.getMyStoreItem(userId, condition, pagingCond);
+		List<Item> item = userDao.getMyStoreItem(userId, condition, pagingCond);
+		return item.stream()
+				.map(StoreSaleResponse::of)
+				.collect(Collectors.toList());
+	}
+
+	public List<StoreSaleResponse> searchStoreItemByName(Long userId, String itemName, String condition, PagingCond pagingCond) {
+		findById(userId);
+		List<Item> item = userDao.searchStoreItemByName(userId, itemName, condition, pagingCond);
 		return item.stream()
 				.map(StoreSaleResponse::of)
 				.collect(Collectors.toList());

@@ -44,9 +44,18 @@ public class UserController {
     public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId,
                                                                   @RequestParam("condition") String condition,
                                                                   @QueryStringArgResolver PagingCond pagingCond) {
-        log.info("{} {} {}", pagingCond.getStart(), pagingCond.getOffset(), pagingCond.getDateSort());
         State.valid(condition);
         return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition, pagingCond));
+    }
+
+    @GetMapping("/{userId}/items/search")
+    public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId,
+                                                                  @RequestParam(value = "itemName", defaultValue = "") String itemName,
+                                                                  @RequestParam("condition") String condition,
+                                                                  @QueryStringArgResolver PagingCond pagingCond) {
+        log.info("itemName={}", itemName);
+        State.valid(condition);
+        return ResponseEntity.ok(userProvider.searchStoreItemByName(userId, itemName, condition, pagingCond));
     }
 
     @PatchMapping("/{userId}")

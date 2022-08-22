@@ -4,10 +4,8 @@ package shop.makaroni.bunjang.src.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
 import shop.makaroni.bunjang.src.domain.item.model.GetSearchRes;
-import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -129,9 +127,6 @@ public class ItemDao {
 				itemIdx);
 	}
 
-	public List<Item> getMyStoreItem(Long userId, String condition, PagingCond pagingCond) {
-		return itemMapper.getMyStoreItem(userId, condition, pagingCond);
-	}
 	public List<GetSearchRes> getSearchRes(String name, char sort, int count){
 		String query;
 		Object[] reqParams;
@@ -217,5 +212,4 @@ public class ItemDao {
 		}
 
 	}
-
 }
