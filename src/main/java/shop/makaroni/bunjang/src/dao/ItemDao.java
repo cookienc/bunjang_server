@@ -74,16 +74,18 @@ public class ItemDao {
 	}
 	public List<GetSearchRes> getItems(){
 		String query;
-			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item\n" +
-					"order by idx asc";
+		query = "select Item.idx itemIdx, path, price, name, safePay, isAd " +
+				"from Item left join " +
+				"(select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx";
 
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetSearchRes(
+						String.valueOf(rs.getInt("itemIdx")),
 						rs.getString("price"),
 						rs.getString("name"),
 						rs.getBoolean("safePay"),
-						rs.getBoolean("isAd")
-				)
+						rs.getBoolean("isAd"),
+						null)
 		);
 
 	}
@@ -150,10 +152,12 @@ public class ItemDao {
 
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
+							String.valueOf(rs.getInt("itemIdx")),
 							rs.getString("price"),
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
-							rs.getBoolean("isAd")
+							rs.getBoolean("isAd"),
+							null
 					),
 					reqParams
 			);
@@ -164,10 +168,12 @@ public class ItemDao {
 			query = "select concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item where name like ? order by updatedAt desc limit ?;";
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
+							String.valueOf(rs.getInt("itemIdx")),
 							rs.getString("price"),
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
-							rs.getBoolean("isAd")
+							rs.getBoolean("isAd"),
+							null
 					),
 					reqParams
 			);
@@ -177,10 +183,12 @@ public class ItemDao {
 			reqParams = new Object[]{param[4], count};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
+							String.valueOf(rs.getInt("itemIdx")),
 							rs.getString("price"),
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
-							rs.getBoolean("isAd")
+							rs.getBoolean("isAd"),
+							null
 					),
 					reqParams
 			);
@@ -190,10 +198,12 @@ public class ItemDao {
 			reqParams = new Object[]{param[4], count};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
+							String.valueOf(rs.getInt("itemIdx")),
 							rs.getString("price"),
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
-							rs.getBoolean("isAd")
+							rs.getBoolean("isAd"),
+							null
 					),
 					reqParams
 			);
