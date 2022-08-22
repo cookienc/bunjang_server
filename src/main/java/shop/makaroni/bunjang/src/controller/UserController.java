@@ -44,7 +44,7 @@ public class UserController {
     public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId,
                                                                   @RequestParam("condition") String condition,
                                                                   @QueryStringArgResolver PagingCond pagingCond) {
-        log.info("{} {} {}", pagingCond.getStart(), pagingCond.getOffset(), pagingCond.getSortCond());
+        log.info("{} {} {}", pagingCond.getStart(), pagingCond.getOffset(), pagingCond.getDateSort());
         State.valid(condition);
         return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition, pagingCond));
     }

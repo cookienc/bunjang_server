@@ -8,13 +8,13 @@ public class PagingCond {
 	public static final String ASC = "asc";
 	private Integer start;
 	private Integer offset;
-	private String sortCond;
+	private String dateSort;
 
 	@Builder
-	public PagingCond(Integer start, Integer offset, String sortCond) {
+	public PagingCond(Integer start, Integer offset, String dateSort) {
 		this.start = start;
 		this.offset = offset;
-		this.sortCond = sortCond;
+		this.dateSort = dateSort;
 	}
 
 	public static PagingCond defaultValue() {
@@ -24,8 +24,8 @@ public class PagingCond {
 	public PagingCond validate() {
 		return PagingCond.builder()
 				.start(this.start == null ? 0 : this.start)
-				.offset(this.offset == null ? 5 : this.offset)
-				.sortCond(this.sortCond == null ? ASC : this.sortCond)
+				.offset(this.offset == null ? 10 : this.offset)
+				.dateSort(this.dateSort == null ? ASC : this.dateSort)
 				.build();
 	}
 }

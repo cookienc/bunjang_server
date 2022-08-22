@@ -23,7 +23,7 @@
         where i.sellerIdx=#{userId}
         and i.status=#{condition}
         order by
-            i.createdAt ${pagingCond.sortCond}
+            i.createdAt ${pagingCond.dateSort}
         limit #{pagingCond.start}, #{pagingCond.offset};
     </select>
 </mapper>
