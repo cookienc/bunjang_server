@@ -16,6 +16,7 @@ public class GetItemRes{
     private String location;
     private String time;
     private int hit;
+    private int stock;
     private int wish;
     private int chat;
     private boolean isNew;

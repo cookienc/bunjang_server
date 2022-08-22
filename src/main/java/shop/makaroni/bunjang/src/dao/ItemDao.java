@@ -36,6 +36,7 @@ public class ItemDao {
 				"           else concat(timestampdiff(year, updatedAt, now()), '년 전')\n" +
 				"       end) as time,\n" +
 				"        hit,\n" +
+				"stock,\n"+
 				"        0 as wish,\n" +
 				"        0 as chat,\n" +
 				"        isNew,\n" +
@@ -54,7 +55,8 @@ public class ItemDao {
 						rs.getString("name"),
 						rs.getString("location"),
 						rs.getString("time"),
-						rs.getInt("hit"),0,0,
+						rs.getInt("hit"),
+						rs.getInt("stock"),0,0,
 						rs.getBoolean("isNew"),
 						rs.getBoolean("delivery"),
 						rs.getBoolean("exchange"),
