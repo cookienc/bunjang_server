@@ -24,7 +24,7 @@ public class ItemDao {
 	}
 
 	public GetItemRes getItem(int itemIdx){
-		String query = "select price, name,\n" +
+		String query = "select concat(FORMAT(price,0),'원') as price, name,\n" +
 				"       IF(isnull(location),'지역정보 없음', location) location,\n" +
 				"       (case\n" +
 				"            when timestampdiff(minute , updatedAt, now()) < 1 then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
