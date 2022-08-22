@@ -2,6 +2,8 @@ package shop.makaroni.bunjang.src.domain.user.dto;
 
 import lombok.Getter;
 
+import javax.validation.constraints.Null;
+
 @Getter
 public class PatchUserRequest {
 	String image;

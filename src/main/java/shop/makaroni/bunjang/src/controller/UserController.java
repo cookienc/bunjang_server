@@ -36,6 +36,8 @@ public class UserController {
 
     @GetMapping("/{userId}/items")
     public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId, @RequestParam("condition") String condition) {
+
+
         return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition));
     }
 
