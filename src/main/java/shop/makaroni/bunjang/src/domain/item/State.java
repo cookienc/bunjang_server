@@ -14,15 +14,14 @@ public enum State {
 	private String state;
 
 	public static void valid(String condition) {
-		if (isNotRightCondition(condition)) {
-			throw new InvalidInputEx(INVALID_INPUT_EXCEPTION.getMessages());
+		if (isRightCondition(condition)) {
+			return;
 		}
+		throw new InvalidInputEx(INVALID_INPUT_EXCEPTION.getMessages());
 	}
 
-	private static boolean isNotRightCondition(String condition) {
-		return !(SOLD.getState().equals(condition) &&
-				SELLING.getState().equals(condition) &&
-				REGISTERED.getState().equals(condition));
+	private static boolean isRightCondition(String condition) {
+		return SELLING.getState().equals(condition) ||SOLD.getState().equals(condition) || REGISTERED.getState().equals(condition);
 	}
 
 

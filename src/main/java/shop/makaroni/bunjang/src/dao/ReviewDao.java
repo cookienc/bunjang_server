@@ -15,8 +15,8 @@ public class ReviewDao {
 	public Integer countStoreReview(Long userId) {
 		var sql = "select count(*) from Review r " +
 				"inner join Item i on i.idx = r.itemIdx " +
-				"where i.sellerIdx=:userId " +
-				"and r.status='Y'";
+				"where i.sellerIdx = :userId " +
+				"and r.status = 'Y'";
 		return template.queryForObject(sql, Map.of("userId", userId), Integer.class);
 	}
 }

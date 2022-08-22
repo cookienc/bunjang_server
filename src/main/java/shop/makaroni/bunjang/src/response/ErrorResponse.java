@@ -2,8 +2,10 @@ package shop.makaroni.bunjang.src.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class ErrorResponse {
 	Integer code;
