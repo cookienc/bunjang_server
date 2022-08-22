@@ -1,6 +1,7 @@
 package shop.makaroni.bunjang.src.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,11 +18,13 @@ import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static shop.makaroni.bunjang.src.response.SuccessStatus.PATCH_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.WITHDRAWAL_SUCCESS;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -42,7 +45,8 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<ResponseInfo> update(@PathVariable("userId") Long userId, @RequestBody PatchUserRequest request) {
+    public ResponseEntity<ResponseInfo> update(@PathVariable("userId") Long userId, @Valid @RequestBody PatchUserRequest request) {
+
         userService.update(userId, request);
         return ResponseEntity.ok(ResponseInfo.of(PATCH_SUCCESS));
     }

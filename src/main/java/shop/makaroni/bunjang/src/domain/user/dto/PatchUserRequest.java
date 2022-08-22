@@ -1,16 +1,19 @@
 package shop.makaroni.bunjang.src.domain.user.dto;
 
 import lombok.Getter;
-
-import javax.validation.constraints.Null;
+import org.hibernate.validator.constraints.Range;
 
 @Getter
 public class PatchUserRequest {
 	String image;
 	String storeName;
 	String storeUrl;
+
+	@Range(min=0, max = 24)
 	Integer contactStart;
+	@Range(min=0, max = 24)
 	Integer contactEnd;
+
 	String description;
 	String policy;
 	String precaution;
