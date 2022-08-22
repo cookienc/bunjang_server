@@ -17,6 +17,8 @@ import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.service.UserService;
+import shop.makaroni.bunjang.utils.resolver.PagingCond;
+import shop.makaroni.bunjang.utils.resolver.QueryStringArgResolver;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -41,11 +43,10 @@ public class UserController {
     @GetMapping("/{userId}/items")
     public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId,
                                                                   @RequestParam("condition") String condition,
-                                                                  @RequestParam(value = "pageNum", defaultValue = "0") Integer start,
-                                                                  @RequestParam(value = "offset", defaultValue = "5") Integer offset,
-                                                                  @RequestParam(value = "sortCond", defaultValue = "asc") String sortCond) {
+                                                                  @QueryStringArgResolver PagingCond pagingCond) {
+        log.info("{} {} {}", pagingCond.getStart(), pagingCond.getOffset(), pagingCond.getSortCond());
         State.valid(condition);
-        return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition, start, offset, sortCond));
+        return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition, pagingCond));
     }
 
     @PatchMapping("/{userId}")

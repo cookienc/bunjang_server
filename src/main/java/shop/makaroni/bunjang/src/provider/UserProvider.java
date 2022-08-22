@@ -14,6 +14,7 @@ import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
+import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -38,12 +39,12 @@ public class UserProvider {
 		Integer followerCount = followDao.countMyFollowers(userId);
 		Integer followingcount =  followDao.countMyFollowings(userId);
 
-		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, getMyStoreItem(userId, State.SELLING.getState(), 0, 5, "asc"));
+		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, getMyStoreItem(userId, State.SELLING.getState(), PagingCond.defaultValue()));
 	}
 
-	public List<StoreSaleResponse> getMyStoreItem(Long userId, String condition, Integer start, Integer offset, String sortCond) {
+	public List<StoreSaleResponse> getMyStoreItem(Long userId, String condition, PagingCond pagingCond) {
 		findById(userId);
-		List<Item> item = itemDao.getMyStoreItem(userId, condition, start, offset, sortCond);
+		List<Item> item = itemDao.getMyStoreItem(userId, condition, pagingCond);
 		return item.stream()
 				.map(StoreSaleResponse::of)
 				.collect(Collectors.toList());

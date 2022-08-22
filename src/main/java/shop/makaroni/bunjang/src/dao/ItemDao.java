@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
 import shop.makaroni.bunjang.src.domain.item.model.GetSearchRes;
+import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -111,8 +112,8 @@ public class ItemDao {
 				itemIdx);
 	}
 
-	public List<Item> getMyStoreItem(Long userId, String condition, Integer start, Integer offset, String sortCond) {
-		return itemMapper.getMyStoreItem(userId, condition, start, offset, sortCond);
+	public List<Item> getMyStoreItem(Long userId, String condition, PagingCond pagingCond) {
+		return itemMapper.getMyStoreItem(userId, condition, pagingCond);
 	}
 	public List<GetSearchRes> getSearchRes(String name, char sort, int count){
 		String query;
