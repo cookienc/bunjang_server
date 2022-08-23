@@ -263,4 +263,34 @@ public class ItemDao {
 				params
 		);
 	}
+
+	public List<GetBrandRes> getBrand(int userIdx) {
+		String query =
+				"select distinct brandIdx, Brand.name brandName, englishName from Brand join (select * from BrandFollow where userIdx =? and status!='D') follow\n" +
+				"    on Brand.idx = brandIdx where Brand.status != 'D';";
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetBrandRes(
+					String.valueOf(rs.getInt("brandIdx")),
+					rs.getString("brandName"),
+					rs.getString("englishName"),
+						null
+				),
+				userIdx
+		);
+
+	}
+
+	public int checkbrandIdx(int brandIdx) {
+		String query = "select exists(select idx from Brand where idx = ? and status != 'D');";
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				brandIdx);
+	}
+
+	public int getItemCnt(int brandIdx) {
+		String query = "select count(idx) from Item where brandIdx = ? and status !='D';";
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				brandIdx);
+	}
 }

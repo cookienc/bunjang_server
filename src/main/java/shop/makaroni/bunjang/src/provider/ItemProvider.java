@@ -76,4 +76,26 @@ public class ItemProvider {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
+
+	public List<GetBrandRes> getBrand(int userIdx) throws BaseException {
+		if(userDao.checkUserIdx(userIdx) == 0){
+			throw new BaseException(USERS_INVALID_IDX);
+		}
+		try {
+			return itemDao.getBrand(userIdx);
+		} catch(Exception exception){
+			throw new BaseException(RESPONSE_ERROR);
+		}
+	}
+
+	public  int getItemCnt(int brandIdx) throws BaseException {
+		if(itemDao.checkbrandIdx(brandIdx) == 0){
+			throw new BaseException(ITEM_INVALID_BRAND);
+		}
+		try {
+			return itemDao.getItemCnt(brandIdx);
+		} catch(Exception exception){
+			throw new BaseException(RESPONSE_ERROR);
+		}
+	}
 }

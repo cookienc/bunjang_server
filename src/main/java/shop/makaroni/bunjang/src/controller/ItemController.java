@@ -104,6 +104,25 @@ public class ItemController {
         }
     }
 
+    @ResponseBody
+    @GetMapping("/brand/{userIdx}")
+    public BaseResponse<List<GetBrandRes>> getBrand(@PathVariable("userIdx") int userIdx){
+
+        if(userIdx < 0){
+            return new BaseResponse<>(USERS_INVALID_IDX);
+        }
+        try {
+            List<GetBrandRes> getBrandRes = itemProvider.getBrand(userIdx);
+            int brandIdx;
+            for (GetBrandRes eachRes : getBrandRes){
+                brandIdx = Integer.parseInt(eachRes.getBrandIdx());
+                eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
+            }
+            return new BaseResponse<>(getBrandRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
 
 }

@@ -44,7 +44,6 @@ public enum BaseResponseStatus {
     ITEM_INVALID_DELIVERY(false, 2030, "잘못된 배송비 포함 여부 값입니다"),
 
 
-
     /**
      * 3000 : Response 오류
      */
