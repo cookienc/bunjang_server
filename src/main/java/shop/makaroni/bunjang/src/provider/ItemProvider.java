@@ -35,8 +35,8 @@ public class ItemProvider {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
-	public List<GetSearchRes> getItems() throws  BaseException{
-		List<GetSearchRes> getItemRes = null;
+	public List<GetItemRes> getItems() throws  BaseException{
+		List<GetItemRes> getItemRes;
 		try{
 			getItemRes = itemDao.getItems();
 			return getItemRes;

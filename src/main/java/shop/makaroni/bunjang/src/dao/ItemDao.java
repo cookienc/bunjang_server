@@ -52,6 +52,7 @@ public class ItemDao {
 				"where idx = ?;";
 		return this.jdbcTemplate.queryForObject(query,
 				(rs, rowNum) -> new GetItemRes(
+						String.valueOf(rs.getInt("idx")),
 						rs.getString("price"),
 						rs.getString("name"),
 						rs.getString("location"),
@@ -71,19 +72,51 @@ public class ItemDao {
 				itemIdx);
 
 	}
-	public List<GetSearchRes> getItems(){
-		String query;
-		query = "select Item.idx itemIdx, path, price, name, safePay, isAd from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx";
-
+	public List<GetItemRes> getItems(){
+		String query = "select idx, concat(FORMAT(price,0),'원') as price, name,\n" +
+				"       IF(isnull(location),'지역정보 없음', location) location,\n" +
+				"       (case\n" +
+				"            when timestampdiff(minute , updatedAt, now()) < 1 then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
+				"           when timestampdiff(hour, updatedAt, now()) < 1 then concat(timestampdiff(minute, updatedAt, now()), '분 전')\n" +
+				"           when timestampdiff(hour, updatedAt, now()) < 24 then concat(timestampdiff(hour, updatedAt, now()), '시간 전')\n" +
+				"           when timestampdiff(day, updatedAt, now()) < 31 then concat(timestampdiff(day, updatedAt, now()), '일 전')\n" +
+				"           when timestampdiff(week, updatedAt, now()) < 4 then concat(timestampdiff(week, updatedAt, now()), '주 전')\n" +
+				"           when timestampdiff(month,updatedAt, now()) < 12 then concat(timestampdiff(month, updatedAt, now()), '개월 전')\n" +
+				"           else concat(timestampdiff(year, updatedAt, now()), '년 전')\n" +
+				"       end) as time,\n" +
+				"        hit,\n" +
+				"stock,\n"+
+				"        0 as wish,\n" +
+				"        0 as chat,\n" +
+				"        isNew,\n" +
+				"        delivery,\n" +
+				"        exchange,\n" +
+				"        content,\n" +
+				"        category,\n" +
+				"        brandIdx as brand,\n" +
+				"        sellerIdx as seller,\n" +
+				"        status \n"+
+				"from Item\n";
 		return this.jdbcTemplate.query(query,
-				(rs, rowNum) -> new GetSearchRes(
-						String.valueOf(rs.getInt("itemIdx")),
+				(rs, rowNum) -> new GetItemRes(
+						String.valueOf(rs.getInt("idx")),
 						rs.getString("price"),
 						rs.getString("name"),
-						rs.getBoolean("safePay"),
-						rs.getBoolean("isAd"),
-						Collections.singletonList(rs.getString("path")))
-		);
+						rs.getString("location"),
+						rs.getString("time"),
+						String.valueOf(rs.getInt("hit")),
+						String.valueOf(rs.getInt("stock")),
+						String.valueOf(0),String.valueOf(0),
+						rs.getBoolean("isNew"),
+						rs.getBoolean("delivery"),
+						rs.getBoolean("exchange"),
+						rs.getString("content"),
+						rs.getString("category"),
+						String.valueOf(rs.getInt("brand")),
+						String.valueOf(rs.getInt("seller")),
+						rs.getString("status").charAt(0),
+						null, null)
+				);
 
 	}
 
@@ -134,7 +167,6 @@ public class ItemDao {
 		if (sort == 'C') {
 			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
 					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
-//					"select idx itemIdx,concat(FORMAT(price,0),'원') as price, name, safePay, isAd from Item\n" +
 					"where name like ?\n" +
 					"order by\n" +
 					"    (case \n" +

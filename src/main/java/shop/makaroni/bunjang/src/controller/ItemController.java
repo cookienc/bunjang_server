@@ -49,9 +49,18 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/all")
-    public BaseResponse<List<GetSearchRes>> getItems() {
+    public BaseResponse<List<GetItemRes>> getItems() {
         try {
-            return new BaseResponse<>(itemProvider.getItems());
+            List<GetItemRes> getItemRes;
+            getItemRes= itemProvider.getItems();
+            for(int i=0;i<getItemRes.size();i++){
+                getItemRes.get(i).setWish(itemProvider.getItemWishCnt(Integer.parseInt(getItemRes.get(i).getIdx())));
+                getItemRes.get(i).setWish(itemProvider.getItemWishCnt(Integer.parseInt(getItemRes.get(i).getIdx())));
+                getItemRes.get(i).setChat(itemProvider.getItemChatCnt(Integer.parseInt(getItemRes.get(i).getIdx())));
+                getItemRes.get(i).setTags(itemProvider.getItemTags(Integer.parseInt(getItemRes.get(i).getIdx())));
+                getItemRes.get(i).setImages(itemProvider.getItemImages(Integer.parseInt(getItemRes.get(i).getIdx())));
+            }
+            return new BaseResponse<>(getItemRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

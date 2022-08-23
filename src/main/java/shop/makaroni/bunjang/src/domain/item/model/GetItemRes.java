@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class GetItemRes{
+    private String idx;
     private String price;
     private String name;
     private String location;
@@ -30,4 +31,7 @@ public class GetItemRes{
     private  List<String> tags;
     private  List<String> images;
 
+    public GetItemRes() {
+        isNew = delivery = exchange = false;
+    }
 }
