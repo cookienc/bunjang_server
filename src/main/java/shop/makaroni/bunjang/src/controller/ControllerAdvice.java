@@ -11,6 +11,7 @@ import shop.makaroni.bunjang.src.response.BeanErrorResponse;
 import shop.makaroni.bunjang.src.response.ErrorResponse;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
+import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 import shop.makaroni.bunjang.src.response.exception.InvalidInputEx;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
+import static shop.makaroni.bunjang.src.response.ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.MISSING_PARAMETER_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NO_SUCH_ELEMENT_EXCEPTION;
@@ -61,6 +63,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(CANNOT_ENCODE_PASSWORD.getStatus())
 				.body(ErrorResponse.of(CANNOT_ENCODE_PASSWORD, request.getRequestURI()));
+	}
+
+	@ExceptionHandler(DuplicateLoginIdEx.class)
+	public ResponseEntity<ErrorResponse> duplicateLoginIdExExHandler(DuplicateLoginIdEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(DUPLICATE_LOGIN_ID_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(DUPLICATE_LOGIN_ID_EXCEPTION, request.getRequestURI()));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

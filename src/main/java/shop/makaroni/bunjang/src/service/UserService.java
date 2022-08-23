@@ -30,6 +30,8 @@ public class UserService {
 	private final UserDao userDao;
 
 	public Long save(SaveUserRequest request) {
+		userProvider.findByLoginId(request.getLoginId());
+
 		String encodePassword;
 		try {
 			encodePassword = AES128.encode(request.getPassword());

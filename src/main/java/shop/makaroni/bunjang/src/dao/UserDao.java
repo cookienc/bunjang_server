@@ -73,6 +73,16 @@ public class UserDao {
 		}
 	}
 
+	public Optional<User> findByLoginId(String loginId) {
+		var sql = "select * from User where loginId=:loginId";
+		try {
+			User user = template.queryForObject(sql, Map.of("loginId", loginId), BeanPropertyRowMapper.newInstance(User.class));
+			return Optional.of(user);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
+	}
+
 	public void changeStoreName(Long idx, String storeName) {
 		var sql = "update User u " +
 				"set u.storeName = :storeName " +

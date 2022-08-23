@@ -61,4 +61,10 @@ public class UserProvider {
 		user.validate();
 		return user;
 	}
+
+	public User findByLoginId(String loginId) {
+		User user = userDao.findByLoginId(loginId).orElseThrow(NoSuchElementException::new);
+		user.checkDuplicateLoginId(loginId);
+		return user;
+	}
 }
