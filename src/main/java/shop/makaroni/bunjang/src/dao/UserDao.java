@@ -64,7 +64,9 @@ public class UserDao {
 	}
 
 	public Optional<User> findById(Long userId) {
-		var sql = "select * from User where idx=:userId";
+		var sql = "select * from User " +
+				"where idx=:userId " +
+				"and status = 'Y'";
 		try {
 			User user = template.queryForObject(sql, Map.of("userId", userId), BeanPropertyRowMapper.newInstance(User.class));
 			return Optional.of(user);
@@ -74,7 +76,9 @@ public class UserDao {
 	}
 
 	public Optional<User> findByLoginId(String loginId) {
-		var sql = "select * from User where loginId=:loginId";
+		var sql = "select * from User " +
+				"where loginId=:loginId " +
+				"and status = 'Y'";
 		try {
 			User user = template.queryForObject(sql, Map.of("loginId", loginId), BeanPropertyRowMapper.newInstance(User.class));
 			return Optional.of(user);

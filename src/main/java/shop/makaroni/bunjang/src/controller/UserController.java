@@ -28,6 +28,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static shop.makaroni.bunjang.src.response.SuccessStatus.CHECK_LOGIN_ID_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.PATCH_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.WITHDRAWAL_SUCCESS;
@@ -41,6 +42,12 @@ public class UserController {
     private final UserProvider userProvider;
     private final UserService userService;
     private final InquiryService inquiryService;
+
+    @GetMapping
+    public ResponseEntity<ResponseInfo> checkDuplicateLoginId(@RequestParam String loginId) {
+        userProvider.checkDuplicateLoginId(loginId);
+        return ResponseEntity.ok(ResponseInfo.of(CHECK_LOGIN_ID_SUCCESS));
+    }
 
     @PostMapping
     public ResponseEntity<ResponseInfo> save(@Valid @RequestBody SaveUserRequest request) {
