@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.inquiry.InquirySaveRequest;
 import shop.makaroni.bunjang.src.domain.item.State;
+import shop.makaroni.bunjang.src.domain.user.dto.SaveUserRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
@@ -40,6 +41,13 @@ public class UserController {
     private final UserProvider userProvider;
     private final UserService userService;
     private final InquiryService inquiryService;
+
+    @PostMapping
+    public ResponseEntity<ResponseInfo> save(@Valid @RequestBody SaveUserRequest request) {
+        Long userIdx = userService.save(request);
+        String url = "/users/" + userIdx;
+        return ResponseEntity.created(URI.create(url)).body(ResponseInfo.of(SAVE_SUCCESS));
+    }
 
     @GetMapping("/{userIdx}")
     public ResponseEntity<MyStoreResponse> getMyStore(@PathVariable Long userIdx) {
@@ -77,8 +85,8 @@ public class UserController {
 
     @PostMapping("/{userIdx}/inquiries/{storeIdx}")
     public ResponseEntity<ResponseInfo> saveInquiry(@PathVariable Long userIdx, @PathVariable Long storeIdx, @Valid @RequestBody InquirySaveRequest request) {
-        Long inquiryId = inquiryService.save(userIdx, storeIdx, request);
-        String uri = "/users/" + userIdx + "/stores/" + storeIdx + "/inquiries/" + inquiryId;
+        Long inquiryIdx = inquiryService.save(userIdx, storeIdx, request);
+        String uri = "/users/" + userIdx + "/stores/" + storeIdx + "/inquiries/" + inquiryIdx;
         return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_SUCCESS));
     }
 }

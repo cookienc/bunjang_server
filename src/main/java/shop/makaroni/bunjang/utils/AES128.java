@@ -1,5 +1,7 @@
 package shop.makaroni.bunjang.utils;
 
+import shop.makaroni.bunjang.config.secret.Secret;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -25,6 +27,14 @@ public class AES128 {
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
         this.ips = key.substring(0, 16);
         this.keySpec = keySpec;
+    }
+
+    public static String encode(String value) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        return new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(value);
+    }
+
+    public static String decode(String value) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        return new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(value);
     }
 
     public String encrypt(String value) throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, InvalidKeyException {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import shop.makaroni.bunjang.src.response.BeanErrorResponse;
 import shop.makaroni.bunjang.src.response.ErrorResponse;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
+import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
 import shop.makaroni.bunjang.src.response.exception.InvalidInputEx;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.MISSING_PARAMETER_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NO_SUCH_ELEMENT_EXCEPTION;
@@ -52,6 +54,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(NO_SUCH_ELEMENT_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(NO_SUCH_ELEMENT_EXCEPTION, request.getRequestURI()));
+	}
+
+	@ExceptionHandler(CannotEncodeEx.class)
+	public ResponseEntity<ErrorResponse> cannotEncodeExHandler(CannotEncodeEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(CANNOT_ENCODE_PASSWORD.getStatus())
+				.body(ErrorResponse.of(CANNOT_ENCODE_PASSWORD, request.getRequestURI()));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

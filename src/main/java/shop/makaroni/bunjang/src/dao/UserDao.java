@@ -5,9 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.user.User;
@@ -22,8 +25,8 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class UserDao {
-
 	private final NamedParameterJdbcTemplate template;
+
 	private final UserMapper userMapper;
 	private final ItemMapper itemMapper;
 
@@ -32,9 +35,26 @@ public class UserDao {
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
+
+	public User save(String loginId, String password) {
+		var sql = "insert into User (loginId, password) " +
+				"values (:loginId, :password)";
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("loginId", loginId)
+				.addValue("password", password);
+		long key = update(sql, params);
+
+		return User.builder()
+				.idx(key)
+				.loginId(loginId)
+				.password(password)
+				.build();
+	}
+
 	public void update(Long userId, PatchUserRequest request) {
 		userMapper.update(userId, request);
 	}
+
 	public void delete(Long userId) {
 		var sql = "update User " +
 				"set status='D' " +
@@ -53,6 +73,13 @@ public class UserDao {
 		}
 	}
 
+	public void changeStoreName(Long idx, String storeName) {
+		var sql = "update User u " +
+				"set u.storeName = :storeName " +
+				"where u.idx = :idx";
+		template.update(sql, Map.of("storeName", storeName, "idx", idx));
+	}
+
 	public List<Item> getMyStoreItem(Long userId, String condition, PagingCond pagingCond) {
 		return itemMapper.getMyStoreItem(userId, condition, pagingCond);
 	}
@@ -67,5 +94,13 @@ public class UserDao {
 				int.class,
 				userIdx);
 
+	}
+
+	private long update(String sql, SqlParameterSource params) {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		template.update(sql, params, keyHolder);
+
+		long key = keyHolder.getKey().longValue();
+		return key;
 	}
 }
