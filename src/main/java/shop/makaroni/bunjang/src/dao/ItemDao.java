@@ -49,7 +49,7 @@ public class ItemDao {
 				"        sellerIdx as seller,\n" +
 				"        status \n"+
 				"from Item\n" +
-				"where idx = ? and (status = 'Y' or status = 'R');";
+				"where idx = ? and (status != 'D');";
 		return this.jdbcTemplate.queryForObject(query,
 				(rs, rowNum) -> new GetItemRes(
 						String.valueOf(rs.getInt("idx")),
@@ -96,7 +96,7 @@ public class ItemDao {
 				"        brandIdx as brand,\n" +
 				"        sellerIdx as seller,\n" +
 				"        status \n"+
-				"from Item\n where (status = 'Y' or status = 'R')";
+				"from Item\n where (status != 'D')";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetItemRes(
 						String.valueOf(rs.getInt("idx")),
