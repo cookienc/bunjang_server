@@ -23,33 +23,33 @@ public class UserDao {
 	private final UserMapper userMapper;
 	private final ItemMapper itemMapper;
 
-	public void update(Long userId, PatchUserRequest request) {
-		userMapper.update(userId, request);
+	public void update(Long userIdx, PatchUserRequest request) {
+		userMapper.update(userIdx, request);
 	}
 
-	public void delete(Long userId) {
+	public void delete(Long userIdx) {
 		var sql = "update User " +
 				"set status='D' " +
-				"where idx=:userId";
+				"where idx=:userIdx";
 
-		template.update(sql, Map.of("userId", userId));
+		template.update(sql, Map.of("userIdx", userIdx));
 	}
 
-	public Optional<User> findById(Long userId) {
-		var sql = "select * from User where idx=:userId";
+	public Optional<User> findById(Long userIdx) {
+		var sql = "select * from User where idx=:userIdx";
 		try {
-			User user = template.queryForObject(sql, Map.of("userId", userId), BeanPropertyRowMapper.newInstance(User.class));
+			User user = template.queryForObject(sql, Map.of("userIdx", userIdx), BeanPropertyRowMapper.newInstance(User.class));
 			return Optional.of(user);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
 		}
 	}
 
-	public List<Item> getMyStoreItem(Long userId, String condition, PagingCond pagingCond) {
-		return itemMapper.getMyStoreItem(userId, condition, pagingCond);
+	public List<Item> getMyStoreItem(Long userIdx, String condition, PagingCond pagingCond) {
+		return itemMapper.getMyStoreItem(userIdx, condition, pagingCond);
 	}
 
-	public List<Item> searchStoreItemByName(Long userId, String itemName, String condition, PagingCond pagingCond) {
-		return itemMapper.searchStoreItemByName(userId, itemName, condition, pagingCond);
+	public List<Item> searchStoreItemByName(Long userIdx, String itemName, String condition, PagingCond pagingCond) {
+		return itemMapper.searchStoreItemByName(userIdx, itemName, condition, pagingCond);
 	}
 }

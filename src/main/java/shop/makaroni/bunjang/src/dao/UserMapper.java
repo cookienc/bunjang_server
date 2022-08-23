@@ -6,5 +6,5 @@ import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
 
 @Mapper
 public interface UserMapper {
-	void update(@Param("userId") Long userId, @Param("request") PatchUserRequest request);
+	void update(@Param("userIdx") Long userIdx, @Param("request") PatchUserRequest request);
 }

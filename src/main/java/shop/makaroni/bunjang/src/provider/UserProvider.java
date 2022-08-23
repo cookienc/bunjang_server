@@ -29,35 +29,35 @@ public class UserProvider {
 	private final WishListDao wishListDao;
 	private final FollowDao followDao;
 
-	public MyStoreResponse getMyStore(Long userId) {
+	public MyStoreResponse getMyStore(Long userIdx) {
 
-		User user = findById(userId);
-		Integer reviewCount = reviewDao.countStoreReview(userId);
-		Integer wishListCount = wishListDao.countMyWishList(userId);
-		Integer followerCount = followDao.countMyFollowers(userId);
-		Integer followingcount =  followDao.countMyFollowings(userId);
+		User user = findById(userIdx);
+		Integer reviewCount = reviewDao.countStoreReview(userIdx);
+		Integer wishListCount = wishListDao.countMyWishList(userIdx);
+		Integer followerCount = followDao.countMyFollowers(userIdx);
+		Integer followingcount =  followDao.countMyFollowings(userIdx);
 
-		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, getMyStoreItem(userId, State.SELLING.getState(), PagingCond.defaultValue()));
+		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, getMyStoreItem(userIdx, State.SELLING.getState(), PagingCond.defaultValue()));
 	}
 
-	public List<StoreSaleResponse> getMyStoreItem(Long userId, String condition, PagingCond pagingCond) {
-		findById(userId);
-		List<Item> item = userDao.getMyStoreItem(userId, condition, pagingCond);
+	public List<StoreSaleResponse> getMyStoreItem(Long userIdx, String condition, PagingCond pagingCond) {
+		findById(userIdx);
+		List<Item> item = userDao.getMyStoreItem(userIdx, condition, pagingCond);
 		return item.stream()
 				.map(StoreSaleResponse::of)
 				.collect(Collectors.toList());
 	}
 
-	public List<StoreSaleResponse> searchStoreItemByName(Long userId, String itemName, String condition, PagingCond pagingCond) {
-		findById(userId);
-		List<Item> item = userDao.searchStoreItemByName(userId, itemName, condition, pagingCond);
+	public List<StoreSaleResponse> searchStoreItemByName(Long userIdx, String itemName, String condition, PagingCond pagingCond) {
+		findById(userIdx);
+		List<Item> item = userDao.searchStoreItemByName(userIdx, itemName, condition, pagingCond);
 		return item.stream()
 				.map(StoreSaleResponse::of)
 				.collect(Collectors.toList());
 	}
 
-	public User findById(Long userId) {
-		User user = userDao.findById(userId).orElseThrow(NoSuchElementException::new);
+	public User findById(Long userIdx) {
+		User user = userDao.findById(userIdx).orElseThrow(NoSuchElementException::new);
 		user.validate();
 		return user;
 	}

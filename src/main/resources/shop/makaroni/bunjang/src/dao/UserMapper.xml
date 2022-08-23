@@ -31,7 +31,7 @@
                 precaution=#{request.precaution},
             </if>
         </set>
-        where idx=#{userId}
+        where idx=#{userIdx}
         and status='Y';
     </update>
 </mapper>

@@ -35,38 +35,37 @@ public class UserController {
     private final UserProvider userProvider;
     private final UserService userService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<MyStoreResponse> getMyStore(@PathVariable Long userId) {
-        return ResponseEntity.ok(userProvider.getMyStore(userId));
+    @GetMapping("/{userIdx}")
+    public ResponseEntity<MyStoreResponse> getMyStore(@PathVariable Long userIdx) {
+        return ResponseEntity.ok(userProvider.getMyStore(userIdx));
     }
 
-    @GetMapping("/{userId}/items")
-    public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId,
+    @GetMapping("/{userIdx}/items")
+    public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userIdx,
                                                                   @RequestParam("condition") String condition,
                                                                   @QueryStringArgResolver PagingCond pagingCond) {
         State.valid(condition);
-        return ResponseEntity.ok(userProvider.getMyStoreItem(userId, condition, pagingCond));
+        return ResponseEntity.ok(userProvider.getMyStoreItem(userIdx, condition, pagingCond));
     }
 
-    @GetMapping("/{userId}/items/search")
-    public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userId,
+    @GetMapping("/{userIdx}/items/search")
+    public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userIdx,
                                                                   @RequestParam(value = "itemName", defaultValue = "") String itemName,
                                                                   @RequestParam("condition") String condition,
                                                                   @QueryStringArgResolver PagingCond pagingCond) {
-        log.info("itemName={}", itemName);
         State.valid(condition);
-        return ResponseEntity.ok(userProvider.searchStoreItemByName(userId, itemName, condition, pagingCond));
+        return ResponseEntity.ok(userProvider.searchStoreItemByName(userIdx, itemName, condition, pagingCond));
     }
 
-    @PatchMapping("/{userId}")
-    public ResponseEntity<ResponseInfo> update(@PathVariable("userId") Long userId, @Valid @RequestBody PatchUserRequest request) {
-        userService.update(userId, request);
+    @PatchMapping("/{userIdx}")
+    public ResponseEntity<ResponseInfo> update(@PathVariable Long userIdx, @Valid @RequestBody PatchUserRequest request) {
+        userService.update(userIdx, request);
         return ResponseEntity.ok(ResponseInfo.of(PATCH_SUCCESS));
     }
 
-    @PatchMapping("/d/{userId}")
-    public ResponseEntity<ResponseInfo> delete(@PathVariable Long userId) {
-        userService.delete(userId);
+    @PatchMapping("/d/{userIdx}")
+    public ResponseEntity<ResponseInfo> delete(@PathVariable Long userIdx) {
+        userService.delete(userIdx);
         return ResponseEntity.ok(ResponseInfo.of(WITHDRAWAL_SUCCESS));
     }
 }

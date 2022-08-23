@@ -9,11 +9,11 @@ import java.util.List;
 
 @Mapper
 public interface ItemMapper {
-	List<Item> getMyStoreItem(@Param("userId") Long userId,
+	List<Item> getMyStoreItem(@Param("userIdx") Long userIdx,
 							  @Param("condition") String condition,
 							  @Param("pagingCond") PagingCond pagingCond);
 
-	List<Item> searchStoreItemByName(@Param("userId") Long userId,
+	List<Item> searchStoreItemByName(@Param("userIdx") Long userIdx,
 									 @Param("itemName") String itemName,
 									 @Param("condition") String condition,
 									 @Param("pagingCond") PagingCond pagingCond);

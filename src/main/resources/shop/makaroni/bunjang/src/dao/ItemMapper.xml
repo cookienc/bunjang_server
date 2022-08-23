@@ -20,7 +20,7 @@
                 end) as updatedAt
         from Item i
             inner join (select ii.itemIdx itemIdx, max(ii.path) path from ItemImage ii group by ii.itemIdx) as ii on ii.itemIdx = i.idx
-        where i.sellerIdx=#{userId}
+        where i.sellerIdx=#{userIdx}
         and i.status=#{condition}
         order by
             i.createdAt ${pagingCond.dateSort}
@@ -44,7 +44,7 @@
                 end) as updatedAt
         from Item i
             inner join (select ii.itemIdx itemIdx, max(ii.path) path from ItemImage ii group by ii.itemIdx) as ii on ii.itemIdx = i.idx
-        where i.sellerIdx = #{userId}
+        where i.sellerIdx = #{userIdx}
         and i.status = #{condition}
         and i.name like concat('%', #{itemName}, '%')
         order by
