@@ -6,24 +6,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import shop.makaroni.bunjang.src.domain.inquiry.InquirySaveRequest;
 import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
+import shop.makaroni.bunjang.src.service.InquiryService;
 import shop.makaroni.bunjang.src.service.UserService;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
 import shop.makaroni.bunjang.utils.resolver.QueryStringArgResolver;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 import static shop.makaroni.bunjang.src.response.SuccessStatus.PATCH_SUCCESS;
+import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.WITHDRAWAL_SUCCESS;
 
 @Slf4j
@@ -34,6 +39,7 @@ public class UserController {
 
     private final UserProvider userProvider;
     private final UserService userService;
+    private final InquiryService inquiryService;
 
     @GetMapping("/{userIdx}")
     public ResponseEntity<MyStoreResponse> getMyStore(@PathVariable Long userIdx) {
@@ -67,5 +73,12 @@ public class UserController {
     public ResponseEntity<ResponseInfo> delete(@PathVariable Long userIdx) {
         userService.delete(userIdx);
         return ResponseEntity.ok(ResponseInfo.of(WITHDRAWAL_SUCCESS));
+    }
+
+    @PostMapping("/{userIdx}/inquiries/{storeIdx}")
+    public ResponseEntity<ResponseInfo> saveInquiry(@PathVariable Long userIdx, @PathVariable Long storeIdx, @Valid @RequestBody InquirySaveRequest request) {
+        Long inquiryId = inquiryService.save(userIdx, storeIdx, request);
+        String uri = "/users/" + userIdx + "/stores/" + storeIdx + "/inquiries/" + inquiryId;
+        return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_SUCCESS));
     }
 }
