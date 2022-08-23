@@ -4,8 +4,7 @@ package shop.makaroni.bunjang.src.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
-import shop.makaroni.bunjang.src.domain.item.model.GetSearchRes;
+import shop.makaroni.bunjang.src.domain.item.model.*;
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -15,9 +14,6 @@ import java.util.List;
 public class ItemDao {
 
 	private JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	private ItemMapper itemMapper;
 
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
@@ -49,7 +45,7 @@ public class ItemDao {
 				"        sellerIdx as seller,\n" +
 				"        status \n"+
 				"from Item\n" +
-				"where idx = ? and (status != 'D');";
+				"where idx = ? and (status != 'D' and status != 'S');";
 		return this.jdbcTemplate.queryForObject(query,
 				(rs, rowNum) -> new GetItemRes(
 						String.valueOf(rs.getInt("idx")),
@@ -96,7 +92,7 @@ public class ItemDao {
 				"        brandIdx as brand,\n" +
 				"        sellerIdx as seller,\n" +
 				"        status \n"+
-				"from Item\n where (status != 'D')";
+				"from Item\n where (status != 'D' and status != 'S')";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetItemRes(
 						String.valueOf(rs.getInt("idx")),
@@ -121,7 +117,7 @@ public class ItemDao {
 	}
 
 	public int checkItemIdx(int itemIdx){
-		String query = "select exists(select idx from Item where idx = ?)";
+		String query = "select exists(select idx from Item where idx = ? and status != 'D')";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				itemIdx);
@@ -129,21 +125,21 @@ public class ItemDao {
 	}
 
 	public int getItemWishCnt(int itemIdx){
-		String query = "select count(idx) as wish from WishList where itemIdx = ?";
+		String query = "select count(idx) as wish from WishList where itemIdx = ? and status != 'D'";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				itemIdx);
 	}
 
 	public int getItemChatCnt(int itemIdx){
-		String query = "select count(idx) as chat from ChatRoom where itemIdx=?";
+		String query = "select count(idx) as chat from ChatRoom where itemIdx=? ";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				itemIdx
 		);
 	}
 	public List<String> getItemTags(int itemIdx){
-		String query = "select name from Tag where itemIdx = ?";
+		String query = "select name from Tag where itemIdx = ? and status != 'D'";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new String(
 						rs.getString("name")),
@@ -153,7 +149,7 @@ public class ItemDao {
 
 
 	public List<String> getItemImages(int itemIdx) {
-		String query = "select path from ItemImage where itemIdx = ? and status = 'Y';";
+		String query = "select path from ItemImage where itemIdx = ? and status != 'D';";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new  String(
 						rs.getString("path")),
@@ -226,7 +222,7 @@ public class ItemDao {
 			);
 		}
 		else{
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd \n" +
 					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
 					"where name like ? order by price desc limit ?;";
 			reqParams = new Object[]{param[4], count};
@@ -243,5 +239,28 @@ public class ItemDao {
 			);
 		}
 
+	}
+
+	public List<GetLogRes> getItemLastN(int userIdx, int count) {
+		String query =
+				"select distinct Log.itemIdx itemIdx, name, price, safePay, isAd, max(log.createdAt) createdAt, path\n" +
+				"from (Log join Item I on Log.itemIdx = I.idx) left join  (select itemIdx, min(path) path from ItemImage group by itemIdx) img\n" +
+				"on I.idx = img.itemIdx where userIdx = ?\n" +
+				"group by itemIdx, name, price, safePay, isAd\n" +
+				"order by createdAt desc\n" +
+				"limit ?;\n";
+		Object[] params = new Object[]{userIdx, count};
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetLogRes(
+						String.valueOf(rs.getInt("itemIdx")),
+						rs.getString("price"),
+						rs.getString("name"),
+						rs.getBoolean("safePay"),
+						rs.getBoolean("isAd"),
+						rs.getTimestamp("createdAt"),
+						Collections.singletonList(rs.getString("path"))
+				),
+				params
+		);
 	}
 }

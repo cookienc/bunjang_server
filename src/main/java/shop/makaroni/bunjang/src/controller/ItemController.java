@@ -86,6 +86,26 @@ public class ItemController {
         }
     }
 
+    @ResponseBody
+    @GetMapping("/{userIdx}/last")
+    public BaseResponse<List<GetLogRes>> getItemLastN(@PathVariable("userIdx") int userIdx,
+                                                      @RequestParam() int count){
+
+        if(userIdx < 0){
+            return new BaseResponse<>(USERS_INVALID_IDX);
+        }
+        if(count <= 0){
+            return new BaseResponse<>(ITEM_NO_COUNT);
+        }
+        try {
+            return new BaseResponse<>(itemProvider.getItemLastN(userIdx, count));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+
 }
 /*
 
