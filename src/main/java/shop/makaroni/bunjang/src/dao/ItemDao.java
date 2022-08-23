@@ -243,7 +243,7 @@ public class ItemDao {
 
 	public List<GetLogRes> getItemLastN(int userIdx, int count) {
 		String query =
-				"select distinct Log.itemIdx itemIdx, name, price, safePay, isAd, max(log.createdAt) createdAt, path\n" +
+				"select distinct Log.itemIdx itemIdx, name, price, safePay, isAd, max(Log.createdAt) createdAt, path\n" +
 				"from (Log join Item I on Log.itemIdx = I.idx) left join  (select itemIdx, min(path) path from ItemImage group by itemIdx) img\n" +
 				"on I.idx = img.itemIdx where userIdx = ?\n" +
 				"group by itemIdx, name, price, safePay, isAd\n" +
