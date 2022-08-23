@@ -26,6 +26,7 @@ public class UserDao {
 	private final NamedParameterJdbcTemplate template;
 	private final UserMapper userMapper;
 	private final ItemMapper itemMapper;
+
 	private JdbcTemplate jdbcTemplate;
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
@@ -34,7 +35,6 @@ public class UserDao {
 	public void update(Long userId, PatchUserRequest request) {
 		userMapper.update(userId, request);
 	}
-
 	public void delete(Long userId) {
 		var sql = "update User " +
 				"set status='D' " +
