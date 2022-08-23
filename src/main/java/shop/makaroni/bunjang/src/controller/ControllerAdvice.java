@@ -13,6 +13,7 @@ import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 import shop.makaroni.bunjang.src.response.exception.InvalidInputEx;
+import shop.makaroni.bunjang.src.response.exception.NotRightPasswordEx;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -24,6 +25,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWOR
 import static shop.makaroni.bunjang.src.response.ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.MISSING_PARAMETER_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_RIGHT_PASSWORD_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NO_SUCH_ELEMENT_EXCEPTION;
 
 @Slf4j
@@ -70,6 +72,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(DUPLICATE_LOGIN_ID_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(DUPLICATE_LOGIN_ID_EXCEPTION, request.getRequestURI()));
+	}
+
+	@ExceptionHandler(NotRightPasswordEx.class)
+	public ResponseEntity<ErrorResponse> notRightPasswordExExHandler(NotRightPasswordEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(NOT_RIGHT_PASSWORD_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(NOT_RIGHT_PASSWORD_EXCEPTION, request.getRequestURI()));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

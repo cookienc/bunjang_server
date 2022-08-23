@@ -8,7 +8,6 @@ import lombok.Setter;
 import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.response.ErrorCode;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
-import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 
 @Getter
 @Setter
@@ -58,10 +57,4 @@ public class User {
             throw new AlreadyDeletedException(ErrorCode.ALREADY_DELETED_EXCEPTION.getMessages());
         }
 	}
-
-    public void checkDuplicateLoginId(String loginId) {
-        if (this.loginId.equals(loginId)) {
-            throw new DuplicateLoginIdEx(ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION.getMessages());
-        }
-    }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+	NOT_RIGHT_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_RIGHT_PASSWORD),
 	DUPLICATE_LOGIN_ID_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.DUPLICATE_LOGIN_ID),
 	CANNOT_ENCODE_PASSWORD(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_ENCODE_PASSWORD),
 	NO_SUCH_ELEMENT_EXCEPTION(HttpStatus.NOT_FOUND, Messages.NO_ELEMENT),
@@ -15,6 +16,7 @@ public enum ErrorCode {
 	INVALID_INPUT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.PLEASE_ENTER_RIGHT_PARAMETER);
 
 	private static class Messages {
+		public static final String NOT_RIGHT_PASSWORD = "올바르지 않은 비밀번호 입니다.";
 		public static final String DUPLICATE_LOGIN_ID = "중복된 아이디로 가입할 수 없습니다.";
 		public static final String CANNOT_ENCODE_PASSWORD = "비밀번호를 암호화 할 수 없습니다.";
 		public static final String NO_ELEMENT = "결과 값을 찾을 수 없습니다.";

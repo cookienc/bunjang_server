@@ -13,6 +13,8 @@ import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
+import shop.makaroni.bunjang.src.response.ErrorCode;
+import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
 import java.util.List;
@@ -62,9 +64,13 @@ public class UserProvider {
 		return user;
 	}
 
-	public User findByLoginId(String loginId) {
-		User user = userDao.findByLoginId(loginId).orElseThrow(NoSuchElementException::new);
-		user.checkDuplicateLoginId(loginId);
-		return user;
+	public void checkDuplicateLoginId(String loginId) {
+		boolean isNotDuplicate = userDao.findByLoginId(loginId).isEmpty();
+
+		if (isNotDuplicate) {
+			return;
+		};
+
+		throw new DuplicateLoginIdEx(ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION.getMessages());
 	}
 }

@@ -13,6 +13,7 @@ import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
 import shop.makaroni.bunjang.utils.AES128;
 import shop.makaroni.bunjang.utils.JwtService;
+import shop.makaroni.bunjang.utils.ValidationRegex;
 
 import java.security.GeneralSecurityException;
 
@@ -30,7 +31,8 @@ public class UserService {
 	private final UserDao userDao;
 
 	public Long save(SaveUserRequest request) {
-		userProvider.findByLoginId(request.getLoginId());
+		userProvider.checkDuplicateLoginId(request.getLoginId());
+		ValidationRegex.isRegexPassword(request.getPassword());
 
 		String encodePassword;
 		try {
