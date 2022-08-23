@@ -78,6 +78,6 @@ public class UserService {
 			return storeName.substring(0, 10);
 		}
 
-		return storeName;
+		return "상점" + storeName + "호";
 	}
 }
