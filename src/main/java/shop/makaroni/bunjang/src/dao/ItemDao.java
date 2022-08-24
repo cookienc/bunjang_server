@@ -141,8 +141,7 @@ public class ItemDao {
 	public List<String> getItemTags(int itemIdx){
 		String query = "select name from Tag where itemIdx = ? and status != 'D'";
 		return this.jdbcTemplate.query(query,
-				(rs, rowNum) -> new String(
-						rs.getString("name")),
+				(rs, rowNum) -> rs.getString("name"),
 				itemIdx);
 
 	}
@@ -264,21 +263,6 @@ public class ItemDao {
 		);
 	}
 
-	public List<GetBrandRes> getBrand(int userIdx) {
-		String query =
-				"select distinct brandIdx, Brand.name brandName, englishName from Brand join (select * from BrandFollow where userIdx =? and status!='D') follow\n" +
-				"    on Brand.idx = brandIdx where Brand.status != 'D';";
-		return this.jdbcTemplate.query(query,
-				(rs, rowNum) -> new GetBrandRes(
-					String.valueOf(rs.getInt("brandIdx")),
-					rs.getString("brandName"),
-					rs.getString("englishName"),
-						null
-				),
-				userIdx
-		);
-
-	}
 
 	public int checkbrandIdx(int brandIdx) {
 		String query = "select exists(select idx from Brand where idx = ? and status != 'D');";
@@ -292,5 +276,84 @@ public class ItemDao {
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				brandIdx);
+	}
+
+	public List<GetBrandRes> getBrand(int userIdx, char sort) {
+		String query;
+		if(sort == 'K'){
+			query =	"select distinct logo, idx brandIdx, name brandName, englishName,\n" +
+					"idx in (select brandIdx from Brand join (select * from BrandFollow where userIdx = ? and status!='D') follow\n" +
+					"on Brand.idx = brandIdx where Brand.status != 'D') follow\n" +
+					"from Brand\n" +
+					"order by brandName asc;";
+		}
+		else{
+			query = "select distinct logo, idx brandIdx, name brandName, englishName,\n" +
+					"idx in (select brandIdx from Brand join (select * from BrandFollow where userIdx = ? and status!='D') follow\n" +
+					"on Brand.idx = brandIdx where Brand.status != 'D') follow\n" +
+					"from Brand\n" +
+					"order by englishName asc;";
+		}
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetBrandRes(
+						rs.getString("logo"),
+						String.valueOf(rs.getInt("brandIdx")),
+						rs.getString("brandName"),
+						rs.getString("englishName"),
+						null,
+						rs.getBoolean("follow")
+				),
+				userIdx
+		);
+
+	}
+
+	public List<GetBrandRes> getBrandSearch(int userIdx, String name) {
+		String query = "select distinct logo, idx brandIdx, name brandName, englishName,\n" +
+				"idx in (select brandIdx from Brand join (select * from BrandFollow where userIdx = ? and status!='D') follow\n" +
+				"on Brand.idx = brandIdx where Brand.status != 'D') follow\n" +
+				"from Brand\n" +
+				"where (Brand.name like ? or englishName like ?)\n" +
+				"order by brandName asc;";
+		Object[] params = new Object[]{userIdx, "%"+name+"%", "%"+name+"%"};
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetBrandRes(
+						rs.getString("logo"),
+						String.valueOf(rs.getInt("brandIdx")),
+						rs.getString("brandName"),
+						rs.getString("englishName"),
+						null,
+						rs.getBoolean("follow")
+				),
+				params
+		);
+	}
+
+	public List<GetUserBrandRes> getUserBrand(int userIdx, char sort) {
+		String query;
+		if(sort == 'K'){
+			query =	"select distinct logo, Brand.idx brandIdx, name brandName, englishName from Brand join\n" +
+					"(select * from BrandFollow where status != 'D') BrandFollow\n" +
+					"on Brand.idx = BrandFollow.brandIdx\n" +
+					"where userIdx = ? and Brand.status !='D'\n" +
+					"order by brandName asc;";
+		}
+		else{
+			query = "select distinct logo, Brand.idx brandIdx, name brandName, englishName from Brand join\n" +
+					"(select * from BrandFollow where status != 'D') BrandFollow\n" +
+					"on Brand.idx = BrandFollow.brandIdx\n" +
+					"where userIdx = ? and Brand.status !='D'\n" +
+					"order by englishName asc;";
+		}
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetUserBrandRes(
+						rs.getString("logo"),
+						String.valueOf(rs.getInt("brandIdx")),
+						rs.getString("brandName"),
+						rs.getString("englishName"),
+						null
+				),
+				userIdx
+		);
 	}
 }

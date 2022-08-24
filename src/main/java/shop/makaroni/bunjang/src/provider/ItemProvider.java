@@ -22,79 +22,104 @@ public class ItemProvider {
 		this.userDao = userDao;
 	}
 
-	public GetItemRes getItem(int itemIdx) throws BaseException{
-		if(itemDao.checkItemIdx(itemIdx) == 0){
+	public GetItemRes getItem(int itemIdx) throws BaseException {
+		if (itemDao.checkItemIdx(itemIdx) == 0) {
 			throw new BaseException(ITEM_NO_EXIST);
 		}
 		GetItemRes getItemRes = null;
-		try{
+		try {
 			getItemRes = itemDao.getItem(itemIdx);
 			return getItemRes;
-		}catch(Exception exception){
+		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
-	public List<GetItemRes> getItems() throws  BaseException{
+
+	public List<GetItemRes> getItems() throws BaseException {
 		List<GetItemRes> getItemRes;
-		try{
+		try {
 			getItemRes = itemDao.getItems();
 			return getItemRes;
-		}catch(Exception exception){
+		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
-	public String getItemWishCnt(int itemIdx){
+
+	public String getItemWishCnt(int itemIdx) {
 		return String.valueOf(itemDao.getItemWishCnt(itemIdx));
 	}
 
-	public String getItemChatCnt(int itemIdx){
+	public String getItemChatCnt(int itemIdx) {
 		return String.valueOf(itemDao.getItemChatCnt(itemIdx));
 	}
 
-	public List<String> getItemTags(int itemIdx){
+	public List<String> getItemTags(int itemIdx) {
 		return itemDao.getItemTags(itemIdx);
 	}
-	public List<String> getItemImages(int itemIdx){
+
+	public List<String> getItemImages(int itemIdx) {
 		return itemDao.getItemImages(itemIdx);
 	}
 
 	public List<GetSearchRes> getSearch(String name, char sort, int count) throws BaseException {
-		try{
+		try {
 			return itemDao.getSearchRes(name, sort, count);
-		}catch(Exception exception){
+		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
 
 	public List<GetLogRes> getItemLastN(int userIdx, int count) throws BaseException {
-		if(userDao.checkUserIdx(userIdx) == 0){
+		if (userDao.checkUserIdx(userIdx) == 0) {
 			throw new BaseException(USERS_INVALID_IDX);
 		}
 		try {
 			return itemDao.getItemLastN(userIdx, count);
-		} catch(Exception exception){
+		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
 
-	public List<GetBrandRes> getBrand(int userIdx) throws BaseException {
-		if(userDao.checkUserIdx(userIdx) == 0){
-			throw new BaseException(USERS_INVALID_IDX);
-		}
-		try {
-			return itemDao.getBrand(userIdx);
-		} catch(Exception exception){
-			throw new BaseException(RESPONSE_ERROR);
-		}
-	}
-
-	public  int getItemCnt(int brandIdx) throws BaseException {
-		if(itemDao.checkbrandIdx(brandIdx) == 0){
+	public int getItemCnt(int brandIdx) throws BaseException {
+		if (itemDao.checkbrandIdx(brandIdx) == 0) {
 			throw new BaseException(ITEM_INVALID_BRAND);
 		}
 		try {
 			return itemDao.getItemCnt(brandIdx);
-		} catch(Exception exception){
+		} catch (Exception exception) {
+			throw new BaseException(RESPONSE_ERROR);
+		}
+	}
+
+	public List<GetBrandRes> getBrand(int userIdx, char sort) throws BaseException {
+		if (userDao.checkUserIdx(userIdx) == 0) {
+			throw new BaseException(USERS_INVALID_IDX);
+		}
+		try {
+			return itemDao.getBrand(userIdx, sort);
+		} catch (Exception exception) {
+			throw new BaseException(RESPONSE_ERROR);
+		}
+	}
+	public List<GetBrandRes> getBrandSearch(int userIdx, String name) throws BaseException {
+		if (userDao.checkUserIdx(userIdx) == 0) {
+			throw new BaseException(USERS_INVALID_IDX);
+		}
+		try {
+			return itemDao.getBrandSearch(userIdx,name);
+		} catch (Exception exception) {
+			throw new BaseException(RESPONSE_ERROR);
+		}
+	}
+
+
+	public List<GetUserBrandRes> getUserBrand(int userIdx, char sort) throws BaseException {
+		if (userDao.checkUserIdx(userIdx) == 0) {
+			throw new BaseException(USERS_INVALID_IDX);
+		}
+		try {
+			return itemDao.getUserBrand(userIdx, sort);
+		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}

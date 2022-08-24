@@ -53,12 +53,12 @@ public class ItemController {
         try {
             List<GetItemRes> getItemRes;
             getItemRes= itemProvider.getItems();
-            for(int i=0;i<getItemRes.size();i++){
-                getItemRes.get(i).setWish(itemProvider.getItemWishCnt(Integer.parseInt(getItemRes.get(i).getIdx())));
-                getItemRes.get(i).setWish(itemProvider.getItemWishCnt(Integer.parseInt(getItemRes.get(i).getIdx())));
-                getItemRes.get(i).setChat(itemProvider.getItemChatCnt(Integer.parseInt(getItemRes.get(i).getIdx())));
-                getItemRes.get(i).setTags(itemProvider.getItemTags(Integer.parseInt(getItemRes.get(i).getIdx())));
-                getItemRes.get(i).setImages(itemProvider.getItemImages(Integer.parseInt(getItemRes.get(i).getIdx())));
+            for (GetItemRes getItemRe : getItemRes) {
+                getItemRe.setWish(itemProvider.getItemWishCnt(Integer.parseInt(getItemRe.getIdx())));
+                getItemRe.setWish(itemProvider.getItemWishCnt(Integer.parseInt(getItemRe.getIdx())));
+                getItemRe.setChat(itemProvider.getItemChatCnt(Integer.parseInt(getItemRe.getIdx())));
+                getItemRe.setTags(itemProvider.getItemTags(Integer.parseInt(getItemRe.getIdx())));
+                getItemRe.setImages(itemProvider.getItemImages(Integer.parseInt(getItemRe.getIdx())));
             }
             return new BaseResponse<>(getItemRes);
         } catch (BaseException exception) {
@@ -73,12 +73,15 @@ public class ItemController {
         try {
             if (name == null) {
                 throw new BaseException(ITEM_NO_NAME);
+//                return new BaseResponse<>(ITEM_NO_NAME);
             }
             if(count == 0){
                 throw new BaseException(ITEM_NO_COUNT);
+//                return new BaseResponse<>(ITEM_NO_COUNT);
             }
             if(sort != 'C' && sort != 'R' && sort != 'L' && sort != 'H'){
-                return new BaseResponse<>(ITEM_INVALID_SORT);
+                 throw new BaseException(ITEM_INVALID_SORT);
+//                return new BaseResponse<>(ITEM_INVALID_SORT);
             }
             return new BaseResponse<>(itemProvider.getSearch(name, sort, count));
         } catch (BaseException exception) {
@@ -103,29 +106,68 @@ public class ItemController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+    @ResponseBody
+    @GetMapping("/brand/follow/{userIdx}")
+    public BaseResponse<List<GetUserBrandRes>> getUserBrand(@PathVariable("userIdx") int userIdx,
+                                                    @RequestParam(required = false, defaultValue = "K") char sort) {
 
+
+        if(!(sort == 'K' || sort == 'E')){
+            return new BaseResponse<>(ITEM_INVALID_SORT);
+        }
+        List<GetUserBrandRes> getUserBrandRes;
+        int brandIdx;
+        try {
+            if (userIdx <= 0) {
+                return new BaseResponse<>(USERS_INVALID_IDX);
+            }
+            getUserBrandRes = itemProvider.getUserBrand(userIdx,sort);
+            for (GetUserBrandRes eachRes : getUserBrandRes) {
+                brandIdx = Integer.parseInt(eachRes.getBrandIdx());
+                eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
+            }
+            return new BaseResponse<>(getUserBrandRes);
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /*
+    *
+    * 모든 브랜드 목록 및 유저 팔로우 여부 조회
+    */
     @ResponseBody
     @GetMapping("/brand/{userIdx}")
-    public BaseResponse<List<GetBrandRes>> getBrand(@PathVariable("userIdx") int userIdx){
+    public BaseResponse<List<GetBrandRes>> getBrand(@PathVariable("userIdx") int userIdx,
+                                                    @RequestParam(required = false) String name,
+                                                    @RequestParam(required = false, defaultValue = "K") char sort) {
 
-        if(userIdx < 0){
-            return new BaseResponse<>(USERS_INVALID_IDX);
+        if(!(sort == 'K' || sort == 'E')){
+            return new BaseResponse<>(ITEM_INVALID_SORT);
         }
+
+        List<GetBrandRes> getBrandRes;
+        int brandIdx;
         try {
-            List<GetBrandRes> getBrandRes = itemProvider.getBrand(userIdx);
-            int brandIdx;
-            for (GetBrandRes eachRes : getBrandRes){
+            if (userIdx <= 0) {
+                return new BaseResponse<>(USERS_INVALID_IDX);
+            }
+            if (name == null) {
+                getBrandRes = itemProvider.getBrand(userIdx,sort);
+            } else {
+                getBrandRes = itemProvider.getBrandSearch(userIdx, name);
+            }
+            for (GetBrandRes eachRes : getBrandRes) {
                 brandIdx = Integer.parseInt(eachRes.getBrandIdx());
                 eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
             }
             return new BaseResponse<>(getBrandRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
         }
     }
-
-
 }
+
 /*
 
     @ResponseBody
