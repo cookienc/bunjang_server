@@ -19,10 +19,10 @@ public class MyStoreResponse {
 	private String reviews;
 	private String followers;
 	private String followings;
-	private List<StoreSaleResponse> itemsResponses;
+	private List<StoreSaleView> itemsResponses;
 
 	@Builder
-	public MyStoreResponse(String storeId, String storeName, Boolean isCertificated, String storeImage, String rating, String wishLists, String reviews, String followers, String followings, List<StoreSaleResponse> itemsResponses) {
+	public MyStoreResponse(String storeId, String storeName, Boolean isCertificated, String storeImage, String rating, String wishLists, String reviews, String followers, String followings, List<StoreSaleView> itemsResponses) {
 		this.storeId = storeId;
 		this.storeName = storeName;
 		this.isCertificated = isCertificated;
@@ -35,7 +35,7 @@ public class MyStoreResponse {
 		this.itemsResponses = itemsResponses;
 	}
 
-	public static MyStoreResponse of(User user, Integer reviewCount, Integer wishListCount, Integer followerCount, Integer followingcount, String rating, List<StoreSaleResponse> myStoreItem) {
+	public static MyStoreResponse of(User user, Integer reviewCount, Integer wishListCount, Integer followerCount, Integer followingcount, String rating, List<StoreSaleView> myStoreItem) {
 		return MyStoreResponse.builder()
 				.storeId(String.valueOf(user.getIdx()))
 				.storeName(user.getStoreName())

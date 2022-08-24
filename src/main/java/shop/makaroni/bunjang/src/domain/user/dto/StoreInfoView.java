@@ -2,13 +2,14 @@ package shop.makaroni.bunjang.src.domain.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import shop.makaroni.bunjang.src.domain.review.dto.ReviewAllResponse;
+import shop.makaroni.bunjang.src.domain.inquiry.InquirySimpleView;
+import shop.makaroni.bunjang.src.domain.review.dto.ReviewSimpleView;
 import shop.makaroni.bunjang.src.domain.user.User;
 
 import java.util.List;
 
 @Getter
-public class StoreInfoResponse {
+public class StoreInfoView {
 	private String storeId;
 	private String storeName;
 	private Boolean isCertificated;
@@ -26,11 +27,12 @@ public class StoreInfoResponse {
 	private String description;
 	private String openDate;
 	private String hit;
-	private List<StoreSaleResponse> itemsResponses;
-	private List<ReviewAllResponse> reviewsResponses;
+	private List<StoreSaleView> itemsResponses;
+	private List<ReviewSimpleView> reviewsResponses;
+	private List<InquirySimpleView> inquiryResponses;
 
 	@Builder
-	public StoreInfoResponse(String storeId, String storeName, Boolean isCertificated, String storeImage, String rating, String wishLists, String reviews, String followers, String followings, String soldCount, String contactStart, String contactEnd, String precaution, String policy, String description, String openDate, String hit, List<StoreSaleResponse> itemsResponses, List<ReviewAllResponse> reviewsResponses) {
+	public StoreInfoView(String storeId, String storeName, Boolean isCertificated, String storeImage, String rating, String wishLists, String reviews, String followers, String followings, String soldCount, String contactStart, String contactEnd, String precaution, String policy, String description, String openDate, String hit, List<StoreSaleView> itemsResponses, List<ReviewSimpleView> reviewsResponses, List<InquirySimpleView> inquiryResponses) {
 		this.storeId = storeId;
 		this.storeName = storeName;
 		this.isCertificated = isCertificated;
@@ -50,10 +52,11 @@ public class StoreInfoResponse {
 		this.hit = hit;
 		this.itemsResponses = itemsResponses;
 		this.reviewsResponses = reviewsResponses;
+		this.inquiryResponses = inquiryResponses;
 	}
 
-	public static StoreInfoResponse of(User user, String rating, Integer reviewCount, Integer wishListCount, Integer followerCount, Integer followingCount, String soldCount, List<StoreSaleResponse> itemSalesResponse, List<ReviewAllResponse> reviewInfo) {
-		return StoreInfoResponse.builder()
+	public static StoreInfoView of(User user, String rating, Integer reviewCount, Integer wishListCount, Integer followerCount, Integer followingCount, String soldCount, List<StoreSaleView> itemSalesResponse, List<ReviewSimpleView> reviewInfo, List<InquirySimpleView> inquiryInfo) {
+		return StoreInfoView.builder()
 				.storeId(String.valueOf(user.getIdx()))
 				.storeName(user.getStoreName())
 				.isCertificated(user.getIsCertificated())
@@ -73,6 +76,7 @@ public class StoreInfoResponse {
 				.hit(user.getHit())
 				.itemsResponses(itemSalesResponse)
 				.reviewsResponses(reviewInfo)
+				.inquiryResponses(inquiryInfo)
 				.build();
 	}
 }

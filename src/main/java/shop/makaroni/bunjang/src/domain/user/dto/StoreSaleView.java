@@ -10,7 +10,7 @@ import static shop.makaroni.bunjang.config.Constant.CANNOT_FIND_LOCATION;
 
 @Getter
 @NoArgsConstructor
-public class StoreSaleResponse {
+public class StoreSaleView {
 	String itemIdx;
 	String itemName;
 	String price;
@@ -19,7 +19,7 @@ public class StoreSaleResponse {
 	String time;
 
 	@Builder
-	public StoreSaleResponse(String itemIdx, String itemName, String price, String location, String image, String time) {
+	public StoreSaleView(String itemIdx, String itemName, String price, String location, String image, String time) {
 		this.itemIdx = itemIdx;
 		this.itemName = itemName;
 		this.price = price;
@@ -28,8 +28,8 @@ public class StoreSaleResponse {
 		this.time = time;
 	}
 
-	public static StoreSaleResponse of(Item item) {
-		return StoreSaleResponse.builder()
+	public static StoreSaleView of(Item item) {
+		return StoreSaleView.builder()
 				.itemIdx(String.valueOf(item.getIdx()))
 				.itemName(item.getName())
 				.price(Formatter.changeWon(item.getPrice()))

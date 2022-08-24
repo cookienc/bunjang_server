@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.inquiry.InquirySaveRequest;
 import shop.makaroni.bunjang.src.domain.item.State;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoResponse;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoView;
 import shop.makaroni.bunjang.src.domain.user.dto.SaveUserRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleView;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.service.InquiryService;
@@ -63,18 +63,18 @@ public class UserController {
     }
 
     @GetMapping("/{userIdx}/items")
-    public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userIdx,
-                                                                  @RequestParam("condition") String condition,
-                                                                  @QueryStringArgResolver PagingCond pagingCond) {
+    public ResponseEntity<List<StoreSaleView>> getMyStoreItem(@PathVariable Long userIdx,
+                                                              @RequestParam("condition") String condition,
+                                                              @QueryStringArgResolver PagingCond pagingCond) {
         State.valid(condition);
         return ResponseEntity.ok(userProvider.getMyStoreItem(userIdx, condition, pagingCond));
     }
 
     @GetMapping("/{userIdx}/items/search")
-    public ResponseEntity<List<StoreSaleResponse>> getMyStoreItem(@PathVariable Long userIdx,
-                                                                  @RequestParam(value = "itemName", defaultValue = "") String itemName,
-                                                                  @RequestParam("condition") String condition,
-                                                                  @QueryStringArgResolver PagingCond pagingCond) {
+    public ResponseEntity<List<StoreSaleView>> getMyStoreItem(@PathVariable Long userIdx,
+                                                              @RequestParam(value = "itemName", defaultValue = "") String itemName,
+                                                              @RequestParam("condition") String condition,
+                                                              @QueryStringArgResolver PagingCond pagingCond) {
         State.valid(condition);
         return ResponseEntity.ok(userProvider.searchStoreItemByName(userIdx, itemName, condition, pagingCond));
     }
@@ -99,7 +99,7 @@ public class UserController {
     }
 
     @GetMapping("/stores/{storeIdx}")
-    public ResponseEntity<StoreInfoResponse> getStoreById(@PathVariable Long storeIdx) {
+    public ResponseEntity<StoreInfoView> getStoreById(@PathVariable Long storeIdx) {
         return ResponseEntity.ok(userProvider.getStoreById(storeIdx));
     }
 }

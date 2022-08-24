@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ReviewAllResponse {
+public class ReviewSimpleView {
 	private String reviewerName;
 	private String reviewerImage;
 	private String post;
@@ -16,7 +16,7 @@ public class ReviewAllResponse {
 	private String date;
 
 	@Builder
-	public ReviewAllResponse(String reviewerName, String reviewerImage, String post, String rating, String date) {
+	public ReviewSimpleView(String reviewerName, String reviewerImage, String post, String rating, String date) {
 		this.reviewerName = reviewerName;
 		this.reviewerImage = reviewerImage;
 		this.post = post;

@@ -12,8 +12,8 @@ import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoResponse;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoView;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleView;
 import shop.makaroni.bunjang.src.response.ErrorCode;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
@@ -32,6 +32,7 @@ public class UserProvider {
 	private final WishListDao wishListDao;
 	private final FollowDao followDao;
 	private final ReviewProvider reviewProvider;
+	private final InquiryProvider inquiryProvider;
 
 	public MyStoreResponse getMyStore(Long userIdx) {
 
@@ -46,19 +47,19 @@ public class UserProvider {
 				getMyStoreItem(userIdx, State.SELLING.getState(), PagingCond.defaultValue()));
 	}
 
-	public List<StoreSaleResponse> getMyStoreItem(Long userIdx, String condition, PagingCond pagingCond) {
+	public List<StoreSaleView> getMyStoreItem(Long userIdx, String condition, PagingCond pagingCond) {
 		findById(userIdx);
 		List<Item> item = userDao.getMyStoreItem(userIdx, condition, pagingCond);
 		return item.stream()
-				.map(StoreSaleResponse::of)
+				.map(StoreSaleView::of)
 				.collect(Collectors.toList());
 	}
 
-	public List<StoreSaleResponse> searchStoreItemByName(Long userIdx, String itemName, String condition, PagingCond pagingCond) {
+	public List<StoreSaleView> searchStoreItemByName(Long userIdx, String itemName, String condition, PagingCond pagingCond) {
 		findById(userIdx);
 		List<Item> item = userDao.searchStoreItemByName(userIdx, itemName, condition, pagingCond);
 		return item.stream()
-				.map(StoreSaleResponse::of)
+				.map(StoreSaleView::of)
 				.collect(Collectors.toList());
 	}
 
@@ -78,7 +79,7 @@ public class UserProvider {
 		throw new DuplicateLoginIdEx(ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION.getMessages());
 	}
 
-	public StoreInfoResponse getStoreById(Long storeIdx) {
+	public StoreInfoView getStoreById(Long storeIdx) {
 
 		User user = findById(storeIdx);
 		Integer reviewCount = reviewDao.countStoreReview(storeIdx);
@@ -88,8 +89,8 @@ public class UserProvider {
 		String soldCount = userDao.getSoldCount(storeIdx);
 		String rating = reviewDao.getRating(storeIdx);
 
-		return StoreInfoResponse.of(user, rating, reviewCount, wishListCount, followerCount, followingCount, soldCount,
+		return StoreInfoView.of(user, rating, reviewCount, wishListCount, followerCount, followingCount, soldCount,
 				getMyStoreItem(storeIdx, State.SELLING.getState(), PagingCond.defaultValue()),
-				reviewProvider.getReviewInfo(storeIdx));
+				reviewProvider.getReviewInfo(storeIdx), inquiryProvider.getInquiryInfo(storeIdx));
 	}
 }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import shop.makaroni.bunjang.src.domain.review.dto.ReviewAllResponse;
+import shop.makaroni.bunjang.src.domain.review.dto.ReviewSimpleView;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class ReviewDao {
 		return template.queryForObject(sql, Map.of("storeIdx", storeIdx), String.class);
 	}
 
-	public List<ReviewAllResponse> getReviewInfo(Long storeIdx) {
+	public List<ReviewSimpleView> getReviewInfo(Long storeIdx) {
 		var sql = "select u.storeName reviewerName, " +
 				"       u.storeImage reviewerImage, " +
 				"       r.post post, " +
@@ -47,7 +47,8 @@ public class ReviewDao {
 				"from Review r " +
 				"inner join User u on u.idx = r.userIdx " +
 				"inner join Item i on i.idx = r.itemIdx " +
-				"where i.sellerIdx = :storeIdx";
-		return template.query(sql, Map.of("storeIdx", storeIdx), BeanPropertyRowMapper.newInstance(ReviewAllResponse.class));
+				"where i.sellerIdx = :storeIdx " +
+				"limit 2";
+		return template.query(sql, Map.of("storeIdx", storeIdx), BeanPropertyRowMapper.newInstance(ReviewSimpleView.class));
 	}
 }
