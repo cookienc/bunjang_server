@@ -1,6 +1,5 @@
 package shop.makaroni.bunjang.src.controller;
 
-import org.hibernate.hql.internal.ast.tree.DisplayableNode;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.config.BaseResponse;
 import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
@@ -35,7 +34,7 @@ public class ItemController {
     public BaseResponse<GetItemRes> getItem(@PathVariable("itemIdx") int itemIdx) {
         try {
             GetItemRes getItemRes;
-            getItemRes= itemProvider.getItem(itemIdx);
+            getItemRes = itemProvider.getItem(itemIdx);
             getItemRes.setWish(itemProvider.getItemWishCnt(itemIdx));
             getItemRes.setChat(itemProvider.getItemChatCnt(itemIdx));
             getItemRes.setTags(itemProvider.getItemTags(itemIdx));
@@ -67,9 +66,9 @@ public class ItemController {
     }
     @ResponseBody
     @GetMapping("")
-    public BaseResponse<List<GetSearchRes>> getSearch(@RequestParam(required = true) String name,
+    public BaseResponse<List<GetSearchRes>> getSearch(@RequestParam() String name,
                                                       @RequestParam(required = false, defaultValue="C") char sort,
-                                                      @RequestParam(required = true) int count) {
+                                                      @RequestParam() int count) {
         try {
             if (name == null) {
                 throw new BaseException(ITEM_NO_NAME);
@@ -167,23 +166,28 @@ public class ItemController {
         }
     }
 
-//    @ResponseBody
-//    @GetMapping("/category/{code}")
-//    public BaseResponse<GetCategoryRes> getCategory(@PathVariable("code") String code,
-//                                                    @RequestParam(required = false, defaultValue = "R") char sort,
-//                                                    @RequestParam(required = false, defaultValue = "0") boolean safePay) {
-//        // TODO : request parameter - 정렬기준, 안전페이 여부
-//        if (code.length() > 10) {
-//            return new BaseResponse<>(ITEM_INVALID_CATEGORY);
-//        }
-////        try{
-//            GetCategoryRes getCategoryRes = itemProvider.getCategory(code);
-//            return new BaseResponse<>(getCategoryRes);
-////        }catch(BaseException baseException){
-////            return new BaseResponse<>(baseException.getStatus());
-////        }
-//
-//    }
+    @ResponseBody
+    @GetMapping("/category/{code}")
+    public BaseResponse<GetCategoryRes> getCategory(@PathVariable("code") String code,
+                                                    @RequestParam(required = false, defaultValue = "R") char sort,
+                                                    @RequestParam() Integer count) {
+
+        if (code.length() > 10 || code.length() < 1 ) {
+            return new BaseResponse<>(ITEM_INVALID_CATEGORY);
+        }
+        if(code.length()!=1 && code.length() % 2 != 0){
+            return new BaseResponse<>(ITEM_INVALID_CATEGORY);
+        }
+        if(count != null && count < 0 ){
+            return new BaseResponse<>(ITEM_NO_COUNT);
+        }
+        try{
+            GetCategoryRes getCategoryRes = itemProvider.getCategory(code, sort, count);
+            return new BaseResponse<>(getCategoryRes);
+        }catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
 }
 
 /*

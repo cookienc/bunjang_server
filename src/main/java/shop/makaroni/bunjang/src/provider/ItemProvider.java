@@ -3,6 +3,7 @@ package shop.makaroni.bunjang.src.provider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import shop.makaroni.bunjang.config.BaseException;
+import shop.makaroni.bunjang.config.BaseResponse;
 import shop.makaroni.bunjang.src.dao.ItemDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.item.model.*;
@@ -124,8 +125,19 @@ public class ItemProvider {
 		}
 	}
 
-//    public GetCategoryRes getCategory(String code) {
-////		GetCategoryRes getCategoryRes = new GetCategoryRes();
-////		if(itemDao.getItem())
-//    }
+    public GetCategoryRes getCategory(String code, char sort, int count) throws BaseException{
+		String parentCode = "E";
+		String subCode = code.substring(code.length()-1);
+		if(code.length()>2){
+			parentCode = code.substring(0,code.length()-2);
+			subCode = code.substring(code.length()-2);
+		}
+		if(!code.equals("E") && itemDao.checkCategory(parentCode,subCode) == 0){
+			throw new BaseException(ITEM_INVALID_CATEGORY);
+		}
+		GetCategoryRes getCategoryRes = new GetCategoryRes();
+		getCategoryRes.setSubCategory(itemDao.getSubcategory(code));
+		getCategoryRes.setItems(itemDao.getCategoryItems(code, sort, count));
+		return getCategoryRes;
+	}
 }

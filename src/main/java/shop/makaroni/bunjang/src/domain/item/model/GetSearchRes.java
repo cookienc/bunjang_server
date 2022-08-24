@@ -16,4 +16,5 @@ public class GetSearchRes {
     private boolean safePay;
     private boolean isAd;
     private String image;
+    private char status;
 }

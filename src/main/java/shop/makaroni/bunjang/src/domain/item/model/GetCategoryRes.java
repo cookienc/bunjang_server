@@ -14,4 +14,7 @@ public class GetCategoryRes {
     List<GetSubcategoryRes> subCategory;
     List<GetSearchRes> items;
 
+    public GetCategoryRes() {
+        ;
+    }
 }

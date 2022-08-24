@@ -160,7 +160,7 @@ public class ItemDao {
 		Object[] reqParams;
 		String[] param={name, name+"%", "%"+name+"%", "%"+name, "%"+name+"%"};
 		if (sort == 'C') {
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, item.status status\n" +
 					"from Item\n" +
 					"         left join (select itemIdx, min(path) path from ItemImage where status !='D' group by itemIdx ) img on Item.idx = img.itemIdx\n" +
 					"where name like ? and status != 'D'\n" +
@@ -181,7 +181,8 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							rs.getString("path")
+							rs.getString("path"),
+							rs.getString("status").charAt(0)
 					),
 					reqParams
 			);
@@ -189,7 +190,7 @@ public class ItemDao {
 		}
 		else if(sort == 'R'){
 			reqParams = new Object[]{param[4], count};
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, item.status status\n" +
 					"from Item\n" +
 					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
 					"                    from ItemImage\n" +
@@ -207,13 +208,14 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							rs.getString("path")
+							rs.getString("path"),
+							rs.getString("status").charAt(0)
 					),
 					reqParams
 			);
 		}
 		else if(sort == 'L'){
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, item.status status\n" +
 					"from Item\n" +
 					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
 					"                    from ItemImage\n" +
@@ -230,13 +232,14 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							rs.getString("path")
+							rs.getString("path"),
+							rs.getString("status").charAt(0)
 					),
 					reqParams
 			);
 		}
 		else{
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
 					"                    from ItemImage\n" +
@@ -253,7 +256,8 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							rs.getString("path")
+							rs.getString("path"),
+							rs.getString("status").charAt(0)
 					),
 					reqParams
 			);
@@ -383,40 +387,91 @@ public class ItemDao {
 	}
 
 
-//	public List<GetSubcategoryRes> getSubcategory(String code) {
-//		String query = "select code, name from Category where parentCode=?";
-//		return this.jdbcTemplate.query(query,
-//				(rs, rowNum) -> new GetUserBrandRes(
-//						rs.getString("code"),
-//						rs.getString("name"),
-//				),
-//				code
-//		);
-//	}
+	public List<GetSubcategoryRes> getSubcategory(String code) {
+		String query = "select concat(parentCode,code) code, name from Category where parentCode=?";
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetSubcategoryRes(
+						rs.getString("code"),
+						rs.getString("name")
+				),
+				code
+		);
+	}
 
-//	public List<GetSearchRes> getCategoryItems(String code) {
-//		Object reqParams = new Object[]{param[4], count};
-//		String query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
-//				"from Item\n" +
-//				"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
-//				"                    from ItemImage\n" +
-//				"                    where status != 'D'\n" +
-//				"                    group by ItemImage.status, itemIdx) img\n" +
-//				"                   on Item.idx = img.itemIdx\n" +
-//				"where name like ?\n" +
-//				"  and Item.status != 'D'\n" +
-//				"order by updatedAt desc\n" +
-//				"limit ?;\n";
-//		return this.jdbcTemplate.query(query,
-//				(rs, rowNum) -> new GetSearchRes(
-//						String.valueOf(rs.getInt("itemIdx")),
-//						rs.getString("price"),
-//						rs.getString("name"),
-//						rs.getBoolean("safePay"),
-//						rs.getBoolean("isAd"),
-//						rs.getString("path")
-//				),
-//				reqParams
-//		);
-//	}
+	public List<GetSearchRes> getCategoryItems(String code, char sort, int count) {
+		Object[] reqParams = new Object[]{code + "%", count};
+		String query;
+		if(sort=='R') {
+			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
+					"from Item\n" +
+					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
+					"                    from ItemImage\n" +
+					"                    where status != 'D'\n" +
+					"                    group by ItemImage.status, itemIdx) img\n" +
+					"                   on Item.idx = img.itemIdx\n" +
+					"where category like ?\n" +
+					"  and Item.status != 'D'\n" +
+					"order by Item.updatedAt desc\n" +
+					"limit ?;\n";
+		}
+		else if(sort=='F'){
+			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
+					"from Item\n" +
+					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
+					"                    from ItemImage\n" +
+					"                    where status != 'D'\n" +
+					"                    group by ItemImage.status, itemIdx) img\n" +
+					"                   on Item.idx = img.itemIdx\n" +
+					"where category like ?\n" +
+					"  and Item.status != 'D'\n" +
+					"order by Item.hit desc\n" +
+					"limit ?;\n";
+		}
+		else if(sort=='L'){
+			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
+					"from Item\n" +
+					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
+					"                    from ItemImage\n" +
+					"                    where status != 'D'\n" +
+					"                    group by ItemImage.status, itemIdx) img\n" +
+					"                   on Item.idx = img.itemIdx\n" +
+					"where category like ?\n" +
+					"  and Item.status != 'D'\n" +
+					"order by Item.price asc\n" +
+					"limit ?;\n";
+		}
+		else{
+			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
+					"from Item\n" +
+					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
+					"                    from ItemImage\n" +
+					"                    where status != 'D'\n" +
+					"                    group by ItemImage.status, itemIdx) img\n" +
+					"                   on Item.idx = img.itemIdx\n" +
+					"where category like ?\n" +
+					"  and Item.status != 'D'\n" +
+					"order by Item.price desc\n" +
+					"limit ?;\n";
+		}
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetSearchRes(
+						String.valueOf(rs.getInt("itemIdx")),
+						rs.getString("price"),
+						rs.getString("name"),
+						rs.getBoolean("safePay"),
+						rs.getBoolean("isAd"),
+						rs.getString("path"),
+						rs.getString("status").charAt(0)
+				),
+				reqParams
+		);
+	}
+	public int checkCategory(String parentCode, String code) {
+		String query = "select exists(select idx from Category where parentCode = ? and code = ? and status != 'D');";
+		Object[] params = new Object[]{parentCode, code};
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				params);
+	}
+
 }
