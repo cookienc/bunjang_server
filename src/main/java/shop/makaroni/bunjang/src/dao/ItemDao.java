@@ -180,7 +180,7 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							Collections.singletonList(rs.getString("path"))
+							rs.getString("path")
 					),
 					reqParams
 			);
@@ -198,7 +198,7 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							Collections.singletonList(rs.getString("path"))
+							rs.getString("path")
 					),
 					reqParams
 			);
@@ -215,7 +215,7 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							Collections.singletonList(rs.getString("path"))
+							rs.getString("path")
 					),
 					reqParams
 			);
@@ -232,7 +232,7 @@ public class ItemDao {
 							rs.getString("name"),
 							rs.getBoolean("safePay"),
 							rs.getBoolean("isAd"),
-							Collections.singletonList(rs.getString("path"))
+							rs.getString("path")
 					),
 					reqParams
 			);

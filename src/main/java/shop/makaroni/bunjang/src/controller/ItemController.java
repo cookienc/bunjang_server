@@ -166,6 +166,21 @@ public class ItemController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    @ResponseBody
+    @GetMapping("/category/{code}")
+    public BaseResponse<List<GetBrandRes>> getBrand(@PathVariable("code") String code,
+                                                    @RequestParam(required = false, defaultValue = "R") char sort,
+                                                    @RequestParam(required = false, defaultValue = "0") boolean safePay) {
+        // TODO : request parameter - 정렬기준, 안전페이 여부
+        if (code.length() > 10) {
+            return new BaseResponse<>(ITEM_INVALID_CATEGORY);
+        }
+//        try{
+////            return new BaseResponse<>( );
+//        }
+        return null;
+    }
 }
 
 /*

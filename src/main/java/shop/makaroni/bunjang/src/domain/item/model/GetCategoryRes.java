@@ -9,11 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GetSearchRes {
-    private String itemIdx;
-    private String price;
-    private String name;
-    private boolean safePay;
-    private boolean isAd;
-    private String image;
+public class GetCategoryRes {
+    List<GetSubcategoryRes> subCategory;
+    List<GetSearchRes> items;
 }

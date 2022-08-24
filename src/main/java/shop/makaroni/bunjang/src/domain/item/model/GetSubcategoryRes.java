@@ -4,16 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
-public class GetSearchRes {
-    private String itemIdx;
-    private String price;
+public class GetSubcategoryRes {
+    private String code;
     private String name;
-    private boolean safePay;
-    private boolean isAd;
-    private String image;
 }
