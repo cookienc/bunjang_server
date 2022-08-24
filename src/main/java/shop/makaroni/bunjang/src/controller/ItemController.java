@@ -15,7 +15,7 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 
 @RestController
-@RequestMapping("/item")
+@RequestMapping("/items")
 public class ItemController {
 
     @Autowired
