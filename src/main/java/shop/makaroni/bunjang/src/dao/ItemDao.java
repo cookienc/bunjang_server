@@ -257,7 +257,7 @@ public class ItemDao {
 						rs.getBoolean("safePay"),
 						rs.getBoolean("isAd"),
 						rs.getTimestamp("createdAt"),
-						Collections.singletonList(rs.getString("path"))
+						rs.getString("path")
 				),
 				params
 		);
