@@ -8,7 +8,7 @@
                 i.name name,
                 i.price price,
                 ii.path image,
-                i.location location,
+                IF(isnull(i.location),'지역정보 없음', i.location) location,
                 (case
                     when timestampdiff(minute , i.updatedAt, now()) &lt; 1 then concat(timestampdiff(second, i.updatedAt, now()), '초 전')
                     when timestampdiff(hour, i.updatedAt, now()) &lt; 1 then concat(timestampdiff(minute, i.updatedAt, now()), '분 전')
@@ -32,7 +32,7 @@
                 i.name name,
                 i.price price,
                 ii.path image,
-                i.location location,
+                IF(isnull(i.location),'지역정보 없음', i.location) location,
                 (case
                     when timestampdiff(minute , i.updatedAt, now()) &lt; 1 then concat(timestampdiff(second, i.updatedAt, now()), '초 전')
                     when timestampdiff(hour, i.updatedAt, now()) &lt; 1 then concat(timestampdiff(minute, i.updatedAt, now()), '분 전')
