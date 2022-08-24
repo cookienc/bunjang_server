@@ -62,6 +62,7 @@ public class InquiryDao {
 				"inner join User u on u.idx = i.userIdx " +
 				"where i.storeIdx = :storeIdx " +
 				"and i.status = 'Y' " +
+				"and i.parentIdx = 0 " +
 				"limit 2";
 		return template.query(sql, Map.of("storeIdx", storeIdx), BeanPropertyRowMapper.newInstance(InquirySimpleResponse.class));
 	}
