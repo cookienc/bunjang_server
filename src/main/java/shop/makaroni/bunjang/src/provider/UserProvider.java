@@ -38,8 +38,10 @@ public class UserProvider {
 		Integer wishListCount = wishListDao.countMyWishList(userIdx);
 		Integer followerCount = followDao.countMyFollowers(userIdx);
 		Integer followingcount =  followDao.countMyFollowings(userIdx);
+		String rating = reviewDao.getRating(userIdx);
 
-		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, getMyStoreItem(userIdx, State.SELLING.getState(), PagingCond.defaultValue()));
+		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, rating,
+				getMyStoreItem(userIdx, State.SELLING.getState(), PagingCond.defaultValue()));
 	}
 
 	public List<StoreSaleResponse> getMyStoreItem(Long userIdx, String condition, PagingCond pagingCond) {

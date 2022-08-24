@@ -14,6 +14,7 @@ public class MyStoreResponse {
 	private String storeName;
 	private Boolean isCertificated;
 	private String storeImage;
+	private String rating;
 	private String wishLists;
 	private String reviews;
 	private String followers;
@@ -21,11 +22,12 @@ public class MyStoreResponse {
 	private List<StoreSaleResponse> itemsResponses;
 
 	@Builder
-	public MyStoreResponse(String storeId, String storeName, Boolean isCertificated, String storeImage, String wishLists, String reviews, String followers, String followings, List<StoreSaleResponse> itemsResponses) {
+	public MyStoreResponse(String storeId, String storeName, Boolean isCertificated, String storeImage, String rating, String wishLists, String reviews, String followers, String followings, List<StoreSaleResponse> itemsResponses) {
 		this.storeId = storeId;
 		this.storeName = storeName;
 		this.isCertificated = isCertificated;
 		this.storeImage = storeImage;
+		this.rating = rating;
 		this.wishLists = wishLists;
 		this.reviews = reviews;
 		this.followers = followers;
@@ -33,12 +35,13 @@ public class MyStoreResponse {
 		this.itemsResponses = itemsResponses;
 	}
 
-	public static MyStoreResponse of(User user, Integer reviewCount, Integer wishListCount, Integer followerCount, Integer followingcount, List<StoreSaleResponse> myStoreItem) {
+	public static MyStoreResponse of(User user, Integer reviewCount, Integer wishListCount, Integer followerCount, Integer followingcount, String rating, List<StoreSaleResponse> myStoreItem) {
 		return MyStoreResponse.builder()
 				.storeId(String.valueOf(user.getIdx()))
 				.storeName(user.getStoreName())
 				.storeImage(user.getStoreImage())
 				.isCertificated(user.getIsCertificated())
+				.rating(rating)
 				.wishLists(String.valueOf(wishListCount))
 				.reviews(String.valueOf(reviewCount))
 				.followers(String.valueOf(followerCount))

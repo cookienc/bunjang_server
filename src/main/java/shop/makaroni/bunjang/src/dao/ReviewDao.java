@@ -19,4 +19,11 @@ public class ReviewDao {
 				"and r.status = 'Y'";
 		return template.queryForObject(sql, Map.of("userId", userId), Integer.class);
 	}
+
+	public String getRating(Long storeIdx) {
+		var sql = "select round(sum(r.rating) / count(r.idx), 1) from Review r " +
+				"inner join (select i.idx itemIdx from Item i " +
+				"where i.sellerIdx = :storeIdx) i on i.itemIdx= r.itemIdx";
+		return template.queryForObject(sql, Map.of("storeIdx", storeIdx), String.class);
+	}
 }
