@@ -160,7 +160,7 @@ public class ItemDao {
 		Object[] reqParams;
 		String[] param={name, name+"%", "%"+name+"%", "%"+name, "%"+name+"%"};
 		if (sort == 'C') {
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, item.status status\n" +
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select itemIdx, min(path) path from ItemImage where status !='D' group by itemIdx ) img on Item.idx = img.itemIdx\n" +
 					"where name like ? and status != 'D'\n" +
