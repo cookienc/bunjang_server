@@ -12,6 +12,7 @@ import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleResponse;
 import shop.makaroni.bunjang.src.response.ErrorCode;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
@@ -30,6 +31,7 @@ public class UserProvider {
 	private final ReviewDao reviewDao;
 	private final WishListDao wishListDao;
 	private final FollowDao followDao;
+	private final ReviewProvider reviewProvider;
 
 	public MyStoreResponse getMyStore(Long userIdx) {
 
@@ -74,5 +76,20 @@ public class UserProvider {
 		};
 
 		throw new DuplicateLoginIdEx(ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION.getMessages());
+	}
+
+	public StoreInfoResponse getStoreById(Long storeIdx) {
+
+		User user = findById(storeIdx);
+		Integer reviewCount = reviewDao.countStoreReview(storeIdx);
+		Integer wishListCount = wishListDao.countMyWishList(storeIdx);
+		Integer followerCount = followDao.countMyFollowers(storeIdx);
+		Integer followingCount = followDao.countMyFollowings(storeIdx);
+		String soldCount = userDao.getSoldCount(storeIdx);
+		String rating = reviewDao.getRating(storeIdx);
+
+		return StoreInfoResponse.of(user, rating, reviewCount, wishListCount, followerCount, followingCount, soldCount,
+				getMyStoreItem(storeIdx, State.SELLING.getState(), PagingCond.defaultValue()),
+				reviewProvider.getReviewInfo(storeIdx));
 	}
 }

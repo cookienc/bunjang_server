@@ -19,7 +19,6 @@ public class User {
     private String storeName;
     private String contactStart;
     private String contactEnd;
-
     private Boolean isCertificated;
     private String storeUrl;
     private String storeImage;
@@ -27,13 +26,13 @@ public class User {
     private String policy;
     private String precaution;
     private String hit;
-
+    private String openDate;
     private String createdAt;
     private String updatedAt;
     private String status;
 
     @Builder
-    public User(Long idx, String loginId, String password, String storeName, String contactStart, String contactEnd, Boolean isCertificated, String storeUrl, String storeImage, String description, String policy, String precaution, String hit, String createdAt, String updatedAt, String status) {
+    public User(Long idx, String loginId, String password, String storeName, String contactStart, String contactEnd, Boolean isCertificated, String storeUrl, String storeImage, String description, String policy, String precaution, String hit, String openDate, String createdAt, String updatedAt, String status) {
         this.idx = idx;
         this.loginId = loginId;
         this.password = password;
@@ -47,6 +46,7 @@ public class User {
         this.policy = policy;
         this.precaution = precaution;
         this.hit = hit;
+        this.openDate = openDate;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.status = status;

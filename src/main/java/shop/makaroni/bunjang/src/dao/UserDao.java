@@ -64,7 +64,24 @@ public class UserDao {
 	}
 
 	public Optional<User> findById(Long userId) {
-		var sql = "select * from User " +
+		var sql = "select idx, " +
+				"loginId, " +
+				"password, " +
+				"storeName, " +
+				"contactStart, " +
+				"contactEnd, " +
+				"isCertificated, " +
+				"storeUrl, " +
+				"storeImage, " +
+				"description, " +
+				"policy, " +
+				"precaution, " +
+				"hit, " +
+				"timestampdiff(day, createdAt, now()) openDate, " +
+				"createdAt, " +
+				"updatedAt, " +
+				"status " +
+				"from User " +
 				"where idx=:userId " +
 				"and status = 'Y'";
 		try {
@@ -116,5 +133,14 @@ public class UserDao {
 
 		long key = keyHolder.getKey().longValue();
 		return key;
+	}
+
+	public String getSoldCount(Long storeIdx) {
+		var sql = "select count(*) " +
+				"from Item i " +
+				"where i.status = 'S' " +
+				"and i.sellerIdx = :storeIdx";
+
+		return template.queryForObject(sql, Map.of("storeIdx", storeIdx), String.class);
 	}
 }
