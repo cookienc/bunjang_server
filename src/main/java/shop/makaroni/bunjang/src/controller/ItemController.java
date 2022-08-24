@@ -167,20 +167,23 @@ public class ItemController {
         }
     }
 
-    @ResponseBody
-    @GetMapping("/category/{code}")
-    public BaseResponse<List<GetBrandRes>> getBrand(@PathVariable("code") String code,
-                                                    @RequestParam(required = false, defaultValue = "R") char sort,
-                                                    @RequestParam(required = false, defaultValue = "0") boolean safePay) {
-        // TODO : request parameter - 정렬기준, 안전페이 여부
-        if (code.length() > 10) {
-            return new BaseResponse<>(ITEM_INVALID_CATEGORY);
-        }
-//        try{
-////            return new BaseResponse<>( );
+//    @ResponseBody
+//    @GetMapping("/category/{code}")
+//    public BaseResponse<GetCategoryRes> getCategory(@PathVariable("code") String code,
+//                                                    @RequestParam(required = false, defaultValue = "R") char sort,
+//                                                    @RequestParam(required = false, defaultValue = "0") boolean safePay) {
+//        // TODO : request parameter - 정렬기준, 안전페이 여부
+//        if (code.length() > 10) {
+//            return new BaseResponse<>(ITEM_INVALID_CATEGORY);
 //        }
-        return null;
-    }
+////        try{
+//            GetCategoryRes getCategoryRes = itemProvider.getCategory(code);
+//            return new BaseResponse<>(getCategoryRes);
+////        }catch(BaseException baseException){
+////            return new BaseResponse<>(baseException.getStatus());
+////        }
+//
+//    }
 }
 
 /*

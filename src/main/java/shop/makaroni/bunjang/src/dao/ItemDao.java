@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 
 import javax.sql.DataSource;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -161,16 +160,17 @@ public class ItemDao {
 		String[] param={name, name+"%", "%"+name+"%", "%"+name, "%"+name+"%"};
 		if (sort == 'C') {
 			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
-					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
-					"where name like ?\n" +
-					"order by\n" +
-					"    (case \n" +
-					"        when name = ? then 0\n" +
-					"        when name like ? then 1\n" +
-					"        when name like ? then 2\n" +
-					"        when name like ? then 3\n" +
-					"        else 4\n" +
-					"    end) limit ?;";
+					"from Item\n" +
+					"         left join (select itemIdx, min(path) path from ItemImage where status !='D' group by itemIdx ) img on Item.idx = img.itemIdx\n" +
+					"where name like ? and status != 'D'\n" +
+					"order by (case\n" +
+					"              when name = ? then 0\n" +
+					"              when name like ? then 1\n" +
+					"              when name like ? then 2\n" +
+					"              when name like ? then 3\n" +
+					"              else 4\n" +
+					"    end)\n" +
+					"limit ?;";
 			reqParams = new Object[]{param[4], param[0], param[1], param[2], param[3], count};
 
 			return this.jdbcTemplate.query(query,
@@ -189,8 +189,16 @@ public class ItemDao {
 		else if(sort == 'R'){
 			reqParams = new Object[]{param[4], count};
 			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
-					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
-					"where name like ? order by updatedAt desc limit ?;";
+					"from Item\n" +
+					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
+					"                    from ItemImage\n" +
+					"                    where status != 'D'\n" +
+					"                    group by ItemImage.status, itemIdx) img\n" +
+					"                   on Item.idx = img.itemIdx\n" +
+					"where name like ?\n" +
+					"  and Item.status != 'D'\n" +
+					"order by updatedAt desc\n" +
+					"limit ?;\n";
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
 							String.valueOf(rs.getInt("itemIdx")),
@@ -205,8 +213,14 @@ public class ItemDao {
 		}
 		else if(sort == 'L'){
 			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
-					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
-					"where name like ? order by price asc limit ?;";
+					"from Item\n" +
+					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
+					"                    from ItemImage\n" +
+					"                    where status != 'D'\n" +
+					"                    group by ItemImage.status, itemIdx) img\n" +
+					"                   on Item.idx = img.itemIdx\n" +
+					"where name like ?\n" +
+					"  and Item.status != 'D' order by price asc limit ?;";
 			reqParams = new Object[]{param[4], count};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
@@ -221,9 +235,15 @@ public class ItemDao {
 			);
 		}
 		else{
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd \n" +
-					"from Item left join (select itemIdx, min(path) path from ItemImage group by itemIdx)img on Item.idx = img.itemIdx\n"+
-					"where name like ? order by price desc limit ?;";
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+					"from Item\n" +
+					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
+					"                    from ItemImage\n" +
+					"                    where status != 'D'\n" +
+					"                    group by ItemImage.status, itemIdx) img\n" +
+					"                   on Item.idx = img.itemIdx\n" +
+					"where name like ?\n" +
+					"  and Item.status != 'D' order by price desc limit ?;";
 			reqParams = new Object[]{param[4], count};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
@@ -243,11 +263,15 @@ public class ItemDao {
 	public List<GetLogRes> getItemLastN(int userIdx, int count) {
 		String query =
 				"select distinct Log.itemIdx itemIdx, name, price, safePay, isAd, max(Log.createdAt) createdAt, path\n" +
-				"from (Log join Item I on Log.itemIdx = I.idx) left join  (select itemIdx, min(path) path from ItemImage group by itemIdx) img\n" +
-				"on I.idx = img.itemIdx where userIdx = ?\n" +
+				"from (Log join Item I on Log.itemIdx = I.idx)\n" +
+				"         left join\n" +
+				"     (select itemIdx, min(path) path from ItemImage where status != 'D' group by itemIdx) img\n" +
+				"     on I.idx = img.itemIdx\n" +
+				"where userIdx = ?\n" +
+				"  and status != 'D'\n" +
 				"group by itemIdx, name, price, safePay, isAd\n" +
 				"order by createdAt desc\n" +
-				"limit ?;\n";
+				"limit ?;";
 		Object[] params = new Object[]{userIdx, count};
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetLogRes(
@@ -264,7 +288,7 @@ public class ItemDao {
 	}
 
 
-	public int checkbrandIdx(int brandIdx) {
+	public int checkBrandIdx(int brandIdx) {
 		String query = "select exists(select idx from Brand where idx = ? and status != 'D');";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
@@ -356,4 +380,6 @@ public class ItemDao {
 				userIdx
 		);
 	}
+
+
 }

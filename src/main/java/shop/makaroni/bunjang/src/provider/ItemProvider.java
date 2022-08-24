@@ -81,7 +81,7 @@ public class ItemProvider {
 	}
 
 	public int getItemCnt(int brandIdx) throws BaseException {
-		if (itemDao.checkbrandIdx(brandIdx) == 0) {
+		if (itemDao.checkBrandIdx(brandIdx) == 0) {
 			throw new BaseException(ITEM_INVALID_BRAND);
 		}
 		try {
@@ -123,4 +123,9 @@ public class ItemProvider {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
+
+//    public GetCategoryRes getCategory(String code) {
+////		GetCategoryRes getCategoryRes = new GetCategoryRes();
+////		if(itemDao.getItem())
+//    }
 }
