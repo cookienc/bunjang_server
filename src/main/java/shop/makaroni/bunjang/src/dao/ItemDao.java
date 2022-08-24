@@ -20,7 +20,7 @@ public class ItemDao {
 	}
 
 	public GetItemRes getItem(int itemIdx){
-		String query = "select concat(FORMAT(price,0),'원') as price, name,\n" +
+		String query = "select idx, concat(FORMAT(price,0),'원') as price, name,\n" +
 				"       IF(isnull(location),'지역정보 없음', location) location,\n" +
 				"       (case\n" +
 				"            when timestampdiff(minute , updatedAt, now()) < 1 then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
@@ -54,7 +54,8 @@ public class ItemDao {
 						rs.getString("time"),
 						String.valueOf(rs.getInt("hit")),
 						String.valueOf(rs.getInt("stock")),
-						String.valueOf(0),String.valueOf(0),
+						String.valueOf(0),
+						String.valueOf(0),
 						rs.getBoolean("isNew"),
 						rs.getBoolean("delivery"),
 						rs.getBoolean("exchange"),
@@ -382,4 +383,40 @@ public class ItemDao {
 	}
 
 
+//	public List<GetSubcategoryRes> getSubcategory(String code) {
+//		String query = "select code, name from Category where parentCode=?";
+//		return this.jdbcTemplate.query(query,
+//				(rs, rowNum) -> new GetUserBrandRes(
+//						rs.getString("code"),
+//						rs.getString("name"),
+//				),
+//				code
+//		);
+//	}
+
+//	public List<GetSearchRes> getCategoryItems(String code) {
+//		Object reqParams = new Object[]{param[4], count};
+//		String query = "select Item.idx itemIdx, path, price, name, safePay, isAd\n" +
+//				"from Item\n" +
+//				"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
+//				"                    from ItemImage\n" +
+//				"                    where status != 'D'\n" +
+//				"                    group by ItemImage.status, itemIdx) img\n" +
+//				"                   on Item.idx = img.itemIdx\n" +
+//				"where name like ?\n" +
+//				"  and Item.status != 'D'\n" +
+//				"order by updatedAt desc\n" +
+//				"limit ?;\n";
+//		return this.jdbcTemplate.query(query,
+//				(rs, rowNum) -> new GetSearchRes(
+//						String.valueOf(rs.getInt("itemIdx")),
+//						rs.getString("price"),
+//						rs.getString("name"),
+//						rs.getBoolean("safePay"),
+//						rs.getBoolean("isAd"),
+//						rs.getString("path")
+//				),
+//				reqParams
+//		);
+//	}
 }
