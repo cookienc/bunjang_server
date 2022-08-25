@@ -7,6 +7,7 @@ import shop.makaroni.bunjang.src.dao.ReviewDao;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewSimpleView;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,7 +17,7 @@ public class ReviewProvider {
 	private final ReviewDao reviewDao;
 
 	public String getRating(Long storeIdx) {
-		return reviewDao.getRating(storeIdx);
+		return reviewDao.getRating(storeIdx).orElseThrow(NoSuchElementException::new);
 	}
 
 	public List<ReviewSimpleView> getReviewInfo(Long storeIdx) {

@@ -41,7 +41,7 @@ public class UserProvider {
 		Integer wishListCount = wishListDao.countMyWishList(userIdx);
 		Integer followerCount = followDao.countMyFollowers(userIdx);
 		Integer followingcount =  followDao.countMyFollowings(userIdx);
-		String rating = reviewDao.getRating(userIdx);
+		String rating = reviewProvider.getRating(userIdx);
 
 		return MyStoreResponse.of(user, reviewCount, wishListCount, followerCount, followingcount, rating,
 				getMyStoreItem(userIdx, State.SELLING.getState(), PagingCond.defaultValue()));
@@ -87,7 +87,7 @@ public class UserProvider {
 		Integer followerCount = followDao.countMyFollowers(storeIdx);
 		Integer followingCount = followDao.countMyFollowings(storeIdx);
 		String soldCount = userDao.getSoldCount(storeIdx);
-		String rating = reviewDao.getRating(storeIdx);
+		String rating = reviewProvider.getRating(storeIdx);
 
 		return StoreInfoView.of(user, rating, reviewCount, wishListCount, followerCount, followingCount, soldCount,
 				getMyStoreItem(storeIdx, State.SELLING.getState(), PagingCond.defaultValue()),

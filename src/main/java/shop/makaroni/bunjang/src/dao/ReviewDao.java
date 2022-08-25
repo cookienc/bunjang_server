@@ -1,6 +1,8 @@
 package shop.makaroni.bunjang.src.dao;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -8,6 +10,7 @@ import shop.makaroni.bunjang.src.domain.review.dto.ReviewSimpleView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,11 +26,32 @@ public class ReviewDao {
 		return template.queryForObject(sql, Map.of("userId", userId), Integer.class);
 	}
 
-	public String getRating(Long storeIdx) {
+	public Optional<String> getRating(Long storeIdx) {
 		var sql = "select round(sum(r.rating) / count(r.idx), 1) from Review r " +
 				"inner join (select i.idx itemIdx from Item i " +
-				"where i.sellerIdx = :storeIdx) i on i.itemIdx= r.itemIdx";
-		return template.queryForObject(sql, Map.of("storeIdx", storeIdx), String.class);
+				"where i.sellerIdx = :storeIdx) i on i.itemIdx= r.itemIdx " +
+				"where r.status = 'Y'";
+		
+		return getRating(storeIdx, sql);
+	}
+
+	@NotNull
+	private Optional<String> getRating(Long storeIdx, String sql) {
+		try {
+			String rating = template.queryForObject(sql, Map.of("storeIdx", storeIdx), String.class);
+			rating = isItNull(rating);
+			return Optional.of(rating);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
+	}
+
+	@NotNull
+	private String isItNull(String rating) {
+		if (rating == null) {
+			rating = "0";
+		}
+		return rating;
 	}
 
 	public List<ReviewSimpleView> getReviewInfo(Long storeIdx) {
