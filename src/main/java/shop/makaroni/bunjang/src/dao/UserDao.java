@@ -74,7 +74,7 @@ public class UserDao {
 				"contactEnd, " +
 				"isCertificated, " +
 				"storeUrl, " +
-				"storeImage, " +
+				"ifnull(storeImage, '이미지가 없습니다.') storeImage, " +
 				"IF(isnull(description),'상점소개가 없습니다.', description) description, " +
 				"IF(isnull(policy),'물품의 상태가 기재된 것과 상이할 경우 배송완료일 기준 7일 이내에 환불 및 반품이 가능합니다.', policy) policy, " +
 				"IF(isnull(precaution),'지역정보 없음.', precaution) precaution, " +

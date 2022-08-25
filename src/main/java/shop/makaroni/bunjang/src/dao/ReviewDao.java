@@ -59,7 +59,7 @@ public class ReviewDao {
 
 	public List<ReviewSimpleView> getReviewInfo(Long storeIdx) {
 		var sql = "select u.storeName reviewerName, " +
-				"       u.storeImage reviewerImage, " +
+				"       ifnull(u.storeImage, '이미지가 없습니다.') reviewerImage, " +
 				"       r.post post, " +
 				"       r.rating rating, " +
 				"       (case " +
@@ -84,7 +84,7 @@ public class ReviewDao {
 				"	 i.idx itemIdx, " +
 				"    u.idx reviewerIdx, " +
 				"    u.storeName  reviewerName, " +
-				"       u.storeImage reviewerImage, " +
+				"       ifnull(u.storeImage, '이미지가 없습니다.') reviewerImage, " +
 				"       r.post       reviewPost, " +
 				"       r.rating     rating, " +
 				"       i.name       purchasedProduct, " +
