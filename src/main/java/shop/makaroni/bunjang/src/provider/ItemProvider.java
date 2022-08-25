@@ -2,6 +2,7 @@ package shop.makaroni.bunjang.src.provider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.config.BaseResponse;
 import shop.makaroni.bunjang.src.dao.ItemDao;
@@ -13,6 +14,7 @@ import java.util.List;
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 @Service
+@Transactional
 public class ItemProvider {
 	private final ItemDao itemDao;
 	private final UserDao userDao;

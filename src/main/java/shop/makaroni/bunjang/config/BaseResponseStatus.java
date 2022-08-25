@@ -22,13 +22,18 @@ public enum BaseResponseStatus {
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
     INVALID_USER_JWT(false, 2003, "권한이 없는 유저의 접근입니다."),
 
+
     // users
     USERS_INVALID_IDX(false, 2010, "유저 아이디 값을 확인해주세요."),
 
     // [POST] /users
-    POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
-    POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
-    POST_USERS_EXISTS_EMAIL(false, 2017, "중복된 이메일입니다."),
+    POST_ITEM_INVALID_SELLER(false, 2012, "판매자 아이디를 확인해주세요"),
+    POST_ITEM_INVALID_CONTENT(false, 2013, "상품 설명은 10글자 이상 200글자 이하로 입력해주세요"),
+    POST_ITEM_INVALID_STOCK(false, 2014, "수량은 1개 이상 입력해주세요"),
+    POST_ITEM_INVALID_NAME(false, 2015, "상품명은 2글자 이상 40자 이하로 입력해주세요"),
+    POST_ITEM_EMPTY_IMAGE(false, 2016, "상품 사진을 등록해주세요."),
+    POST_ITEM_INVALID_CATEGORY(false, 2017, "유효하지 않은 카테고리 코드값입니다"),
+    POST_ITEM_INVALID_PRICE(false,2018, "금액은 100원이상 100000000이하 입력해주세요"),
 
 
     // items

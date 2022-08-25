@@ -1,5 +1,7 @@
 package shop.makaroni.bunjang.src.controller;
 
+import org.springframework.security.core.parameters.P;
+import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.config.BaseResponse;
 import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
@@ -8,14 +10,16 @@ import org.springframework.web.bind.annotation.*;
 import shop.makaroni.bunjang.src.provider.ItemProvider;
 import shop.makaroni.bunjang.src.service.ItemService;
 import shop.makaroni.bunjang.src.domain.item.model.*;
-
+import shop.makaroni.bunjang.src.validation.*;
 import java.util.List;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
+import static shop.makaroni.bunjang.src.validation.validationRegex.*;
 
 
 @RestController
 @RequestMapping("/items")
+@Transactional
 public class ItemController {
 
     @Autowired
@@ -185,11 +189,41 @@ public class ItemController {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
-//    @ResponseBody
-//    @PostMapping("")
-//    public BaseResponse<PostItemRes> PostSearch(@RequestBody PostSellReq postSellReq) {
-//
-//    }
+    @ResponseBody
+    @PostMapping("")
+    public BaseResponse<PostItemRes> CreateItem(@RequestBody PostItemReq postItemReq) {
+        if(postItemReq.getImages() == null){
+            return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
+        }
+        if(!isRegexItemName(postItemReq.getName())){
+            return new BaseResponse<>(POST_ITEM_INVALID_NAME);
+        }
+        if(postItemReq.getCategory() == null || !isRegexCategory(postItemReq.getCategory())){
+            return new BaseResponse<>(POST_ITEM_INVALID_CATEGORY);
+        }
+        if(postItemReq.getPrice() < 100 || postItemReq.getPrice() > 100000000){
+            return new BaseResponse<>(POST_ITEM_INVALID_PRICE);
+        }
+        if(postItemReq.getStock() < 1){
+            return new BaseResponse<>(POST_ITEM_INVALID_STOCK);
+        }
+        if(!isRegexContent(postItemReq.getContent())){
+            return new BaseResponse<>(POST_ITEM_INVALID_CONTENT);
+        }
+        if(postItemReq.getPrice() < 500){
+            postItemReq.setSafePay(false);
+        }
+        if(postItemReq.getSellerIdx() < 0){
+            return new BaseResponse<>(POST_ITEM_INVALID_SELLER);
+        }
+        try {
+            PostItemRes postItemRes = itemService.createItem(postItemReq);
+            return new BaseResponse<>(postItemRes);
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
 }
 
 /*

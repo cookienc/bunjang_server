@@ -132,7 +132,7 @@ public class ItemDao {
 	}
 
 	public int getItemChatCnt(int itemIdx){
-		String query = "select count(idx) as chat from ChatRoom where itemIdx=? ";
+		String query = "select count(idx) as chat from ChatRoom where itemIdx=? and status != 'D' ";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				itemIdx
@@ -471,11 +471,30 @@ public class ItemDao {
 				params);
 	}
 
-	public void createItem(PostItemReq postItemReq) {
+	public int createItem(PostItemReq postItemReq) {
 		String query =
-				"Insert into Item(idx, sellerIdx, name, category, brandIdx, price, delivery, content, stock, isNew, exchange, safePay,\n" +
-				"                 inspection, createdAt, updatedAt, status, hit, location, isAd)\n" +
-				"values (default, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,default,0,location,isAd);";
-		Object[] params = new Object[]{};
+				"Insert into Item(sellerIdx, name, category, brandIdx, price, delivery, content, stock, isNew, exchange, safePay,\n" +
+						"                 inspection, location, isAd)\n" +
+						"                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);";
+		Object[] params = postItemReq.getPostItemReq();
+		this.jdbcTemplate.update(query, params);
+		String lastInsertIdQuery = "select last_insert_id()";
+		return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+	}
+
+	public int findBrand(String tag) {
+		String query = "select IF((select exists(select idx from Brand where name = ? or englishName = ?)),\n" +
+				"               (select idx from Brand where name = ? or englishName = ?),\n" +
+				"               0);";
+		Object[] params = new Object[]{tag, tag, tag, tag};
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				params);
+	}
+
+	public void setBrand(int itemIdx, int brandIdx){
+		String query = "update Item set brandIdx = ? where idx=?;";
+		Object[] params = new Object[]{brandIdx,itemIdx};
+		this.jdbcTemplate.update(query, params);
 	}
 }
