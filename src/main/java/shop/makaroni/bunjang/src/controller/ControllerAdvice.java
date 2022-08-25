@@ -14,6 +14,7 @@ import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
 import shop.makaroni.bunjang.src.response.exception.DoesNotMatchPasswordEx;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
+import shop.makaroni.bunjang.src.response.exception.EmptyParamEx;
 import shop.makaroni.bunjang.src.response.exception.InvalidInputEx;
 import shop.makaroni.bunjang.src.response.exception.NotRightPasswordEx;
 
@@ -26,6 +27,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_EXCEP
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_DECODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.EMPTY_PARAM_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.MISSING_PARAMETER_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_MATCH_PASSWORD_EXCEPTION;
@@ -97,6 +99,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(NOT_RIGHT_PASSWORD_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(NOT_RIGHT_PASSWORD_EXCEPTION, request.getRequestURI()));
+	}
+
+	@ExceptionHandler(EmptyParamEx.class)
+	public ResponseEntity<ErrorResponse> emptyParamExHandler(EmptyParamEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(EMPTY_PARAM_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(EMPTY_PARAM_EXCEPTION, request.getRequestURI()));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

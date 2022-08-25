@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.inquiry.InquirySaveRequest;
 import shop.makaroni.bunjang.src.domain.item.State;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoView;
-import shop.makaroni.bunjang.src.domain.user.dto.SaveUserRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
+import shop.makaroni.bunjang.src.domain.user.dto.SaveUserRequest;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoView;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleView;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchView;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
+import shop.makaroni.bunjang.src.response.exception.EmptyParamEx;
 import shop.makaroni.bunjang.src.service.InquiryService;
 import shop.makaroni.bunjang.src.service.UserService;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
@@ -30,6 +31,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static shop.makaroni.bunjang.src.response.ErrorCode.EMPTY_PARAM_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.CHECK_LOGIN_ID_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.PATCH_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_SUCCESS;
@@ -106,6 +108,9 @@ public class UserController {
 
     @GetMapping("/stores/search")
     public ResponseEntity<List<StoreSearchView>> searchStoreByName(@RequestParam String name) {
+        if (name.isBlank()) {
+            throw new EmptyParamEx(EMPTY_PARAM_EXCEPTION.getMessages());
+        }
         return ResponseEntity.ok(userProvider.searchStoreByName(name));
     }
 }
