@@ -93,4 +93,8 @@ public class UserProvider {
 				getMyStoreItem(storeIdx, State.SELLING.getState(), PagingCond.defaultValue()),
 				reviewProvider.getReviewInfo(storeIdx), inquiryProvider.getInquiryInfo(storeIdx));
 	}
+
+	public String getSellerNameByItemIdx(Long itemIdx) {
+		return userDao.getSellerNameByItemIdx(itemIdx);
+	}
 }

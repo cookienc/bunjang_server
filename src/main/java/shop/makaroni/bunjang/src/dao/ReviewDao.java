@@ -81,6 +81,7 @@ public class ReviewDao {
 
 	public List<ReviewSpecificDto> findAllByStoreIdx(Long storeIdx, Integer start, Integer offset) {
 		var sql = "select r.idx idx, " +
+				"	 i.idx itemIdx, " +
 				"    u.idx reviewerIdx, " +
 				"    u.storeName  reviewerName, " +
 				"       u.storeImage reviewerImage, " +

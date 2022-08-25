@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.ReviewDao;
+import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.review.ReviewCommentDto;
 import shop.makaroni.bunjang.src.domain.review.ReviewSpecificDto;
 import shop.makaroni.bunjang.src.domain.review.ReviewSpecificView;
@@ -19,6 +20,7 @@ import java.util.NoSuchElementException;
 public class ReviewProvider {
 
 	private final ReviewDao reviewDao;
+	private final UserDao userDao;
 
 	public String getRating(Long storeIdx) {
 		return reviewDao.getRating(storeIdx).orElseThrow(NoSuchElementException::new);
@@ -32,11 +34,15 @@ public class ReviewProvider {
 		List<ReviewSpecificDto> reviews = reviewDao.findAllByStoreIdx(storeIdx, start, offset);
 
 		return reviews.stream()
-				.map(review -> ReviewSpecificView.of(review, getReviewCommentDto(review)))
+				.map(review -> ReviewSpecificView.of(review, getSellerName(review.getItemIdx()), getReviewCommentDto(review.getIdx())))
 				.collect(Collectors.toList());
 	}
 
-	private ReviewCommentDto getReviewCommentDto(ReviewSpecificDto review) {
-		return (ReviewCommentDto) reviewDao.findReviewCommentById(review.getIdx()).orElseGet(ReviewCommentDto::mock);
+	private String getSellerName(Long itemIdx) {
+		return userDao.getSellerNameByItemIdx(itemIdx);
+	}
+
+	private ReviewCommentDto getReviewCommentDto(Long reviewId) {
+		return (ReviewCommentDto) reviewDao.findReviewCommentById(reviewId).orElseGet(ReviewCommentDto::mock);
 	}
 }

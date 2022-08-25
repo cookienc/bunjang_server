@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class ReviewSpecificView {
+	private String sellerName;
 	private String reviewerIdx;
 	private String reviewerName;
 	private String reviewerImage;
@@ -16,7 +17,8 @@ public class ReviewSpecificView {
 	private ReviewCommentDto comments;
 
 	@Builder
-	public ReviewSpecificView(String reviewerIdx, String reviewerName, String reviewerImage, String purchasedProduct, String rating, String reviewPost, String reviewDate, ReviewCommentDto comments) {
+	public ReviewSpecificView(String sellerName, String reviewerIdx, String reviewerName, String reviewerImage, String purchasedProduct, String rating, String reviewPost, String reviewDate, ReviewCommentDto comments) {
+		this.sellerName = sellerName;
 		this.reviewerIdx = reviewerIdx;
 		this.reviewerName = reviewerName;
 		this.reviewerImage = reviewerImage;
@@ -27,8 +29,9 @@ public class ReviewSpecificView {
 		this.comments = comments;
 	}
 
-	public static ReviewSpecificView of(ReviewSpecificDto reviewDto, ReviewCommentDto commentDto) {
+	public static ReviewSpecificView of(ReviewSpecificDto reviewDto, String sellerName, ReviewCommentDto commentDto) {
 		return ReviewSpecificView.builder()
+				.sellerName(sellerName)
 				.reviewerIdx(reviewDto.getReviewerIdx())
 				.reviewerName(reviewDto.getReviewerName())
 				.reviewerImage(reviewDto.getReviewerImage())

@@ -31,6 +31,7 @@ public class UserDao {
 	private final ItemMapper itemMapper;
 
 	private JdbcTemplate jdbcTemplate;
+
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -142,5 +143,11 @@ public class UserDao {
 				"and i.sellerIdx = :storeIdx";
 
 		return template.queryForObject(sql, Map.of("storeIdx", storeIdx), String.class);
+	}
+
+	public String getSellerNameByItemIdx(Long itemIdx) {
+		var sql = "select u.storeName from User u " +
+				"where u.idx = (select i.sellerIdx from Item i where i.idx = :itemIdx)";
+		return template.queryForObject(sql, Map.of("itemIdx", itemIdx), String.class);
 	}
 }
