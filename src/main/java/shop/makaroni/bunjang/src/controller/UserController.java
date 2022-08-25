@@ -18,6 +18,7 @@ import shop.makaroni.bunjang.src.domain.user.dto.SaveUserRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleView;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchView;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.service.InquiryService;
@@ -101,5 +102,10 @@ public class UserController {
     @GetMapping("/stores/{storeIdx}")
     public ResponseEntity<StoreInfoView> getStoreById(@PathVariable Long storeIdx) {
         return ResponseEntity.ok(userProvider.getStoreById(storeIdx));
+    }
+
+    @GetMapping("/stores/search")
+    public ResponseEntity<List<StoreSearchView>> searchStoreByName(@RequestParam String name) {
+        return ResponseEntity.ok(userProvider.searchStoreByName(name));
     }
 }

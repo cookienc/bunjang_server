@@ -10,14 +10,17 @@ import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.dao.WishListDao;
 import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.State;
+import shop.makaroni.bunjang.src.domain.user.StoreSearchDto;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoView;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleView;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchView;
 import shop.makaroni.bunjang.src.response.ErrorCode;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -39,7 +42,7 @@ public class UserProvider {
 		User user = findById(userIdx);
 		Integer reviewCount = reviewDao.countStoreReview(userIdx);
 		Integer wishListCount = wishListDao.countMyWishList(userIdx);
-		Integer followerCount = followDao.countMyFollowers(userIdx);
+		Integer followerCount = countFollowers(userIdx);
 		Integer followingcount =  followDao.countMyFollowings(userIdx);
 		String rating = reviewProvider.getRating(userIdx);
 
@@ -84,7 +87,7 @@ public class UserProvider {
 		User user = findById(storeIdx);
 		Integer reviewCount = reviewDao.countStoreReview(storeIdx);
 		Integer wishListCount = wishListDao.countMyWishList(storeIdx);
-		Integer followerCount = followDao.countMyFollowers(storeIdx);
+		Integer followerCount = countFollowers(storeIdx);
 		Integer followingCount = followDao.countMyFollowings(storeIdx);
 		String soldCount = userDao.getSoldCount(storeIdx);
 		String rating = reviewProvider.getRating(storeIdx);
@@ -94,7 +97,20 @@ public class UserProvider {
 				reviewProvider.getReviewInfo(storeIdx), inquiryProvider.getInquiryInfo(storeIdx));
 	}
 
-	public String getSellerNameByItemIdx(Long itemIdx) {
-		return userDao.getSellerNameByItemIdx(itemIdx);
+	public List<StoreSearchView> searchStoreByName(String name) {
+		List<StoreSearchDto> results = userDao.searchStoreByName(name);
+		return results.stream()
+				.map(result -> StoreSearchView.of(result, countFollowers(result.getStoreIdx()), countStoreItems(result.getStoreIdx())))
+				.sorted(Comparator.comparing(StoreSearchView::getFollowers).reversed()
+						.thenComparing(StoreSearchView::getItems).reversed())
+				.collect(Collectors.toList());
+	}
+
+	private Integer countStoreItems(Long storeIdx) {
+		return userDao.countAllItems(storeIdx);
+	}
+
+	private Integer countFollowers(Long storeIdx) {
+		return followDao.countMyFollowers(storeIdx);
 	}
 }

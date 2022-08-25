@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.item.Item;
+import shop.makaroni.bunjang.src.domain.user.StoreSearchDto;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
@@ -149,5 +150,22 @@ public class UserDao {
 		var sql = "select u.storeName from User u " +
 				"where u.idx = (select i.sellerIdx from Item i where i.idx = :itemIdx)";
 		return template.queryForObject(sql, Map.of("itemIdx", itemIdx), String.class);
+	}
+
+	public List<StoreSearchDto> searchStoreByName(String name) {
+		var sql = "select u.idx storeIdx, " +
+				"u.storeName storeName, " +
+				"ifnull(u.storeImage, '이미지가 없습니다.') storeImage, " +
+				"u.createdAt createdAt " +
+				"from User u " +
+				"where u.status = 'Y' " +
+				"and u.storeName like :name";
+		String wrappedName = "%" + name + "%";
+		return template.query(sql, Map.of("name", wrappedName), BeanPropertyRowMapper.newInstance(StoreSearchDto.class));
+	}
+
+	public Integer countAllItems(Long storeIdx) {
+		var sql = "select count(*) from Item where sellerIdx = :storeIdx and status in ('Y', 'R')";
+		return template.queryForObject(sql, Map.of("storeIdx", storeIdx), Integer.class);
 	}
 }
