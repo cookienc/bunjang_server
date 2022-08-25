@@ -20,7 +20,7 @@ public class ItemDao {
 	}
 
 	public GetItemRes getItem(int itemIdx){
-		String query = "select idx, concat(FORMAT(price,0),'원') as price, name,\n" +
+		String query = "select idx, price, name,\n" +
 				"       IF(isnull(location),'지역정보 없음', location) location,\n" +
 				"       (case\n" +
 				"            when timestampdiff(minute , updatedAt, now()) < 1 then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
@@ -69,7 +69,7 @@ public class ItemDao {
 
 	}
 	public List<GetItemRes> getItems(){
-		String query = "select idx, concat(FORMAT(price,0),'원') as price, name,\n" +
+		String query = "select idx, price, name,\n" +
 				"       IF(isnull(location),'지역정보 없음', location) location,\n" +
 				"       (case\n" +
 				"            when timestampdiff(minute , updatedAt, now()) < 1 then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
@@ -471,4 +471,11 @@ public class ItemDao {
 				params);
 	}
 
+	public void createItem(PostItemReq postItemReq) {
+		String query =
+				"Insert into Item(idx, sellerIdx, name, category, brandIdx, price, delivery, content, stock, isNew, exchange, safePay,\n" +
+				"                 inspection, createdAt, updatedAt, status, hit, location, isAd)\n" +
+				"values (default, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,default,0,location,isAd);";
+		Object[] params = new Object[]{};
+	}
 }
