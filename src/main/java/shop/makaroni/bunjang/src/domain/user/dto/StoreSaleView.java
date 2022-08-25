@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.makaroni.bunjang.src.domain.item.Item;
-import shop.makaroni.bunjang.utils.Formatter;
 
 import static shop.makaroni.bunjang.config.Constant.CANNOT_FIND_LOCATION;
 
@@ -32,7 +31,7 @@ public class StoreSaleView {
 		return StoreSaleView.builder()
 				.itemIdx(String.valueOf(item.getIdx()))
 				.itemName(item.getName())
-				.price(Formatter.changeWon(item.getPrice()))
+				.price(String.valueOf(item.getPrice()))
 				.location(item.getLocation() == null ? CANNOT_FIND_LOCATION.getMessages() : item.getLocation())
 				.image(item.getImage())
 				.time(item.getUpdatedAt())
