@@ -162,7 +162,8 @@ public class ItemDao {
 		if (sort == 'C') {
 			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
-					"         left join (select itemIdx, min(path) path from ItemImage where status !='D' group by itemIdx ) img on Item.idx = img.itemIdx\n" +
+					"         left join (select itemIdx, min(path) path " +
+					"					from ItemImage where status !='D' group by itemIdx ) img on Item.idx = img.itemIdx\n" +
 					"where name like ? and status != 'D'\n" +
 					"order by (case\n" +
 					"              when name = ? then 0\n" +
@@ -190,16 +191,13 @@ public class ItemDao {
 		}
 		else if(sort == 'R'){
 			reqParams = new Object[]{param[4], count};
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, item.status status\n" +
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
-					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
-					"                    from ItemImage\n" +
-					"                    where status != 'D'\n" +
-					"                    group by ItemImage.status, itemIdx) img\n" +
+					"         left join (select itemIdx, min(path) path from ItemImage where status = 'Y' group by itemIdx) img\n" +
 					"                   on Item.idx = img.itemIdx\n" +
 					"where name like ?\n" +
-					"  and Item.status != 'D'\n" +
-					"order by updatedAt desc\n" +
+					"  and status != 'D'\n" +
+					"order by Item.updatedAt desc\n" +
 					"limit ?;\n";
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
@@ -215,15 +213,14 @@ public class ItemDao {
 			);
 		}
 		else if(sort == 'L'){
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, item.status status\n" +
+			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
-					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
-					"                    from ItemImage\n" +
-					"                    where status != 'D'\n" +
-					"                    group by ItemImage.status, itemIdx) img\n" +
+					"         left join (select itemIdx, min(path) path from ItemImage where status = 'Y' group by itemIdx) img\n" +
 					"                   on Item.idx = img.itemIdx\n" +
 					"where name like ?\n" +
-					"  and Item.status != 'D' order by price asc limit ?;";
+					"  and status != 'D'\n" +
+					"order by price asc\n" +
+					"limit ?;\n;";
 			reqParams = new Object[]{param[4], count};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(

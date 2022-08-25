@@ -72,15 +72,12 @@ public class ItemController {
         try {
             if (name == null) {
                 throw new BaseException(ITEM_NO_NAME);
-//                return new BaseResponse<>(ITEM_NO_NAME);
             }
             if(count == 0){
                 throw new BaseException(ITEM_NO_COUNT);
-//                return new BaseResponse<>(ITEM_NO_COUNT);
             }
             if(sort != 'C' && sort != 'R' && sort != 'L' && sort != 'H'){
                  throw new BaseException(ITEM_INVALID_SORT);
-//                return new BaseResponse<>(ITEM_INVALID_SORT);
             }
             return new BaseResponse<>(itemProvider.getSearch(name, sort, count));
         } catch (BaseException exception) {
@@ -188,6 +185,11 @@ public class ItemController {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
+//    @ResponseBody
+//    @PostMapping("")
+//    public BaseResponse<PostItemRes> PostSearch(@RequestBody PostSellReq postSellReq) {
+//
+//    }
 }
 
 /*
