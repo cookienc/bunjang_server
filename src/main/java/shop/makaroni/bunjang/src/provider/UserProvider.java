@@ -16,7 +16,7 @@ import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoView;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleView;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchView;
-import shop.makaroni.bunjang.src.response.ErrorCode;
+import shop.makaroni.bunjang.src.response.exception.CannotFindPurchasedItem;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
@@ -24,6 +24,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_PURCHASED_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION;
 
 @Service
 @Transactional(readOnly = true)
@@ -79,7 +82,7 @@ public class UserProvider {
 			return;
 		};
 
-		throw new DuplicateLoginIdEx(ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION.getMessages());
+		throw new DuplicateLoginIdEx(DUPLICATE_LOGIN_ID_EXCEPTION.getMessages());
 	}
 
 	public StoreInfoView getStoreById(Long storeIdx) {
@@ -104,6 +107,11 @@ public class UserProvider {
 				.sorted(Comparator.comparing(StoreSearchView::getFollowers).reversed()
 						.thenComparing(StoreSearchView::getItems).reversed())
 				.collect(Collectors.toList());
+	}
+
+	public void checkPurchased(Long storeIdx, Long userIdx, Long itemIdx) {
+		userDao.findItemWithUserIdxItemIdx(storeIdx, userIdx, itemIdx)
+				.orElseThrow(() -> new CannotFindPurchasedItem(CANNOT_FIND_PURCHASED_EXCEPTION.getMessages()));
 	}
 
 	private Integer countStoreItems(Long storeIdx) {

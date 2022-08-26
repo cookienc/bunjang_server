@@ -5,6 +5,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.review.ReviewCommentDto;
 import shop.makaroni.bunjang.src.domain.review.ReviewSpecificDto;
@@ -20,6 +23,29 @@ import java.util.Optional;
 public class ReviewDao {
 
 	private final NamedParameterJdbcTemplate template;
+
+	public Long save(Long itemIdx, Long userIdx, String post, Double rating) {
+		var sql = "insert into Review (itemIdx, userIdx, post, rating) " +
+				"values (:itemIdx, :userIdx, :post, :rating)";
+
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("itemIdx",itemIdx)
+				.addValue("userIdx", userIdx)
+				.addValue("post", post)
+				.addValue("rating", rating);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		template.update(sql, params, keyHolder);
+		return keyHolder.getKey().longValue();
+	}
+
+	public void saveReviewImage(Long reviewIdx, String image) {
+		var sql = "insert into ReviewImage (reviewIdx, image) " +
+				"values (:reviewIdx, :image)";
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("reviewIdx", reviewIdx)
+				.addValue("image", image);
+		template.update(sql, params);
+	}
 
 	public Integer countStoreReview(Long userId) {
 		var sql = "select count(*) from Review r " +

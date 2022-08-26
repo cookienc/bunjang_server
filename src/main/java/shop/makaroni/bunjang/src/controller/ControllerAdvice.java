@@ -12,6 +12,7 @@ import shop.makaroni.bunjang.src.response.ErrorResponse;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
 import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
+import shop.makaroni.bunjang.src.response.exception.CannotFindPurchasedItem;
 import shop.makaroni.bunjang.src.response.exception.DoesNotMatchPasswordEx;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 import shop.makaroni.bunjang.src.response.exception.EmptyParamEx;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_DECODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
+import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_PURCHASED_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.EMPTY_PARAM_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
@@ -106,6 +108,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(EMPTY_PARAM_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(EMPTY_PARAM_EXCEPTION, request.getRequestURI()));
+	}
+
+	@ExceptionHandler(CannotFindPurchasedItem.class)
+	public ResponseEntity<ErrorResponse> cannotFindPurchasedItemExHandler(CannotFindPurchasedItem e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(CANNOT_FIND_PURCHASED_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(CANNOT_FIND_PURCHASED_EXCEPTION, request.getRequestURI()));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
