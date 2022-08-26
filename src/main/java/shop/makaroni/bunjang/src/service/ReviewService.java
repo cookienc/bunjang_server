@@ -6,6 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.ReviewDao;
 import shop.makaroni.bunjang.src.domain.review.dto.PostReviewRequest;
 import shop.makaroni.bunjang.src.provider.UserProvider;
+import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
+
+import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_REVIEW_EXCEPTION;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +27,15 @@ public class ReviewService {
 		request.getImages().stream()
 				.forEach(image -> reviewDao.saveReviewImage(reviewIdx, image));
 		return reviewIdx;
+	}
+
+	public void delete(Long reviewIdx) {
+
+		if (reviewDao.findReviewStatusById(reviewIdx).equals("D")) {
+			throw new AlreadyDeletedException(ALREADY_DELETED_REVIEW_EXCEPTION.getMessages());
+		}
+
+		reviewDao.delete(reviewIdx);
+		reviewDao.deleteReviewImagesByReviewIdx(reviewIdx);
 	}
 }

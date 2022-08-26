@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import shop.makaroni.bunjang.src.domain.review.dto.PurchasedItemsView;
 import shop.makaroni.bunjang.src.provider.ReviewProvider;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
+import shop.makaroni.bunjang.src.response.SuccessStatus;
 import shop.makaroni.bunjang.src.service.ReviewService;
 
 import java.net.URI;
@@ -37,7 +39,7 @@ public class ReviewController {
 	public ResponseEntity<List<ReviewSpecificView>> findAll(@PathVariable Long storeIdx,
 															@RequestParam(defaultValue = "0") Integer start,
 															@RequestParam(defaultValue = "10") Integer offset) {
-		return ResponseEntity.ok(reviewProvider.findAllByStoreIdx(storeIdx,start, offset));
+		return ResponseEntity.ok(reviewProvider.findAllByStoreIdx(storeIdx, start, offset));
 	}
 
 	@GetMapping("/stores/{storeIdx}/users/{userIdx}")
@@ -48,7 +50,13 @@ public class ReviewController {
 	@PostMapping("/stores/{storeIdx}/users/{userIdx}")
 	public ResponseEntity<ResponseInfo> save(@PathVariable Long storeIdx, @PathVariable Long userIdx, @RequestBody PostReviewRequest request) {
 		Long reviewId = reviewService.save(storeIdx, userIdx, request);
-		String uri = "/reviews/" + reviewId + "/users/" + userIdx;
+		String uri = "/reviews/" + reviewId;
 		return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_SUCCESS));
+	}
+
+	@PatchMapping("/d/{reviewIdx}")
+	public ResponseEntity<ResponseInfo> delete(@PathVariable Long reviewIdx) {
+		reviewService.delete(reviewIdx);
+		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.DELETE_REVIEW_SUCCESS));
 	}
 }

@@ -172,4 +172,23 @@ public class ReviewDao {
 			return Optional.empty();
 		}
 	}
+
+	public void delete(Long reviewIdx) {
+		var sql = "update Review r " +
+				"set r.status = 'D' " +
+				"where r.idx = :reviewIdx";
+		template.update(sql, Map.of("reviewIdx", reviewIdx));
+	}
+
+	public String findReviewStatusById(Long reviewIdx) {
+		var sql = "select status from Review r where idx = :reviewIdx";
+		return template.queryForObject(sql, Map.of("reviewIdx", reviewIdx), String.class);
+	}
+
+	public void deleteReviewImagesByReviewIdx(Long reviewIdx) {
+		var sql = "update ReviewImage ri " +
+				"set ri.status = 'D' " +
+				"where ri.reviewIdx = :reviewIdx";
+		template.update(sql, Map.of("reviewIdx", reviewIdx));
+	}
 }

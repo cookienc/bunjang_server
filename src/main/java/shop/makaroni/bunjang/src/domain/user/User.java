@@ -54,7 +54,7 @@ public class User {
 
 	public void validate() {
         if (this.status.equals(State.DELETE.getState())) {
-            throw new AlreadyDeletedException(ErrorCode.ALREADY_DELETED_EXCEPTION.getMessages());
+            throw new AlreadyDeletedException(ErrorCode.ALREADY_DELETED_MEMBER_EXCEPTION.getMessages());
         }
 	}
 }

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_MEMBER_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_DECODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_PURCHASED_EXCEPTION;
@@ -59,8 +59,8 @@ public class ControllerAdvice {
 	@ExceptionHandler(AlreadyDeletedException.class)
 	public ResponseEntity<ErrorResponse> alreadyDeletedExHandler(AlreadyDeletedException e, HttpServletRequest request) {
 		printLog(e, request);
-		return ResponseEntity.status(ALREADY_DELETED_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(ALREADY_DELETED_EXCEPTION, request.getRequestURI()));
+		return ResponseEntity.status(ALREADY_DELETED_MEMBER_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(ALREADY_DELETED_MEMBER_EXCEPTION, request.getRequestURI()));
 	}
 
 	@ExceptionHandler(NoSuchElementException.class)
