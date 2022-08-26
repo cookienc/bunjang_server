@@ -231,7 +231,7 @@ public class ItemController {
         }
     }
     @ResponseBody
-    @PatchMapping("/{idx}/test/status/sellers")
+    @PatchMapping("/{idx}/status/sellers")
     public BaseResponse<HashMap<String, String>> PatchItemStatus(@PathVariable("idx") Integer idx,
                                               @RequestBody Map<String, String> param) {
 
@@ -264,6 +264,13 @@ public class ItemController {
     public BaseResponse<GetWishListRes> GetWishList(@PathVariable("idx") Integer idx) {
             return itemProvider.getWishList(idx);
     }
+
+//    @ResponseBody
+//    @PostMapping("wish-lists/{userIdx}")
+//    public BaseResponse<HashMap<String, String>> PostWish(@PathVariable("userIdx") Integer userIdx) {
+//
+//    }
+
 
 
 }
