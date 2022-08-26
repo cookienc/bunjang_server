@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-public class PostItemRes {
+public class ItemRes {
     int idx;
 
 }

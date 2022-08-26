@@ -471,20 +471,20 @@ public class ItemDao {
 				params);
 	}
 
-	public int createItem(PostItemReq postItemReq) {
+	public int createItem(ItemReq itemReq) {
 		String query =
 				"Insert into Item(sellerIdx, name, category, brandIdx, price, delivery, content, stock, isNew, exchange, safePay,\n" +
 						"                 inspection, location, isAd)\n" +
 						"                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);";
-		Object[] params = postItemReq.getPostItemReq();
+		Object[] params = itemReq.getPostItemReq();
 		this.jdbcTemplate.update(query, params);
 		String lastInsertIdQuery = "select last_insert_id()";
 		return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
 	}
 
 	public int findBrand(String tag) {
-		String query = "select IF((select exists(select idx from Brand where name = ? or englishName = ?)),\n" +
-				"               (select idx from Brand where name = ? or englishName = ?),\n" +
+		String query = "select IF((select exists(select idx from Brand where (name = ? or englishName = ?) and status!='D')),\n" +
+				"               (select idx from Brand where (name = ? or englishName = ?) and status!='D'),\n" +
 				"               0);";
 		Object[] params = new Object[]{tag, tag, tag, tag};
 		return this.jdbcTemplate.queryForObject(query,
@@ -497,4 +497,133 @@ public class ItemDao {
 		Object[] params = new Object[]{brandIdx,itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
+
+	public void setTags(int itemIdx, String tag) {
+		String query = "insert into Tag(itemIdx, name) values(?, ?);";
+		Object[] params = new Object[]{itemIdx, tag};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public void setImage(int itemIdx, String image) {
+		String query = "insert into ItemImage(itemIdx, path) values(?, ?);";
+		Object[] params = new Object[]{itemIdx, image};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public int checkImage(int itemIdx, String image) {
+		String query = "select IF(exists(select idx from ItemImage where itemIdx = ? and path = ?),\n" +
+				"          (select idx from ItemImage where itemIdx = ? and path = ?),\n" +
+				"          0);";
+		Object[] params = new Object[]{itemIdx, image, itemIdx, image};
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				params);
+	}
+	public void updateImage(int imgIdx) {
+		String query = "update ItemImage set status = 'Y' where idx = ?;";
+		this.jdbcTemplate.update(query, imgIdx);
+	}
+
+	public void updateName(int itemIdx, String name){
+		String query = "update Item set name=? where idx = ?;";
+		Object[] params = new Object[]{name, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public void updateCategory(int itemIdx, String category) {
+		String query = "update Item set category=? where idx = ?;";
+		Object[] params = new Object[]{category, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+	public int checkTag(int itemIdx, String Tag) {
+		String query = "select IF(exists(select idx from Tag where itemIdx = ? and name = ?),\n" +
+				"          (select idx from Tag where itemIdx = ? and name = ?),\n" +
+				"          0);";
+		Object[] params = new Object[]{itemIdx, Tag, itemIdx, Tag};
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				params);
+	}
+
+	public void setTag(int itemIdx, String tag) {
+		String query = "insert into Tag(itemIdx, name) values(?, ?);";
+		Object[] params = new Object[]{itemIdx, tag};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public void updateTag(int tagIdx) {
+		String query = "update Tag set status = 'Y' where idx = ?;";
+		this.jdbcTemplate.update(query, tagIdx);
+	}
+
+	public void updatePrice(int itemIdx, Integer price) {
+		String query = "update Item set price = ? where idx = ?;";
+		Object[] params = new Object[]{price, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+	public void updateDelivery(int itemIdx, Integer delivery) {
+		String query = "update Item set delivery = ? where idx = ?;";
+		Object[] params = new Object[]{delivery, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public void updateStock(int itemIdx, Integer stock) {
+		String query = "update Item set stock = ? where idx = ?;";
+		Object[] params = new Object[]{stock, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public void updateIsNew(int itemIdx, Integer isNew) {
+		String query = "update Item set isNew = ? where idx = ?;";
+		Object[] params = new Object[]{isNew, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public void updateExchange(int itemIdx, Integer exchange) {
+		String query = "update Item set exchange = ? where idx = ?;";
+		Object[] params = new Object[]{exchange, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+	public void updateSafePay(int itemIdx,Integer safePay){
+		String query = "update Item set safePay = ? where idx = ?;";
+		Object[] params = new Object[]{safePay, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+	public void updateSellerIdx(int itemIdx,Integer sellerIdx){
+		String query = "update Item set sellerIdx = ? where idx = ?;";
+		Object[] params = new Object[]{sellerIdx, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+	public void updateLocation(int itemIdx, String location){
+		String query = "update Item set location = ? where idx = ?;";
+		Object[] params = new Object[]{location, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+	public void updateIsAd(int itemIdx, Integer isAd){
+		String query = "update Item set isAd = ? where idx = ?;";
+		Object[] params = new Object[]{isAd, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+	public void updateInspection(int itemIdx,Integer inspection){
+		String query = "update Item set inspection = ? where idx = ?;";
+		Object[] params = new Object[]{inspection, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public void updateContent(int itemIdx, String content) {
+		String query = "update Item set content = ? where idx = ?;";
+		Object[] params = new Object[]{content, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public void deleteAllTags(int itemIdx) {
+		String query = "update Tag set status = 'D' where itemIdx = ?;";
+		this.jdbcTemplate.update(query, itemIdx);
+	}
+
+	public void deleteAllImages(int itemIdx) {
+		String query = "update ItemImage set status = 'D' where itemIdx = ?;";
+		this.jdbcTemplate.update(query, itemIdx);
+	}
+
 }

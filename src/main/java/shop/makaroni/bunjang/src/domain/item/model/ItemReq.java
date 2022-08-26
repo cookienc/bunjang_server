@@ -9,22 +9,22 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostItemReq {
+public class ItemReq {
     private List<String> images;
     private String name;
-    private String category = "E";
-    private List<String> tags;
-    private int price;
-    private boolean delivery;
-    private int stock;
-    private boolean isNew;
-    private boolean exchange;
+    private String category; //V
+    private List<String> tags;//V
+    private Integer price;
+    private Integer delivery;
+    private Integer stock;
+    private Integer isNew;
+    private Integer exchange;
     private String content;
-    private boolean safePay;
-    private int sellerIdx;
+    private Integer safePay;
+    private Integer sellerIdx;//V
     private String location;
-    private boolean isAd;
-    private boolean inspection;
+    private Integer isAd;
+    private Integer inspection;
 
     public Object[] getPostItemReq(){
         return new Object[]{sellerIdx, name, category, 0, price, delivery, content, stock, isNew,

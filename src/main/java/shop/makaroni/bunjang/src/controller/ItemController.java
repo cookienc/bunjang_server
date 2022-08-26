@@ -1,6 +1,5 @@
 package shop.makaroni.bunjang.src.controller;
 
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.config.BaseResponse;
@@ -10,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import shop.makaroni.bunjang.src.provider.ItemProvider;
 import shop.makaroni.bunjang.src.service.ItemService;
 import shop.makaroni.bunjang.src.domain.item.model.*;
-import shop.makaroni.bunjang.src.validation.*;
+
 import java.util.List;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
-import static shop.makaroni.bunjang.src.validation.validationRegex.*;
+import static shop.makaroni.bunjang.src.validation.validation.*;
 
 
 @RestController
@@ -37,13 +36,7 @@ public class ItemController {
     @GetMapping("/{itemIdx}")
     public BaseResponse<GetItemRes> getItem(@PathVariable("itemIdx") int itemIdx) {
         try {
-            GetItemRes getItemRes;
-            getItemRes = itemProvider.getItem(itemIdx);
-            getItemRes.setWish(itemProvider.getItemWishCnt(itemIdx));
-            getItemRes.setChat(itemProvider.getItemChatCnt(itemIdx));
-            getItemRes.setTags(itemProvider.getItemTags(itemIdx));
-            getItemRes.setImages(itemProvider.getItemImages(itemIdx));
-            return new BaseResponse<>(getItemRes);
+            return new BaseResponse<>(itemProvider.getItem(itemIdx));
         } catch (BaseException exception) {
             exception.printStackTrace();
             return new BaseResponse<>((exception.getStatus()));
@@ -54,16 +47,7 @@ public class ItemController {
     @GetMapping("/all")
     public BaseResponse<List<GetItemRes>> getItems() {
         try {
-            List<GetItemRes> getItemRes;
-            getItemRes= itemProvider.getItems();
-            for (GetItemRes getItemRe : getItemRes) {
-                getItemRe.setWish(itemProvider.getItemWishCnt(Integer.parseInt(getItemRe.getIdx())));
-                getItemRe.setWish(itemProvider.getItemWishCnt(Integer.parseInt(getItemRe.getIdx())));
-                getItemRe.setChat(itemProvider.getItemChatCnt(Integer.parseInt(getItemRe.getIdx())));
-                getItemRe.setTags(itemProvider.getItemTags(Integer.parseInt(getItemRe.getIdx())));
-                getItemRe.setImages(itemProvider.getItemImages(Integer.parseInt(getItemRe.getIdx())));
-            }
-            return new BaseResponse<>(getItemRes);
+            return new BaseResponse<>(itemProvider.getItems());
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -191,34 +175,27 @@ public class ItemController {
     }
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<PostItemRes> CreateItem(@RequestBody PostItemReq postItemReq) {
-        if(postItemReq.getImages() == null){
+    public BaseResponse<ItemRes> CreateItem(@RequestBody ItemReq itemReq) {
+        if(itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()){
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
         }
-        if(!isRegexItemName(postItemReq.getName())){
-            return new BaseResponse<>(POST_ITEM_INVALID_NAME);
-        }
-        if(postItemReq.getCategory() == null || !isRegexCategory(postItemReq.getCategory())){
-            return new BaseResponse<>(POST_ITEM_INVALID_CATEGORY);
-        }
-        if(postItemReq.getPrice() < 100 || postItemReq.getPrice() > 100000000){
-            return new BaseResponse<>(POST_ITEM_INVALID_PRICE);
-        }
-        if(postItemReq.getStock() < 1){
-            return new BaseResponse<>(POST_ITEM_INVALID_STOCK);
-        }
-        if(!isRegexContent(postItemReq.getContent())){
-            return new BaseResponse<>(POST_ITEM_INVALID_CONTENT);
-        }
-        if(postItemReq.getPrice() < 500){
-            postItemReq.setSafePay(false);
-        }
-        if(postItemReq.getSellerIdx() < 0){
-            return new BaseResponse<>(POST_ITEM_INVALID_SELLER);
-        }
         try {
-            PostItemRes postItemRes = itemService.createItem(postItemReq);
-            return new BaseResponse<>(postItemRes);
+            validateItems(itemReq);
+            ItemRes itemRes = itemService.createItem(itemReq);
+            return new BaseResponse<>(itemRes);
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
+    @ResponseBody
+    @PatchMapping("/{idx}")
+    public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Integer idx,
+                                           @RequestBody ItemReq itemReq) {
+        try {
+            validateItems(itemReq);
+            itemService.patchItem(idx, itemReq);
+            return new BaseResponse<>(itemProvider.getItem(idx));
         }
         catch(BaseException baseException){
             return new BaseResponse<>(baseException.getStatus());
