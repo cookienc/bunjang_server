@@ -1,5 +1,6 @@
 package shop.makaroni.bunjang.src.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.config.BaseResponse;
@@ -20,7 +21,6 @@ import static shop.makaroni.bunjang.src.validation.validation.*;
 
 @RestController
 @RequestMapping("/items")
-@Transactional
 public class ItemController {
 
     @Autowired
