@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 
 import javax.sql.DataSource;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
 public class ItemDao {
-
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
@@ -637,5 +638,51 @@ public class ItemDao {
 		return this.jdbcTemplate.queryForObject(query,
 				char.class,
 				idx);
+	}
+
+	public String getPrice(Integer idx) {
+		String query = "select price from Item where idx = ?";
+		return String.valueOf(this.jdbcTemplate.queryForObject(query,
+				int.class,
+				idx));
+	}
+
+	public String getItemName(Integer idx) {
+		String query = "select name from Item where idx = ?";
+		return this.jdbcTemplate.queryForObject(query,
+				String.class,
+				idx);
+	}
+
+	public String getUpdatedAt(Integer idx) {
+		String query = "select (case\n" +
+				"    when timestampdiff(minute , updatedAt, now()) < 1 then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
+				"    when timestampdiff(hour, updatedAt, now()) < 1 then concat(timestampdiff(minute, updatedAt, now()), '분 전')\n" +
+				"    when timestampdiff(hour, updatedAt, now()) < 24 then concat(timestampdiff(hour, updatedAt, now()), '시간 전')\n" +
+				"    when timestampdiff(day, updatedAt, now()) < 31 then concat(timestampdiff(day, updatedAt, now()), '일 전')\n" +
+				"    when timestampdiff(week, updatedAt, now()) < 4 then concat(timestampdiff(week, updatedAt, now()), '주 전')\n" +
+				"    when timestampdiff(month,updatedAt, now()) < 12 then concat(timestampdiff(month, updatedAt, now()), '개월 전')\n" +
+				"    else concat(timestampdiff(year, updatedAt, now()), '년 전')\n" +
+				"end) as time\n" +
+				"from Item\n" +
+				"where idx = ?";
+		return this.jdbcTemplate.queryForObject(query,
+			String.class,
+			idx);
+	}
+
+	public List<WishList> getWishList(int idx) {
+		String query = "select User.idx userIdx, User.storeName name, User.storeImage image\n" +
+				"from WishList\n" +
+				"         left join User on WishList.userIdx = User.idx\n" +
+				"where itemIdx = ? and WishList.status!='D' and User.status != 'D';";
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new WishList(
+						String.valueOf(rs.getInt("userIdx")),
+						rs.getString("name"),
+						rs.getString("image")
+				),
+				idx
+		);
 	}
 }

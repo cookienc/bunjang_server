@@ -1,9 +1,11 @@
 package shop.makaroni.bunjang.src.provider;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
+import shop.makaroni.bunjang.config.BaseResponse;
 import shop.makaroni.bunjang.src.dao.ItemDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.item.model.*;
@@ -161,5 +163,17 @@ public class ItemProvider {
 		if(!category.equals("E") && itemDao.checkCategory(parentCode,subCode) == 0){
 			throw new BaseException(POST_ITEM_INVALID_CATEGORY);
 		}
+	}
+
+	public BaseResponse<GetWishListRes> getWishList(Integer idx) {
+		if(itemDao.checkItemIdx(idx) == 0){
+			return new BaseResponse<>(ITEM_NO_EXIST);
+		}
+		ItemPreview item = new ItemPreview(itemDao.getPrice(idx),
+				itemDao.getItemName(idx),
+				itemDao.getUpdatedAt(idx));
+		int wishCnt = itemDao.getItemWishCnt(idx);
+		List<WishList> wishList = itemDao.getWishList(idx);
+		return new BaseResponse<>(new GetWishListRes(item, wishCnt, wishList));
 	}
 }

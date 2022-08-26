@@ -1,6 +1,8 @@
 package shop.makaroni.bunjang.src.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.config.BaseResponse;
@@ -11,6 +13,7 @@ import shop.makaroni.bunjang.src.provider.ItemProvider;
 import shop.makaroni.bunjang.src.service.ItemService;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +26,7 @@ import static shop.makaroni.bunjang.src.validation.validation.*;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private final ItemProvider itemProvider;
     @Autowired
@@ -39,6 +42,7 @@ public class ItemController {
     @GetMapping("/{itemIdx}")
     public BaseResponse<GetItemRes> getItem(@PathVariable("itemIdx") int itemIdx) {
         try {
+
             return new BaseResponse<>(itemProvider.getItem(itemIdx));
         } catch (BaseException exception) {
             exception.printStackTrace();
@@ -118,32 +122,49 @@ public class ItemController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
-    /*
-    *
-    * 모든 브랜드 목록 및 유저 팔로우 여부 조회
-    */
     @ResponseBody
     @GetMapping("/brand/{userIdx}")
     public BaseResponse<List<GetBrandRes>> getBrand(@PathVariable("userIdx") int userIdx,
-                                                    @RequestParam(required = false) String name,
-                                                    @RequestParam(required = false, defaultValue = "K") char sort) {
+                                                    @RequestParam(required = false, defaultValue = "K") char sort){
 
         if(!(sort == 'K' || sort == 'E')){
             return new BaseResponse<>(ITEM_INVALID_SORT);
         }
+        List<GetBrandRes> getBrandRes;
+        int brandIdx;
+        try {
+            getBrandRes = itemProvider.getBrand(userIdx,sort);
+            for (GetBrandRes eachRes : getBrandRes) {
+                brandIdx = Integer.parseInt(eachRes.getBrandIdx());
+                eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
+            }
+            return new BaseResponse<>(getBrandRes);
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
 
+
+
+
+    }
+
+    @ResponseBody
+    @GetMapping("/brand/{userIdx}/search")
+    public BaseResponse<List<GetBrandRes>> getBrandSearch(@PathVariable("userIdx") int userIdx,
+                                                    @RequestParam(required = false) String name) {
+
+        ArrayList blank = new ArrayList();
         List<GetBrandRes> getBrandRes;
         int brandIdx;
         try {
             if (userIdx <= 0) {
                 return new BaseResponse<>(USERS_INVALID_IDX);
             }
-            if (name == null) {
-                getBrandRes = itemProvider.getBrand(userIdx,sort);
-            } else {
-                getBrandRes = itemProvider.getBrandSearch(userIdx, name);
+            if(name == null){
+//                return new BaseResponse<>(blank);
+                return new BaseResponse<>(blank);
             }
+            getBrandRes = itemProvider.getBrandSearch(userIdx, name);
             for (GetBrandRes eachRes : getBrandRes) {
                 brandIdx = Integer.parseInt(eachRes.getBrandIdx());
                 eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
@@ -237,6 +258,13 @@ public class ItemController {
         }
 
     }
+
+    @ResponseBody
+    @GetMapping("/{idx}/wish-lists")
+    public BaseResponse<GetWishListRes> GetWishList(@PathVariable("idx") Integer idx) {
+            return itemProvider.getWishList(idx);
+    }
+
 
 }
 
