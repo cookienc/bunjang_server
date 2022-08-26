@@ -10,7 +10,6 @@ import shop.makaroni.bunjang.src.provider.ItemProvider;
 import shop.makaroni.bunjang.src.service.ItemService;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,7 +157,8 @@ public class ItemController {
     @GetMapping("/category/{code}")
     public BaseResponse<GetCategoryRes> getCategory(@PathVariable("code") String code,
                                                     @RequestParam(required = false, defaultValue = "R") char sort,
-                                                    @RequestParam() Integer count) {
+                                                    @RequestParam() Integer count)
+    {
 
         if (code.length() > 10 || code.length() < 1 ) {
             return new BaseResponse<>(ITEM_INVALID_CATEGORY);
@@ -209,7 +209,7 @@ public class ItemController {
         }
     }
     @ResponseBody
-    @PostMapping("/{idx}")
+    @PatchMapping("/{idx}/status")
     public BaseResponse<HashMap<String, String>> PatchItemStatus(@PathVariable("idx") Integer idx,
                                               @RequestBody Map<String, String> param) {
 
@@ -223,6 +223,18 @@ public class ItemController {
         catch(BaseException baseException){
             return new BaseResponse<>(baseException.getStatus());
         }
+    }
+
+    @ResponseBody
+    @DeleteMapping("/{idx}")
+    public BaseResponse<HashMap<String, String>> DeleteItem(@PathVariable("idx") Integer idx) {
+        try {
+            return new BaseResponse<>(itemService.PatchItemStatus(idx, "D"));
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+
     }
 
 }
