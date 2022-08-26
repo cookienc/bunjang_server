@@ -197,7 +197,7 @@ public class ItemController {
     @PatchMapping("/{idx}/sellers")
     public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Integer idx,
                                            @RequestBody ItemReq itemReq) {
-        if(itemReq.getImages() != null && ( itemReq.getImages().isEmpty() || itemReq.getImages().get(0).equals(""))){
+        if(itemReq.getImages() != null && (itemReq.getImages().isEmpty() || itemReq.getImages().get(0).equals(""))){
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
         }
         try {
