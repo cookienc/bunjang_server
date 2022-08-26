@@ -19,6 +19,7 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 import static shop.makaroni.bunjang.src.validation.validation.*;
 
 
+@Transactional
 @RestController
 @RequestMapping("/items")
 public class ItemController {
@@ -196,7 +197,7 @@ public class ItemController {
     @PatchMapping("/{idx}/sellers")
     public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Integer idx,
                                            @RequestBody ItemReq itemReq) {
-        if(itemReq.getImages() == null || itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()){
+        if(itemReq.getImages() != null && ( itemReq.getImages().isEmpty() || itemReq.getImages().get(0).equals(""))){
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
         }
         try {
