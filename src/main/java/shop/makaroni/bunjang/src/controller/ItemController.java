@@ -177,7 +177,7 @@ public class ItemController {
         }
     }
     @ResponseBody
-    @PostMapping("")
+    @PostMapping
     public BaseResponse<ItemRes> CreateItem(@RequestBody ItemReq itemReq) {
         if(itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()){
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
