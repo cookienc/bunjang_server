@@ -177,7 +177,7 @@ public class ItemController {
         }
     }
     @ResponseBody
-    @PostMapping
+    @PostMapping("/test") // TODO : URI 수정
     public BaseResponse<ItemRes> CreateItem(@RequestBody ItemReq itemReq) {
         if(itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()){
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
@@ -193,7 +193,7 @@ public class ItemController {
     }
 
     @ResponseBody
-    @PatchMapping("/{idx}")
+    @PatchMapping("/test/{idx}") // TODO : URI 수정
     public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Integer idx,
                                            @RequestBody ItemReq itemReq) {
         if(itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()){
