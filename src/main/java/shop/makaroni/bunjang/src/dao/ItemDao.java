@@ -626,4 +626,16 @@ public class ItemDao {
 		this.jdbcTemplate.update(query, itemIdx);
 	}
 
+	public void patchStatus(Integer idx, String status) {
+		String query = "update Item set status = ? where idx = ?;";
+		Object[] params = new Object[]{status, idx};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public char getStatus(Integer idx) {
+		String query = "select status from Item where idx = ?";
+		return this.jdbcTemplate.queryForObject(query,
+				char.class,
+				idx);
+	}
 }

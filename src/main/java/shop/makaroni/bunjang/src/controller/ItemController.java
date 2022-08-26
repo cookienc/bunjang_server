@@ -10,7 +10,10 @@ import shop.makaroni.bunjang.src.provider.ItemProvider;
 import shop.makaroni.bunjang.src.service.ItemService;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 import static shop.makaroni.bunjang.src.validation.validation.*;
@@ -189,18 +192,22 @@ public class ItemController {
         }
     }
     @ResponseBody
-    @PatchMapping("/{idx}")
-    public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Integer idx,
-                                           @RequestBody ItemReq itemReq) {
+    @PostMapping("/{idx}")
+    public BaseResponse<HashMap<String, String>> PatchItem(@PathVariable("idx") Integer idx,
+                                              @RequestBody Map<String, String> param) {
+
+        char statusC = param.get("status").charAt(0);
+        if(!(statusC == 'Y'||statusC=='R'||statusC=='S'||statusC=='D')){
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
         try {
-            validateItems(itemReq);
-            itemService.patchItem(idx, itemReq);
-            return new BaseResponse<>(itemProvider.getItem(idx));
+            return new BaseResponse<>(itemService.patchStatus(idx, param.get("status")));
         }
         catch(BaseException baseException){
             return new BaseResponse<>(baseException.getStatus());
         }
     }
+
 }
 
 /*

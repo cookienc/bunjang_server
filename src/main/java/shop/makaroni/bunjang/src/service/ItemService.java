@@ -10,6 +10,7 @@ import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 import shop.makaroni.bunjang.src.provider.ItemProvider;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
@@ -239,5 +240,18 @@ public class ItemService {
 
 	public void deleteAllImages(int itemIdx){
 		itemDao.deleteAllImages(itemIdx);
+	}
+
+	public HashMap<String, String> patchStatus(Integer idx, String status) throws BaseException{
+		if(itemDao.checkItemIdx(idx) == 0){
+			throw new BaseException(ITEM_NO_EXIST);
+		}
+
+		itemDao.patchStatus(idx, status);
+
+		HashMap<String, String> itemRes = new HashMap<>();
+		itemRes.put("idx", String.valueOf(idx));
+		itemRes.put("status", String.valueOf(itemDao.getStatus(idx)));
+		return itemRes;
 	}
 }

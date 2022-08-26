@@ -12,8 +12,8 @@ import java.util.List;
 public class ItemReq {
     private List<String> images;
     private String name;
-    private String category; //V
-    private List<String> tags;//V
+    private String category;
+    private List<String> tags;
     private Integer price;
     private Integer delivery;
     private Integer stock;
@@ -21,7 +21,7 @@ public class ItemReq {
     private Integer exchange;
     private String content;
     private Integer safePay;
-    private Integer sellerIdx;//V
+    private Integer sellerIdx;
     private String location;
     private Integer isAd;
     private Integer inspection;
