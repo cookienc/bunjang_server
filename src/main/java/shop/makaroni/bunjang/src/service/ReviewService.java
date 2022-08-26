@@ -10,6 +10,8 @@ import shop.makaroni.bunjang.src.provider.ReviewProvider;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
 
+import java.util.NoSuchElementException;
+
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_REVIEW_EXCEPTION;
 
 @Service
@@ -36,7 +38,8 @@ public class ReviewService {
 
 	public void delete(Long reviewIdx) {
 
-		String state = reviewDao.findReviewStatusById(reviewIdx);
+		String state = reviewDao.findReviewStatusById(reviewIdx).orElseThrow(NoSuchElementException::new);
+
 		if (State.isAlreadyDeleted(state)) {
 			throw new AlreadyDeletedException(ALREADY_DELETED_REVIEW_EXCEPTION.getMessages());
 		}

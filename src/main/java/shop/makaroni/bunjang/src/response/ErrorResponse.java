@@ -18,7 +18,11 @@ public class ErrorResponse {
 		this.path = path;
 	}
 
-	public static ErrorResponse of(ErrorCode error, String requestUri) {
-		return new ErrorResponse(String.valueOf(error.getStatus().value()), error.getMessages(), requestUri);
+	public static ErrorResponse of(ErrorCode error, String message, String requestUri) {
+		return new ErrorResponse(String.valueOf(error.getStatus().value()), message, requestUri);
+	}
+
+	public static ErrorResponse of(ErrorCode error, String requestURI) {
+		return new ErrorResponse(String.valueOf(error.getStatus().value()), error.getMessages(),requestURI);
 	}
 }

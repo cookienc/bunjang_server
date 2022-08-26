@@ -48,28 +48,28 @@ public class ControllerAdvice {
 	public ResponseEntity<ErrorResponse> parameterExHandler(MissingServletRequestParameterException e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(MISSING_PARAMETER_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(MISSING_PARAMETER_EXCEPTION, request.getRequestURI()));
+				.body(ErrorResponse.of(MISSING_PARAMETER_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(InvalidInputEx.class)
 	public ResponseEntity<ErrorResponse> invalidInputExHandler(InvalidInputEx e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(INVALID_INPUT_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(INVALID_INPUT_EXCEPTION, request.getRequestURI()));
+				.body(ErrorResponse.of(INVALID_INPUT_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(AlreadyDeletedException.class)
 	public ResponseEntity<ErrorResponse> alreadyDeletedExHandler(AlreadyDeletedException e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(ALREADY_DELETED_MEMBER_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(ALREADY_DELETED_MEMBER_EXCEPTION, request.getRequestURI()));
+				.body(ErrorResponse.of(ALREADY_DELETED_MEMBER_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(AlreadySavedException.class)
 	public ResponseEntity<ErrorResponse> alreadySavedExHandler(AlreadySavedException e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(ALREADY_SAVED_REVIEW.getStatus())
-				.body(ErrorResponse.of(ALREADY_SAVED_REVIEW, request.getRequestURI()));
+				.body(ErrorResponse.of(ALREADY_SAVED_REVIEW, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(NoSuchElementException.class)
@@ -83,56 +83,56 @@ public class ControllerAdvice {
 	public ResponseEntity<ErrorResponse> cannotDecodeExHandler(CannotDecodeEx e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(CANNOT_DECODE_PASSWORD.getStatus())
-				.body(ErrorResponse.of(CANNOT_DECODE_PASSWORD, request.getRequestURI()));
+				.body(ErrorResponse.of(CANNOT_DECODE_PASSWORD, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(CannotEncodeEx.class)
 	public ResponseEntity<ErrorResponse> cannotEncodeExHandler(CannotEncodeEx e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(CANNOT_ENCODE_PASSWORD.getStatus())
-				.body(ErrorResponse.of(CANNOT_ENCODE_PASSWORD, request.getRequestURI()));
+				.body(ErrorResponse.of(CANNOT_ENCODE_PASSWORD, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(DuplicateLoginIdEx.class)
 	public ResponseEntity<ErrorResponse> duplicateLoginIdExExHandler(DuplicateLoginIdEx e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(DUPLICATE_LOGIN_ID_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(DUPLICATE_LOGIN_ID_EXCEPTION, request.getRequestURI()));
+				.body(ErrorResponse.of(DUPLICATE_LOGIN_ID_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(DoesNotMatchPasswordEx.class)
 	public ResponseEntity<ErrorResponse> doesNotMatchPasswordExHandler(DoesNotMatchPasswordEx e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(NOT_MATCH_PASSWORD_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(NOT_MATCH_PASSWORD_EXCEPTION, request.getRequestURI()));
+				.body(ErrorResponse.of(NOT_MATCH_PASSWORD_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(NotRightPasswordEx.class)
 	public ResponseEntity<ErrorResponse> notRightPasswordExExHandler(NotRightPasswordEx e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(NOT_RIGHT_PASSWORD_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(NOT_RIGHT_PASSWORD_EXCEPTION, request.getRequestURI()));
+				.body(ErrorResponse.of(NOT_RIGHT_PASSWORD_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(EmptyParamEx.class)
 	public ResponseEntity<ErrorResponse> emptyParamExHandler(EmptyParamEx e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(EMPTY_PARAM_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(EMPTY_PARAM_EXCEPTION, request.getRequestURI()));
+				.body(ErrorResponse.of(EMPTY_PARAM_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(CannotFindPurchasedItem.class)
 	public ResponseEntity<ErrorResponse> cannotFindPurchasedItemExHandler(CannotFindPurchasedItem e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(CANNOT_FIND_PURCHASED_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(CANNOT_FIND_PURCHASED_EXCEPTION, request.getRequestURI()));
+				.body(ErrorResponse.of(CANNOT_FIND_PURCHASED_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(DontPurchaseItemEx.class)
 	public ResponseEntity<ErrorResponse> dontPurchaseItemExHandler(DontPurchaseItemEx e, HttpServletRequest request) {
 		printLog(e, request);
 		return ResponseEntity.status(DONT_PURCHASE_ITEM_EXCEPTION.getStatus())
-				.body(ErrorResponse.of(DONT_PURCHASE_ITEM_EXCEPTION, request.getRequestURI()));
+				.body(ErrorResponse.of(DONT_PURCHASE_ITEM_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

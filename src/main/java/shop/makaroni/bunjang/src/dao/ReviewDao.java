@@ -180,9 +180,14 @@ public class ReviewDao {
 		template.update(sql, Map.of("reviewIdx", reviewIdx));
 	}
 
-	public String findReviewStatusById(Long reviewIdx) {
+	public Optional<String> findReviewStatusById(Long reviewIdx) {
 		var sql = "select status from Review r where idx = :reviewIdx";
-		return template.queryForObject(sql, Map.of("reviewIdx", reviewIdx), String.class);
+		try {
+			String status = this.template.queryForObject(sql, Map.of("reviewIdx", reviewIdx), String.class);
+			return Optional.of(status);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
 	}
 
 	public void deleteReviewImagesByReviewIdx(Long reviewIdx) {
