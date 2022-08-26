@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.ReviewDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
+import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.review.ReviewCommentDto;
 import shop.makaroni.bunjang.src.domain.review.ReviewSpecificDto;
 import shop.makaroni.bunjang.src.domain.review.ReviewSpecificView;
@@ -36,6 +37,11 @@ public class ReviewProvider {
 		return reviews.stream()
 				.map(review -> ReviewSpecificView.of(review, getSellerName(review.getItemIdx()), getReviewCommentDto(review.getIdx())))
 				.collect(Collectors.toList());
+	}
+
+	public void checkIfExist(Long userIdx, Long itemIdx) {
+		String state = reviewDao.getReviewStatus(userIdx, itemIdx);
+		State.isAlreadySaved(state);
 	}
 
 	private String getSellerName(Long itemIdx) {

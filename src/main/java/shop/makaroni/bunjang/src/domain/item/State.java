@@ -2,6 +2,8 @@ package shop.makaroni.bunjang.src.domain.item;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import shop.makaroni.bunjang.src.response.ErrorCode;
+import shop.makaroni.bunjang.src.response.exception.AlreadySavedException;
 import shop.makaroni.bunjang.src.response.exception.InvalidInputEx;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
@@ -9,7 +11,8 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTI
 @Getter
 @AllArgsConstructor
 public enum State {
-	DELETE("D"), REGISTERED("R"), SELLING("Y"), SOLD("S");
+	DELETE("D"), REGISTERED("R"), SELLING("Y"), SOLD("S"),
+	NORMAL("Y");
 
 	private String state;
 
@@ -25,4 +28,13 @@ public enum State {
 	}
 
 
+	public static void isAlreadySaved(String state) {
+		if (NORMAL.getState().equals(state)) {
+			throw new AlreadySavedException(ErrorCode.ALREADY_SAVED_REVIEW.getMessages());
+		}
+	}
+
+	public static boolean isAlreadyDeleted(String state) {
+		return DELETE.getState().equals(state);
+	}
 }

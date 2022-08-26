@@ -2,7 +2,6 @@ package shop.makaroni.bunjang.src.dao;
 
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class UserDao {
@@ -173,8 +171,6 @@ public class UserDao {
 	}
 
 	public Optional<Item> findItemWithUserIdxItemIdx(Long storeIdx, Long userIdx, Long itemIdx) {
-		log.info("userIdx = {}", userIdx);
-		log.info("itemIdx = {}", itemIdx);
 		var sql = "select * from Item i " +
 				"where i.status = 'S' " +
 				"and i.sellerIdx = :storeIdx " +

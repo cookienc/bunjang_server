@@ -191,4 +191,15 @@ public class ReviewDao {
 				"where ri.reviewIdx = :reviewIdx";
 		template.update(sql, Map.of("reviewIdx", reviewIdx));
 	}
+
+	public String getReviewStatus(Long userIdx, Long itemIdx) {
+		var sql = "select r.status from Review r " +
+				"where r.userIdx = :userIdx " +
+				"and r.itemIdx = :itemIdx";
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("userIdx", userIdx)
+				.addValue("itemIdx", itemIdx);
+
+		return template.queryForObject(sql, params, String.class);
+	}
 }

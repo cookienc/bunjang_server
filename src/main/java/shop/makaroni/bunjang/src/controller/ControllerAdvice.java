@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import shop.makaroni.bunjang.src.response.BeanErrorResponse;
 import shop.makaroni.bunjang.src.response.ErrorResponse;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
+import shop.makaroni.bunjang.src.response.exception.AlreadySavedException;
 import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotFindPurchasedItem;
@@ -26,6 +27,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_MEMBER_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_SAVED_REVIEW;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_DECODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_PURCHASED_EXCEPTION;
@@ -61,6 +63,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(ALREADY_DELETED_MEMBER_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(ALREADY_DELETED_MEMBER_EXCEPTION, request.getRequestURI()));
+	}
+
+	@ExceptionHandler(AlreadySavedException.class)
+	public ResponseEntity<ErrorResponse> alreadySavedExHandler(AlreadySavedException e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(ALREADY_SAVED_REVIEW.getStatus())
+				.body(ErrorResponse.of(ALREADY_SAVED_REVIEW, request.getRequestURI()));
 	}
 
 	@ExceptionHandler(NoSuchElementException.class)
