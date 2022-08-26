@@ -176,4 +176,7 @@ public class ItemProvider {
 		List<WishList> wishList = itemDao.getWishList(idx);
 		return new BaseResponse<>(new GetWishListRes(item, wishCnt, wishList));
 	}
+
+
+
 }

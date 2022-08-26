@@ -684,4 +684,10 @@ public class ItemDao {
 				idx
 		);
 	}
+
+	public void postWish(int itemIdx, Integer userIdx) {
+		String query = "insert WishList(userIdx, itemIdx) values(?,?)";
+		Object[] params = new Object[]{userIdx, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
 }

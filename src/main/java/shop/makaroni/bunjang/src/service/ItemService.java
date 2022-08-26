@@ -252,4 +252,18 @@ public class ItemService {
 		itemRes.put("status", String.valueOf(itemDao.getStatus(idx)));
 		return itemRes;
 	}
+
+	public HashMap<String, String> PostWish(int itemIdx, Integer userIdx) throws BaseException {
+		if(userDao.checkUserIdx(userIdx) == 0){
+			throw new BaseException(USERS_INVALID_IDX);
+		}
+		if(itemDao.checkItemIdx(itemIdx) == 0){
+			throw new BaseException(ITEM_NO_EXIST);
+		}
+		itemDao.postWish(itemIdx, userIdx);
+		HashMap<String,String> res = new HashMap<>();
+		res.put("itemIdx", String.valueOf(itemIdx));
+		return res;
+
+	}
 }

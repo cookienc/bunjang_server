@@ -265,11 +265,24 @@ public class ItemController {
             return itemProvider.getWishList(idx);
     }
 
-//    @ResponseBody
-//    @PostMapping("wish-lists/{userIdx}")
-//    public BaseResponse<HashMap<String, String>> PostWish(@PathVariable("userIdx") Integer userIdx) {
-//
-//    }
+    @ResponseBody
+    @PostMapping("wish-lists/{userIdx}")
+    public BaseResponse<HashMap<String, String>> PostWish(@PathVariable("userIdx") Integer userIdx,
+                                                          @RequestBody Map<String, Integer> param) {
+        int itemIdx = param.get("itemIdx");
+        if(userIdx < 0){
+            return new BaseResponse<>(USERS_INVALID_IDX);
+        }
+        if(itemIdx < 0){
+            return new BaseResponse<>(ITEM_NO_EXIST);
+        }
+        try {
+            return new BaseResponse<>(itemService.PostWish(itemIdx, userIdx));
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
 
 
 
