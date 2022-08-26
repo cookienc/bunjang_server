@@ -177,7 +177,7 @@ public class ItemController {
         }
     }
     @ResponseBody
-    @PostMapping("/test") // TODO : URI 수정
+    @PostMapping("/sellers")
     public BaseResponse<ItemRes> CreateItem(@RequestBody ItemReq itemReq) {
         if(itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()){
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
@@ -193,7 +193,7 @@ public class ItemController {
     }
 
     @ResponseBody
-    @PatchMapping("/test/{idx}") // TODO : URI 수정
+    @PatchMapping("/{idx}/sellers")
     public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Integer idx,
                                            @RequestBody ItemReq itemReq) {
         if(itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()){
@@ -209,7 +209,7 @@ public class ItemController {
         }
     }
     @ResponseBody
-    @PatchMapping("/{idx}/status")
+    @PatchMapping("/{idx}/status/sellers")
     public BaseResponse<HashMap<String, String>> PatchItemStatus(@PathVariable("idx") Integer idx,
                                               @RequestBody Map<String, String> param) {
 
@@ -226,7 +226,7 @@ public class ItemController {
     }
 
     @ResponseBody
-    @DeleteMapping("/{idx}")
+    @DeleteMapping("/{idx}/sellers")
     public BaseResponse<HashMap<String, String>> DeleteItem(@PathVariable("idx") Integer idx) {
         try {
             return new BaseResponse<>(itemService.PatchItemStatus(idx, "D"));
