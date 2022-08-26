@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import shop.makaroni.bunjang.src.domain.inquiry.InquirySaveRequest;
+import shop.makaroni.bunjang.src.domain.inquiry.dto.InquirySaveRequest;
 import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.user.view.MyStoreResponse;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;

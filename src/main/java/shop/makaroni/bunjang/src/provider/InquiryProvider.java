@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.InquiryDao;
-import shop.makaroni.bunjang.src.domain.inquiry.InquirySimpleResponse;
-import shop.makaroni.bunjang.src.domain.inquiry.InquirySimpleView;
+import shop.makaroni.bunjang.src.domain.inquiry.view.InquirySimpleResponse;
+import shop.makaroni.bunjang.src.domain.inquiry.view.InquirySimpleView;
 
 import java.util.List;
 import java.util.stream.Collectors;

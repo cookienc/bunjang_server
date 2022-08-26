@@ -10,7 +10,7 @@ import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.dao.WishListDao;
 import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.State;
-import shop.makaroni.bunjang.src.domain.review.dto.PurchasedItemsView;
+import shop.makaroni.bunjang.src.domain.review.view.PurchasedItemsView;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.PurchasedItemsDto;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchDto;

@@ -2,8 +2,8 @@ package shop.makaroni.bunjang.src.domain.user.view;
 
 import lombok.Builder;
 import lombok.Getter;
-import shop.makaroni.bunjang.src.domain.inquiry.InquirySimpleView;
-import shop.makaroni.bunjang.src.domain.review.dto.ReviewSimpleView;
+import shop.makaroni.bunjang.src.domain.inquiry.view.InquirySimpleView;
+import shop.makaroni.bunjang.src.domain.review.view.ReviewSimpleView;
 import shop.makaroni.bunjang.src.domain.user.User;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package shop.makaroni.bunjang.src.domain.review.dto;
+package shop.makaroni.bunjang.src.domain.review.view;
 
 import lombok.Builder;
 import lombok.Getter;

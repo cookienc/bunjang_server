@@ -1,7 +1,9 @@
-package shop.makaroni.bunjang.src.domain.review;
+package shop.makaroni.bunjang.src.domain.review.view;
 
 import lombok.Builder;
 import lombok.Getter;
+import shop.makaroni.bunjang.src.domain.review.dto.ReviewCommentDto;
+import shop.makaroni.bunjang.src.domain.review.dto.ReviewSpecificDto;
 
 @Getter
 public class ReviewSpecificView {

@@ -1,4 +1,4 @@
-package shop.makaroni.bunjang.src.domain.inquiry;
+package shop.makaroni.bunjang.src.domain.inquiry.view;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

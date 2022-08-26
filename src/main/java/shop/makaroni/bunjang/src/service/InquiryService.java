@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.InquiryDao;
 import shop.makaroni.bunjang.src.domain.inquiry.Inquiry;
-import shop.makaroni.bunjang.src.domain.inquiry.InquirySaveRequest;
+import shop.makaroni.bunjang.src.domain.inquiry.dto.InquirySaveRequest;
 
 @Service
 @Transactional

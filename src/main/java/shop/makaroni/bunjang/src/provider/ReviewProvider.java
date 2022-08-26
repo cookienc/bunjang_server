@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.ReviewDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.item.State;
-import shop.makaroni.bunjang.src.domain.review.ReviewCommentDto;
-import shop.makaroni.bunjang.src.domain.review.ReviewSpecificDto;
-import shop.makaroni.bunjang.src.domain.review.ReviewSpecificView;
-import shop.makaroni.bunjang.src.domain.review.dto.ReviewSimpleView;
+import shop.makaroni.bunjang.src.domain.review.dto.ReviewCommentDto;
+import shop.makaroni.bunjang.src.domain.review.dto.ReviewSpecificDto;
+import shop.makaroni.bunjang.src.domain.review.view.ReviewSpecificView;
+import shop.makaroni.bunjang.src.domain.review.view.ReviewSimpleView;
 
 import java.util.List;
 import java.util.NoSuchElementException;

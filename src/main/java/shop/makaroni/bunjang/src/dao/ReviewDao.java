@@ -9,9 +9,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import shop.makaroni.bunjang.src.domain.review.ReviewCommentDto;
-import shop.makaroni.bunjang.src.domain.review.ReviewSpecificDto;
-import shop.makaroni.bunjang.src.domain.review.dto.ReviewSimpleView;
+import shop.makaroni.bunjang.src.domain.review.dto.ReviewCommentDto;
+import shop.makaroni.bunjang.src.domain.review.dto.ReviewSpecificDto;
+import shop.makaroni.bunjang.src.domain.review.view.ReviewSimpleView;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

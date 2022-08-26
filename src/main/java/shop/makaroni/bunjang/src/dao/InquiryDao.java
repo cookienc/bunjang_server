@@ -10,7 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.inquiry.Inquiry;
-import shop.makaroni.bunjang.src.domain.inquiry.InquirySimpleResponse;
+import shop.makaroni.bunjang.src.domain.inquiry.view.InquirySimpleResponse;
 
 import java.util.List;
 import java.util.Map;
