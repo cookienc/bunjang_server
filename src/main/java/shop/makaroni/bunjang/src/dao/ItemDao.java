@@ -283,7 +283,6 @@ public class ItemDao {
 						rs.getString("name"),
 						rs.getBoolean("safePay"),
 						rs.getBoolean("isAd"),
-						rs.getTimestamp("createdAt"),
 						rs.getString("path")
 				),
 				params

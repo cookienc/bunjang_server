@@ -16,6 +16,5 @@ public class GetLogRes {
     private String name;
     private boolean safePay;
     private boolean isAd;
-    private Timestamp createdAt;
     private String image;
 }
