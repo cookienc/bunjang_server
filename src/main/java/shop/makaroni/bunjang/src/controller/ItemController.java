@@ -191,9 +191,26 @@ public class ItemController {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
+
+    @ResponseBody
+    @PatchMapping("/{idx}")
+    public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Integer idx,
+                                           @RequestBody ItemReq itemReq) {
+        if(itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()){
+            return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
+        }
+        try {
+            validateItems(itemReq);
+            itemService.patchItem(idx,itemReq);
+            return new BaseResponse<>(itemProvider.getItem(idx));
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
     @ResponseBody
     @PostMapping("/{idx}")
-    public BaseResponse<HashMap<String, String>> PatchItem(@PathVariable("idx") Integer idx,
+    public BaseResponse<HashMap<String, String>> PatchItemStatus(@PathVariable("idx") Integer idx,
                                               @RequestBody Map<String, String> param) {
 
         char statusC = param.get("status").charAt(0);
@@ -201,7 +218,7 @@ public class ItemController {
             return new BaseResponse<>(REQUEST_ERROR);
         }
         try {
-            return new BaseResponse<>(itemService.patchStatus(idx, param.get("status")));
+            return new BaseResponse<>(itemService.PatchItemStatus(idx, param.get("status")));
         }
         catch(BaseException baseException){
             return new BaseResponse<>(baseException.getStatus());

@@ -242,7 +242,7 @@ public class ItemService {
 		itemDao.deleteAllImages(itemIdx);
 	}
 
-	public HashMap<String, String> patchStatus(Integer idx, String status) throws BaseException{
+	public HashMap<String, String> PatchItemStatus(Integer idx, String status) throws BaseException{
 		if(itemDao.checkItemIdx(idx) == 0){
 			throw new BaseException(ITEM_NO_EXIST);
 		}
