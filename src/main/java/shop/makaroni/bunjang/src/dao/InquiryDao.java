@@ -47,7 +47,7 @@ public class InquiryDao {
 
 	public List<InquirySimpleResponse> findAllByStoreId(Long storeIdx) {
 		var sql = "select u.storeName name, " +
-				"       ifnull(u.storeImage image, " +
+				"       ifnull(u.storeImage, '이미지가 없습니다.') image, " +
 				"       i.post post, " +
 				"       (case " +
 				"            when timestampdiff(minute , i.createdAt, now()) < 1 then concat(timestampdiff(second, i.createdAt, now()), '초 전') " +
