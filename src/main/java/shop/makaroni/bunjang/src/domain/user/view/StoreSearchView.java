@@ -1,8 +1,8 @@
-package shop.makaroni.bunjang.src.domain.user.dto;
+package shop.makaroni.bunjang.src.domain.user.view;
 
 import lombok.Builder;
 import lombok.Getter;
-import shop.makaroni.bunjang.src.domain.user.StoreSearchDto;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchDto;
 
 @Getter
 public class StoreSearchView {

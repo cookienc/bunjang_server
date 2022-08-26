@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+	DONT_PURCHASE_ITEM_EXCEPTION(HttpStatus.UNAUTHORIZED, Messages.DONT_PURCHASE_ITEM),
 	CANNOT_FIND_PURCHASED_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.CANNOT_FIND_PURCHASED_ITEM),
 	EMPTY_PARAM_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.EMPTY_PARAM),
 	NOT_MATCH_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_MATCH_PASSWORD),
@@ -20,6 +21,7 @@ public enum ErrorCode {
 	INVALID_INPUT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.PLEASE_ENTER_RIGHT_PARAMETER);
 
 	private static class Messages {
+		public static final String DONT_PURCHASE_ITEM = "구매한 상품이 없습니다.";
 		public static final String CANNOT_FIND_PURCHASED_ITEM = "구매한 상품을 찾을 수 없습니다.";
 		public static final String EMPTY_PARAM = "필수 파라미터를 입력해주세요.";
 		public static final String NOT_MATCH_PASSWORD = "아이디와 비밀번호가 일치하지 않습니다.";

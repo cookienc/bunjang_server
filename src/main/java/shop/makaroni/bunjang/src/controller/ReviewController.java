@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.review.ReviewSpecificView;
 import shop.makaroni.bunjang.src.domain.review.dto.PostReviewRequest;
+import shop.makaroni.bunjang.src.domain.review.dto.PurchasedItemsView;
 import shop.makaroni.bunjang.src.provider.ReviewProvider;
+import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.service.ReviewService;
 
@@ -29,12 +31,18 @@ public class ReviewController {
 
 	private final ReviewProvider reviewProvider;
 	private final ReviewService reviewService;
+	private final UserProvider userProvider;
 
 	@GetMapping("/stores/{storeIdx}")
 	public ResponseEntity<List<ReviewSpecificView>> findAll(@PathVariable Long storeIdx,
 															@RequestParam(defaultValue = "0") Integer start,
 															@RequestParam(defaultValue = "10") Integer offset) {
 		return ResponseEntity.ok(reviewProvider.findAllByStoreIdx(storeIdx,start, offset));
+	}
+
+	@GetMapping("/stores/{storeIdx}/users/{userIdx}")
+	public ResponseEntity<List<PurchasedItemsView>> getPurchasedItems(@PathVariable Long storeIdx, @PathVariable Long userIdx) {
+		return ResponseEntity.ok(userProvider.getPurchasedItems(storeIdx, userIdx));
 	}
 
 	@PostMapping("/stores/{storeIdx}/users/{userIdx}")

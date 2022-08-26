@@ -10,13 +10,16 @@ import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.dao.WishListDao;
 import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.item.State;
-import shop.makaroni.bunjang.src.domain.user.StoreSearchDto;
+import shop.makaroni.bunjang.src.domain.review.dto.PurchasedItemsView;
 import shop.makaroni.bunjang.src.domain.user.User;
-import shop.makaroni.bunjang.src.domain.user.dto.MyStoreResponse;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreInfoView;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreSaleView;
-import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchView;
+import shop.makaroni.bunjang.src.domain.user.dto.PurchasedItemsDto;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchDto;
+import shop.makaroni.bunjang.src.domain.user.view.MyStoreResponse;
+import shop.makaroni.bunjang.src.domain.user.view.StoreInfoView;
+import shop.makaroni.bunjang.src.domain.user.view.StoreSaleView;
+import shop.makaroni.bunjang.src.domain.user.view.StoreSearchView;
 import shop.makaroni.bunjang.src.response.exception.CannotFindPurchasedItem;
+import shop.makaroni.bunjang.src.response.exception.DontPurchaseItemEx;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
@@ -26,6 +29,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_PURCHASED_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.DONT_PURCHASE_ITEM_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION;
 
 @Service
@@ -114,11 +118,27 @@ public class UserProvider {
 				.orElseThrow(() -> new CannotFindPurchasedItem(CANNOT_FIND_PURCHASED_EXCEPTION.getMessages()));
 	}
 
+	public List<PurchasedItemsView> getPurchasedItems(Long storeIdx, Long userIdx) {
+		List<PurchasedItemsDto> purchasedItems = userDao.findPurchasedItems(storeIdx, userIdx);
+
+		isItEmpty(purchasedItems);
+
+		return purchasedItems.stream()
+				.map(PurchasedItemsView::of)
+				.collect(Collectors.toList());
+	}
+
 	private Integer countStoreItems(Long storeIdx) {
 		return userDao.countAllItems(storeIdx);
 	}
 
 	private Integer countFollowers(Long storeIdx) {
 		return followDao.countMyFollowers(storeIdx);
+	}
+
+	private void isItEmpty(List<PurchasedItemsDto> purchasedItems) {
+		if (purchasedItems.isEmpty()) {
+			throw new DontPurchaseItemEx(DONT_PURCHASE_ITEM_EXCEPTION.getMessages());
+		}
 	}
 }

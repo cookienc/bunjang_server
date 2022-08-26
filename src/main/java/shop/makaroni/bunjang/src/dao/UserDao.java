@@ -14,9 +14,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.item.Item;
-import shop.makaroni.bunjang.src.domain.user.StoreSearchDto;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
+import shop.makaroni.bunjang.src.domain.user.dto.PurchasedItemsDto;
+import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchDto;
 import shop.makaroni.bunjang.utils.resolver.PagingCond;
 
 import javax.sql.DataSource;
@@ -189,5 +190,25 @@ public class UserDao {
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
 		}
+	}
+
+	public List<PurchasedItemsDto> findPurchasedItems(Long storeIdx, Long userIdx) {
+		var sql = "select i.idx itemIdx, " +
+				"         i.name itemName, " +
+				"         (select path " +
+							"from ItemImage " +
+							"where idx = (select min(idx) idx " +
+							"from ItemImage " +
+							"where itemIdx = i.idx " +
+							"group by itemIdx)) as itemImage " +
+				"from Item i " +
+				"where i.sellerIdx = :storeIdx " +
+				"and i.buyerIdx = :userIdx " +
+				"and i.status = 'S'";
+
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("storeIdx", storeIdx)
+				.addValue("userIdx", userIdx);
+		return template.query(sql, params, BeanPropertyRowMapper.newInstance(PurchasedItemsDto.class));
 	}
 }

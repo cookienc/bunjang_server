@@ -11,8 +11,8 @@ import shop.makaroni.bunjang.src.domain.review.ReviewSpecificView;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewSimpleView;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
