@@ -28,6 +28,6 @@ public class ItemReq {
 
     public Object[] getPostItemReq(){
         return new Object[]{sellerIdx, name, category, 0, price, delivery, content, stock, isNew,
-                exchange, safePay, inspection, location, isAd};
+                exchange, safePay, inspection, location, isAd, 0};
     }
 }

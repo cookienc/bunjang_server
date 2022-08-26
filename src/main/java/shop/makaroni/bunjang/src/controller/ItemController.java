@@ -209,7 +209,7 @@ public class ItemController {
         }
     }
     @ResponseBody
-    @PatchMapping("/{idx}/status/sellers")
+    @PatchMapping("/{idx}/test/status/sellers")
     public BaseResponse<HashMap<String, String>> PatchItemStatus(@PathVariable("idx") Integer idx,
                                               @RequestBody Map<String, String> param) {
 

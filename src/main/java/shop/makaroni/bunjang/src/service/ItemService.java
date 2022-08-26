@@ -66,6 +66,7 @@ public class ItemService {
 	}
 
 	public void patchItem(int itemIdx, ItemReq itemReq) throws BaseException {
+
 		if (itemReq.getImages().isEmpty()) {
 			throw new BaseException(POST_ITEM_EMPTY_IMAGE);
 		}

@@ -474,8 +474,8 @@ public class ItemDao {
 	public int createItem(ItemReq itemReq) {
 		String query =
 				"Insert into Item(sellerIdx, name, category, brandIdx, price, delivery, content, stock, isNew, exchange, safePay,\n" +
-						"                 inspection, location, isAd)\n" +
-						"                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);";
+						"                 inspection, location, isAd, buyerIdx)\n" +
+						"                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);";
 		Object[] params = itemReq.getPostItemReq();
 		this.jdbcTemplate.update(query, params);
 		String lastInsertIdQuery = "select last_insert_id()";
