@@ -257,4 +257,40 @@ public class ReviewDao {
 				"and status = 'Y'";
 		template.update(sql, Map.of("reviewIdx", reviewIdx));
 	}
+
+	public void deleteReviewComment(Long reviewIdx, Long commentIdx) {
+		var sql = "update Comment " +
+				"set status = 'D' " +
+				"where reviewIdx = :reviewIdx " +
+				"and idx = :commentIdx " +
+				"and status = 'Y'";
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("reviewIdx", reviewIdx)
+				.addValue("commentIdx", commentIdx);
+		template.update(sql, params);
+	}
+
+	public void changeReviewCommentStatus(Long reviewIdx) {
+		var sql = "update Review " +
+				"set hasComment = 1 " +
+				"where idx = :reviewIdx " +
+				"and status = 'Y'";
+		template.update(sql, Map.of("reviewIdx", reviewIdx));
+	}
+
+	public Optional<String> findCommentStatusById(Long reviewIdx, Long commentIdx) {
+		var sql = "select status from Comment " +
+				"where reviewIdx = :reviewIdx " +
+				"and idx = :commentIdx";
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("reviewIdx", reviewIdx)
+				.addValue("commentIdx", commentIdx);
+
+		try {
+			String status = template.queryForObject(sql, params, String.class);
+			return Optional.of(status);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
+	}
 }

@@ -19,6 +19,7 @@ public enum ErrorCode {
 	NO_SUCH_ELEMENT_EXCEPTION(HttpStatus.NOT_FOUND, Messages.NO_ELEMENT),
 	ALREADY_DELETED_MEMBER_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_MEMBER),
 	ALREADY_DELETED_REVIEW_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW),
+	ALREADY_DELETED_REVIEW_COMMENT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW_COMMENT),
 	MISSING_PARAMETER_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.PLEASE_ENTER_REQUIRED_PARAMETER),
 	INVALID_INPUT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.PLEASE_ENTER_RIGHT_PARAMETER);
 
@@ -35,6 +36,7 @@ public enum ErrorCode {
 		public static final String NO_ELEMENT = "결과 값을 찾을 수 없습니다.";
 		public static final String ALREADY_DELETED_MEMBER = "이미 탈퇴된 회원 입니다.";
 		public static final String ALREADY_DELETED_REVIEW = "이미 삭제된 리뷰 입니다.";
+		public static final String ALREADY_DELETED_REVIEW_COMMENT = "이미 삭제된 댓글 입니다.";
 		public static final String PLEASE_ENTER_REQUIRED_PARAMETER = "필수 파라미터를 넣어주세요.";
 		public static final String PLEASE_ENTER_RIGHT_PARAMETER = "올바른 파라미터를 넣어주세요.";
 	}

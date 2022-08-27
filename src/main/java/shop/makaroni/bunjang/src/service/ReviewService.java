@@ -15,6 +15,7 @@ import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_REVIEW_COMMENT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_REVIEW_EXCEPTION;
 
 @Service
@@ -39,22 +40,29 @@ public class ReviewService {
 	}
 
 	public void updateReview(Long reviewIdx, UpdateReviewRequest request) {
-		checkIfAlreadyDeleted(reviewIdx);
+		checkReviewIfAlreadyDeleted(reviewIdx);
 
 		modifyReview(reviewIdx, request);
 	}
 
 	public void delete(Long reviewIdx) {
-		checkIfAlreadyDeleted(reviewIdx);
+		checkReviewIfAlreadyDeleted(reviewIdx);
 
 		reviewDao.delete(reviewIdx);
 		reviewDao.deleteReviewImagesByReviewIdx(reviewIdx);
 	}
 
 	public Long saveReviewComment(Long reviewIdx, SaveReviewCommentRequest request) {
-		checkIfAlreadyDeleted(reviewIdx);
+		checkReviewIfAlreadyDeleted(reviewIdx);
 		reviewDao.addReviewCommentOnParent(reviewIdx);
 		return reviewDao.saveReviewComment(reviewIdx, request.getPost());
+	}
+
+	public void deleteComment(Long reviewIdx, Long commentIdx) {
+		checkCommentIfAlreadyDeleted(reviewIdx, commentIdx);
+
+		reviewDao.deleteReviewComment(reviewIdx, commentIdx);
+		reviewDao.changeReviewCommentStatus(reviewIdx);
 	}
 
 	private void modifyReview(Long reviewIdx, UpdateReviewRequest request) {
@@ -63,7 +71,11 @@ public class ReviewService {
 		saveReviewImages(reviewIdx, request.getImages());
 	}
 
-	private void checkIfAlreadyDeleted(Long reviewIdx) {
+	private void saveReviewImages(Long reviewIdx, List<String> request) {
+		request.forEach(image -> reviewDao.saveReviewImage(reviewIdx, image));
+	}
+
+	private void checkReviewIfAlreadyDeleted(Long reviewIdx) {
 		String state = reviewDao.findReviewStatusById(reviewIdx).orElseThrow(NoSuchElementException::new);
 
 		if (State.isAlreadyDeleted(state)) {
@@ -71,7 +83,11 @@ public class ReviewService {
 		}
 	}
 
-	private void saveReviewImages(Long reviewIdx, List<String> request) {
-		request.forEach(image -> reviewDao.saveReviewImage(reviewIdx, image));
+	private void checkCommentIfAlreadyDeleted(Long reviewIdx, Long commentIdx) {
+		String state = reviewDao.findCommentStatusById(reviewIdx, commentIdx).orElseThrow(NoSuchElementException::new);
+
+		if (State.isAlreadyDeleted(state)) {
+			throw new AlreadyDeletedException(ALREADY_DELETED_REVIEW_COMMENT_EXCEPTION.getMessages());
+		}
 	}
 }

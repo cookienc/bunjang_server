@@ -27,6 +27,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static shop.makaroni.bunjang.src.response.SuccessStatus.DELETE_REVIEW_COMMENT_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_REVIEW_COMMENT_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_SUCCESS;
 
@@ -83,5 +84,11 @@ public class ReviewController {
 		Long commentId = reviewService.saveReviewComment(reviewIdx, request);
 		String uri = "/reviews/" + reviewIdx + "/comments/" + commentId;
 		return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_REVIEW_COMMENT_SUCCESS));
+	}
+
+	@PatchMapping("/{reviewIdx}/comments/{commentIdx}")
+	public ResponseEntity<ResponseInfo> deleteComment(@PathVariable Long reviewIdx, @PathVariable Long commentIdx) {
+		reviewService.deleteComment(reviewIdx, commentIdx);
+		return ResponseEntity.ok(ResponseInfo.of(DELETE_REVIEW_COMMENT_SUCCESS));
 	}
 }
