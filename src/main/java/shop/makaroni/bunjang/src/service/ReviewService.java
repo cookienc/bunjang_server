@@ -7,6 +7,7 @@ import shop.makaroni.bunjang.src.dao.ReviewDao;
 import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.review.UpdateReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.dto.PostReviewRequest;
+import shop.makaroni.bunjang.src.domain.review.dto.SaveReviewCommentRequest;
 import shop.makaroni.bunjang.src.provider.ReviewProvider;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
@@ -50,6 +51,11 @@ public class ReviewService {
 		reviewDao.deleteReviewImagesByReviewIdx(reviewIdx);
 	}
 
+	public Long saveReviewComment(Long reviewIdx, SaveReviewCommentRequest request) {
+		reviewDao.addReviewCommentOnParent(reviewIdx);
+		return reviewDao.saveReviewComment(reviewIdx, request.getPost());
+	}
+
 	private void modifyReview(Long reviewIdx, UpdateReviewRequest request) {
 		reviewDao.updateReview(reviewIdx, request);
 		reviewDao.cleanDeleteReviewImages(reviewIdx);
@@ -65,7 +71,6 @@ public class ReviewService {
 	}
 
 	private void saveReviewImages(Long reviewIdx, List<String> request) {
-		request
-				.forEach(image -> reviewDao.saveReviewImage(reviewIdx, image));
+		request.forEach(image -> reviewDao.saveReviewImage(reviewIdx, image));
 	}
 }

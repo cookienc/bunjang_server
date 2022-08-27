@@ -50,6 +50,17 @@ public class ReviewDao {
 		template.update(sql, params);
 	}
 
+	public Long saveReviewComment(Long reviewIdx, String post) {
+		var sql = "insert into Comment (reviewIdx, post) " +
+				"values (:reviewIdx, :post)";
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("reviewIdx", reviewIdx)
+				.addValue("post", post);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		template.update(sql, params, keyHolder);
+		return keyHolder.getKey().longValue();
+	}
+
 	public Integer countStoreReview(Long userId) {
 		var sql = "select count(*) from Review r " +
 				"inner join Item i on i.idx = r.itemIdx " +
@@ -237,5 +248,12 @@ public class ReviewDao {
 	public List<String> getReviewImagesById(Long reviewIdx) {
 		var sql = "select image from ReviewImage where reviewIdx = :reviewIdx";
 		return template.queryForList(sql, Map.of("reviewIdx", reviewIdx), String.class);
+	}
+
+	public void addReviewCommentOnParent(Long reviewIdx) {
+		var sql = "update Review " +
+				"set hasComment = 1 " +
+				"where idx = :reviewIdx";
+		template.update(sql, Map.of("reviewIdx", reviewIdx));
 	}
 }

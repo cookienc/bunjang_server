@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.review.UpdateReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.dto.PostReviewRequest;
+import shop.makaroni.bunjang.src.domain.review.dto.SaveReviewCommentRequest;
 import shop.makaroni.bunjang.src.domain.review.view.PurchasedItemsView;
 import shop.makaroni.bunjang.src.domain.review.view.ReviewSpecificView;
 import shop.makaroni.bunjang.src.domain.review.view.SingleReviewResponse;
@@ -26,6 +27,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_REVIEW_COMMENT_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_SUCCESS;
 
 @Slf4j
@@ -73,5 +75,13 @@ public class ReviewController {
 	@GetMapping("/{reviewIdx}")
 	public ResponseEntity<SingleReviewResponse> getReviewById(@PathVariable Long reviewIdx) {
 		return ResponseEntity.ok(reviewProvider.getReviewById(reviewIdx));
+	}
+
+	@PostMapping("/{reviewIdx}/comments")
+	public ResponseEntity<ResponseInfo> saveReviewComment(@PathVariable Long reviewIdx,
+														  @Valid @RequestBody SaveReviewCommentRequest request) {
+		Long commentId = reviewService.saveReviewComment(reviewIdx, request);
+		String uri = "/reviews/" + reviewIdx + "/comments/" + commentId;
+		return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_REVIEW_COMMENT_SUCCESS));
 	}
 }
