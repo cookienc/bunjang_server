@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.review.UpdateReviewRequest;
-import shop.makaroni.bunjang.src.domain.review.view.ReviewSpecificView;
 import shop.makaroni.bunjang.src.domain.review.dto.PostReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.view.PurchasedItemsView;
+import shop.makaroni.bunjang.src.domain.review.view.ReviewSpecificView;
+import shop.makaroni.bunjang.src.domain.review.view.SingleReviewResponse;
 import shop.makaroni.bunjang.src.provider.ReviewProvider;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
@@ -67,5 +68,10 @@ public class ReviewController {
 	public ResponseEntity<ResponseInfo> updateReview(@PathVariable Long reviewIdx, @Valid @RequestBody UpdateReviewRequest request) {
 		reviewService.updateReview(reviewIdx, request);
 		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.UPDATE_REVIEW_SUCCESS));
+	}
+
+	@GetMapping("/{reviewIdx}")
+	public ResponseEntity<SingleReviewResponse> getReviewById(@PathVariable Long reviewIdx) {
+		return ResponseEntity.ok(reviewProvider.getReviewById(reviewIdx));
 	}
 }

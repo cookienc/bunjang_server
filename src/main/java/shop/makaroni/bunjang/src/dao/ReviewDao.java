@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.review.UpdateReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewCommentDto;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewSpecificDto;
+import shop.makaroni.bunjang.src.domain.review.dto.SingleReviewDto;
 import shop.makaroni.bunjang.src.domain.review.view.ReviewSimpleView;
 
 import javax.validation.constraints.NotNull;
@@ -221,5 +222,20 @@ public class ReviewDao {
 	public void cleanDeleteReviewImages(Long reviewIdx) {
 		var sql = "delete from ReviewImage where reviewIdx = :reviewIdx";
 		template.update(sql, Map.of("reviewIdx", reviewIdx));
+	}
+
+	public Optional<SingleReviewDto> getReviewById(Long reviewIdx) {
+		var sql = "select idx reviewIdx, post post, rating, hasComment from Review where idx = :reviewIdx";
+		try {
+			SingleReviewDto dto = template.queryForObject(sql, Map.of("reviewIdx", reviewIdx), BeanPropertyRowMapper.newInstance(SingleReviewDto.class));
+			return Optional.of(dto);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
+	}
+
+	public List<String> getReviewImagesById(Long reviewIdx) {
+		var sql = "select image from ReviewImage where reviewIdx = :reviewIdx";
+		return template.queryForList(sql, Map.of("reviewIdx", reviewIdx), String.class);
 	}
 }

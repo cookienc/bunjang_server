@@ -7,8 +7,10 @@ import shop.makaroni.bunjang.src.dao.ReviewDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewCommentDto;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewSpecificDto;
+import shop.makaroni.bunjang.src.domain.review.dto.SingleReviewDto;
 import shop.makaroni.bunjang.src.domain.review.view.ReviewSimpleView;
 import shop.makaroni.bunjang.src.domain.review.view.ReviewSpecificView;
+import shop.makaroni.bunjang.src.domain.review.view.SingleReviewResponse;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -45,6 +47,12 @@ public class ReviewProvider {
 		String state = reviewDao.getReviewStatus(userIdx, itemIdx)
 				.orElseGet(() -> NOT_SAVED.getState());
 		isAlreadySaved(state);
+	}
+
+	public SingleReviewResponse getReviewById(Long reviewIdx) {
+		SingleReviewDto review = reviewDao.getReviewById(reviewIdx).orElseThrow(NoSuchElementException::new);
+		List<String> images = reviewDao.getReviewImagesById(reviewIdx);
+		return SingleReviewResponse.of(review, images);
 	}
 
 	private String getSellerName(Long itemIdx) {
