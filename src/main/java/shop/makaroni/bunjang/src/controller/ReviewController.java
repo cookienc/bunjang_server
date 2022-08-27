@@ -21,6 +21,7 @@ import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.SuccessStatus;
 import shop.makaroni.bunjang.src.service.ReviewService;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -49,7 +50,8 @@ public class ReviewController {
 	}
 
 	@PostMapping("/stores/{storeIdx}/users/{userIdx}")
-	public ResponseEntity<ResponseInfo> save(@PathVariable Long storeIdx, @PathVariable Long userIdx, @RequestBody PostReviewRequest request) {
+	public ResponseEntity<ResponseInfo> save(@PathVariable Long storeIdx, @PathVariable Long userIdx,
+											 @Valid @RequestBody PostReviewRequest request) {
 		Long reviewId = reviewService.save(storeIdx, userIdx, request);
 		String uri = "/reviews/" + reviewId;
 		return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_SUCCESS));
@@ -62,7 +64,7 @@ public class ReviewController {
 	}
 
 	@PatchMapping("/{reviewIdx}")
-	public ResponseEntity<ResponseInfo> updateReview(@PathVariable Long reviewIdx, @RequestBody UpdateReviewRequest request) {
+	public ResponseEntity<ResponseInfo> updateReview(@PathVariable Long reviewIdx, @Valid @RequestBody UpdateReviewRequest request) {
 		reviewService.updateReview(reviewIdx, request);
 		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.UPDATE_REVIEW_SUCCESS));
 	}
