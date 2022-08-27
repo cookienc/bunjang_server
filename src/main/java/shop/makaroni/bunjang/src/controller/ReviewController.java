@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import shop.makaroni.bunjang.src.domain.review.UpdateReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.view.ReviewSpecificView;
 import shop.makaroni.bunjang.src.domain.review.dto.PostReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.view.PurchasedItemsView;
@@ -58,5 +59,11 @@ public class ReviewController {
 	public ResponseEntity<ResponseInfo> delete(@PathVariable Long reviewIdx) {
 		reviewService.delete(reviewIdx);
 		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.DELETE_REVIEW_SUCCESS));
+	}
+
+	@PatchMapping("/{reviewIdx}")
+	public ResponseEntity<ResponseInfo> updateReview(@PathVariable Long reviewIdx, @RequestBody UpdateReviewRequest request) {
+		reviewService.updateReview(reviewIdx, request);
+		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.UPDATE_REVIEW_SUCCESS));
 	}
 }

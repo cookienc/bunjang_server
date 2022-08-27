@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import shop.makaroni.bunjang.src.domain.review.UpdateReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewCommentDto;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewSpecificDto;
 import shop.makaroni.bunjang.src.domain.review.view.ReviewSimpleView;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class ReviewDao {
 
 	private final NamedParameterJdbcTemplate template;
+	private final ReviewMapper reviewMapper;
 
 	public Long save(Long itemIdx, Long userIdx, String post, Double rating) {
 		var sql = "insert into Review (itemIdx, userIdx, post, rating) " +
@@ -197,14 +199,27 @@ public class ReviewDao {
 		template.update(sql, Map.of("reviewIdx", reviewIdx));
 	}
 
-	public String getReviewStatus(Long userIdx, Long itemIdx) {
+	public Optional<String> getReviewStatus(Long userIdx, Long itemIdx) {
 		var sql = "select r.status from Review r " +
 				"where r.userIdx = :userIdx " +
 				"and r.itemIdx = :itemIdx";
 		SqlParameterSource params = new MapSqlParameterSource()
 				.addValue("userIdx", userIdx)
 				.addValue("itemIdx", itemIdx);
+		try {
+			String state = template.queryForObject(sql, params, String.class);
+			return Optional.of(state);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
+	}
 
-		return template.queryForObject(sql, params, String.class);
+	public void updateReview(Long reviewIdx, UpdateReviewRequest request) {
+		reviewMapper.updateReview(reviewIdx, request);
+	}
+
+	public void cleanDeleteReviewImages(Long reviewIdx) {
+		var sql = "delete from ReviewImage where reviewIdx = :reviewIdx";
+		template.update(sql, Map.of("reviewIdx", reviewIdx));
 	}
 }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum SuccessStatus {
 	DELETE_REVIEW_SUCCESS(HttpStatus.NO_CONTENT, Messages.DELETE_REVIEW_SUCCESS),
+	UPDATE_REVIEW_SUCCESS(HttpStatus.OK, Messages.UPDATE_REVEIEW_SUCCESS),
 	LOGIN_SUCCESS(HttpStatus.OK, Messages.LOGIN_SUCCESS),
 	CHECK_LOGIN_ID_SUCCESS(HttpStatus.OK, Messages.CHECK_LOGIN_ID_SUCCESS),
 	SAVE_SUCCESS(HttpStatus.CREATED, Messages.SAVE_SUCCESS),
@@ -15,6 +16,7 @@ public enum SuccessStatus {
 
 	private static class Messages {
 		public static String DELETE_REVIEW_SUCCESS= "리뷰를 삭제 하였습니다.";
+		public static String UPDATE_REVEIEW_SUCCESS= "리뷰를 수정 했습니다.";
 		public static String LOGIN_SUCCESS= "로그인에 성공했습니다.";
 		public static String CHECK_LOGIN_ID_SUCCESS = "중복된 아이디가 없습니다.";
 		public static String SAVE_SUCCESS = "저장되었습니다.";

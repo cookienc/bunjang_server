@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.makaroni.bunjang.src.dao.ReviewMapper">
+    <update id="updateReview">
+        update Review
+        <set>
+            <if test="request.post != null and request.post != ''">
+                post = #{request.post},
+            </if>
+            <if test="request.rating != null">
+                rating = #{request.rating}
+            </if>
+        </set>
+        where idx = #{reviewIdx}
+        and status = 'Y';
+    </update>
+</mapper>

@@ -12,7 +12,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTI
 @AllArgsConstructor
 public enum State {
 	DELETE("D"), REGISTERED("R"), SELLING("Y"), SOLD("S"),
-	NORMAL("Y");
+	NORMAL("Y"), NOT_SAVED("NS");
 
 	private String state;
 

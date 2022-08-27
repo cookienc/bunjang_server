@@ -5,15 +5,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.ReviewDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
-import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewCommentDto;
 import shop.makaroni.bunjang.src.domain.review.dto.ReviewSpecificDto;
-import shop.makaroni.bunjang.src.domain.review.view.ReviewSpecificView;
 import shop.makaroni.bunjang.src.domain.review.view.ReviewSimpleView;
+import shop.makaroni.bunjang.src.domain.review.view.ReviewSpecificView;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import static shop.makaroni.bunjang.src.domain.item.State.NOT_SAVED;
+import static shop.makaroni.bunjang.src.domain.item.State.isAlreadySaved;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,8 +42,9 @@ public class ReviewProvider {
 	}
 
 	public void checkIfExist(Long userIdx, Long itemIdx) {
-		String state = reviewDao.getReviewStatus(userIdx, itemIdx);
-		State.isAlreadySaved(state);
+		String state = reviewDao.getReviewStatus(userIdx, itemIdx)
+				.orElseGet(() -> NOT_SAVED.getState());
+		isAlreadySaved(state);
 	}
 
 	private String getSellerName(Long itemIdx) {

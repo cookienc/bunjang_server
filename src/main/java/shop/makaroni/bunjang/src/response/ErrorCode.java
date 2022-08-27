@@ -34,7 +34,7 @@ public enum ErrorCode {
 		public static final String CANNOT_DECODE_PASSWORD = "비밀번호를 복호화 할 수 없습니다.";
 		public static final String NO_ELEMENT = "결과 값을 찾을 수 없습니다.";
 		public static final String ALREADY_DELETED_MEMBER = "이미 탈퇴된 회원 입니다.";
-		public static final String ALREADY_DELETED_REVIEW = "이미 리뷰 입니다.";
+		public static final String ALREADY_DELETED_REVIEW = "이미 삭제된 리뷰 입니다.";
 		public static final String PLEASE_ENTER_REQUIRED_PARAMETER = "필수 파라미터를 넣어주세요.";
 		public static final String PLEASE_ENTER_RIGHT_PARAMETER = "올바른 파라미터를 넣어주세요.";
 	}
