@@ -9,7 +9,9 @@ import shop.makaroni.bunjang.src.domain.item.model.*;
 import javax.sql.DataSource;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ItemDao {
@@ -747,5 +749,21 @@ public class ItemDao {
 				),
 				userIdx
 		);
+	}
+
+	public String getCategoryName(HashMap<String,String> codes) {
+		String query = "select name from Category where parentCode = ? and code = ? and status !='D'";
+		Object[] params = new Object[]{codes.get("parentCode"), codes.get("subCode")};
+		return this.jdbcTemplate.queryForObject(query,
+				String.class,
+				params);
+	}
+
+	public String getCategoryImg(HashMap<String, String> codes) {
+		String query = "select image from Category where parentCode = ? and code = ? and status !='D'";
+		Object[] params = new Object[]{codes.get("parentCode"), codes.get("subCode")};
+		return this.jdbcTemplate.queryForObject(query,
+				String.class,
+				params);
 	}
 }

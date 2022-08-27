@@ -11,8 +11,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class GetCategoryRes {
-    List<GetSubcategoryRes> subCategory;
-    List<GetSearchRes> items;
+    private String name;
+    private String image;
+    private List<GetSubcategoryRes> subCategory;
+    private List<GetSearchRes> items;
 
     public GetCategoryRes() {
         ;

@@ -9,7 +9,9 @@ import shop.makaroni.bunjang.src.dao.ItemDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.max;
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
@@ -147,22 +149,28 @@ public class ItemProvider {
 			throw new BaseException(baseException.getStatus());
 		}
 		GetCategoryRes getCategoryRes = new GetCategoryRes();
+		HashMap<String,String> codes = validateCategory(code);
+		getCategoryRes.setName(itemDao.getCategoryName(codes));
+		getCategoryRes.setImage(itemDao.getCategoryImg(codes));
 		getCategoryRes.setSubCategory(itemDao.getSubcategory(code));
 		getCategoryRes.setItems(itemDao.getCategoryItems(code, sort, count));
-
 		return getCategoryRes;
 	}
 
-	public void validateCategory(String category) throws BaseException {
+	public HashMap<String,String> validateCategory(String category) throws BaseException {
+		HashMap<String,String> codes = new HashMap<String, String>();
 		String parentCode = "E";
 		String subCode = category.substring(category.length()-1);
 		if(category.length()>2){
 			parentCode = category.substring(0,category.length()-2);
 			subCode = category.substring(category.length()-2);
 		}
+		codes.put("parentCode", parentCode);
+		codes.put("subCode",subCode);
 		if(!category.equals("E") && itemDao.checkCategory(parentCode,subCode) == 0){
 			throw new BaseException(POST_ITEM_INVALID_CATEGORY);
 		}
+		return codes;
 	}
 
 	public BaseResponse<GetWisherRes> getWisher(Integer idx){
@@ -188,4 +196,8 @@ public class ItemProvider {
 		}
 		return res;
 	}
+
+//	public List<GetSearchWordRes> getSearchWord(String q) {
+//
+//	}
 }

@@ -265,7 +265,7 @@ public class ItemController {
     }
 
     @ResponseBody
-    @PostMapping("wish-lists/{userIdx}")
+    @PostMapping("/wish-lists/{userIdx}")
     public BaseResponse<HashMap<String, String>> PostWish(@PathVariable("userIdx") Integer userIdx,
                                                           @RequestBody Map<String, Integer> param) {
         int itemIdx = param.get("itemIdx");
@@ -284,7 +284,7 @@ public class ItemController {
     }
 
     @ResponseBody
-    @DeleteMapping("wish-lists")
+    @DeleteMapping("/wish-lists")
     public BaseResponse<HashMap<String, String>> PostWish(@RequestParam() Integer itemIdx,
                                                           @RequestParam() Integer userIdx) {
         if(userIdx < 0){
@@ -301,7 +301,7 @@ public class ItemController {
         }
     }
     @ResponseBody
-    @GetMapping("wish-lists/{userIdx}")
+    @GetMapping("/wish-lists/{userIdx}")
     public BaseResponse<List<GetWishListRes>> getWishList(@PathVariable("userIdx") Integer userIdx)
             throws BaseException {
         if(userIdx < 0){
@@ -314,6 +314,18 @@ public class ItemController {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
+
+//    @ResponseBody
+//    @GetMapping("/search")
+//    public BaseResponse<List<GetSearchWordRes>> getSearchWord(@RequestParam() String q)
+//            throws BaseException {
+//        try{
+//            return new BaseResponse<>(itemProvider.getSearchWord(q));
+//        }
+//        catch(BaseException baseException){
+//            return new BaseResponse<>(baseException.getStatus());
+//        }
+//    }
 
 }
 
