@@ -1,6 +1,5 @@
 package shop.makaroni.bunjang.src.provider;
 
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +11,7 @@ import shop.makaroni.bunjang.src.domain.item.model.*;
 
 import java.util.List;
 
+import static java.util.Collections.max;
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 
@@ -165,7 +165,7 @@ public class ItemProvider {
 		}
 	}
 
-	public BaseResponse<GetWishListRes> getWishList(Integer idx) {
+	public BaseResponse<GetWisherRes> getWisher(Integer idx){
 		if(itemDao.checkItemIdx(idx) == 0){
 			return new BaseResponse<>(ITEM_NO_EXIST);
 		}
@@ -173,10 +173,19 @@ public class ItemProvider {
 				itemDao.getItemName(idx),
 				itemDao.getUpdatedAt(idx));
 		int wishCnt = itemDao.getItemWishCnt(idx);
-		List<WishList> wishList = itemDao.getWishList(idx);
-		return new BaseResponse<>(new GetWishListRes(item, wishCnt, wishList));
+		List<WishList> wishList = itemDao.getWisher(idx);
+		return new BaseResponse<>(new GetWisherRes(item, wishCnt, wishList));
 	}
 
 
-
+	public  List<GetWishListRes> getWishList(Integer userIdx) throws BaseException {
+		if(userDao.checkUserIdx(userIdx) == 0){
+			throw new BaseException(USERS_INVALID_IDX);
+		}
+		List<GetWishListRes> res = itemDao.getWishList(userIdx);
+		for(GetWishListRes each : res){
+			each.setImage(max(itemDao.getItemImages(Integer.parseInt(each.getItemIdx()))));
+		}
+		return res;
+	}
 }

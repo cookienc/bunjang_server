@@ -1,6 +1,5 @@
 package shop.makaroni.bunjang.src.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -260,9 +259,9 @@ public class ItemController {
     }
 
     @ResponseBody
-    @GetMapping("/{idx}/wish-lists")
-    public BaseResponse<GetWishListRes> GetWishList(@PathVariable("idx") Integer idx) {
-            return itemProvider.getWishList(idx);
+    @GetMapping("/{idx}/wishers")
+    public BaseResponse<GetWisherRes> GetWishers (@PathVariable("idx") Integer idx) {
+            return itemProvider.getWisher(idx);
     }
 
     @ResponseBody
@@ -284,7 +283,37 @@ public class ItemController {
         }
     }
 
-
+    @ResponseBody
+    @DeleteMapping("wish-lists")
+    public BaseResponse<HashMap<String, String>> PostWish(@RequestParam() Integer itemIdx,
+                                                          @RequestParam() Integer userIdx) {
+        if(userIdx < 0){
+            return new BaseResponse<>(USERS_INVALID_IDX);
+        }
+        if(itemIdx < 0){
+            return new BaseResponse<>(ITEM_NO_EXIST);
+        }
+        try {
+            return new BaseResponse<>(itemService.DeleteWish(itemIdx, userIdx));
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
+    @ResponseBody
+    @GetMapping("wish-lists/{userIdx}")
+    public BaseResponse<List<GetWishListRes>> getWishList(@PathVariable("userIdx") Integer userIdx)
+            throws BaseException {
+        if(userIdx < 0){
+            return new BaseResponse<>(USERS_INVALID_IDX);
+        }
+        try {
+            return new BaseResponse<>(itemProvider.getWishList(userIdx));
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
 
 }
 

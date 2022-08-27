@@ -10,14 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GetWishListRes {
+public class GetWisherRes {
     private ItemPreview items;
     private int wishCnt;
     private List<WishList> wishList;
-//    public GetWishListRes(ItemPreview items, int wishCnt, List<WishList> wishList)){
-//        this.wishCnt = wishCnt;
-//        this.wishList = wishList;
-//        this.items = items;
-//
-//    }
 }

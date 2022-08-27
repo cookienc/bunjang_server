@@ -670,7 +670,7 @@ public class ItemDao {
 			idx);
 	}
 
-	public List<WishList> getWishList(int idx) {
+	public List<WishList> getWisher(int idx) {
 		String query = "select User.idx userIdx, User.storeName name, User.storeImage image\n" +
 				"from WishList\n" +
 				"         left join User on WishList.userIdx = User.idx\n" +
@@ -689,5 +689,63 @@ public class ItemDao {
 		String query = "insert WishList(userIdx, itemIdx) values(?,?)";
 		Object[] params = new Object[]{userIdx, itemIdx};
 		this.jdbcTemplate.update(query, params);
+	}
+
+	public int checkWishList(Integer userIdx, Integer itemIdx) {
+		String query = "select exists(select idx from WishList where userIdx = ? and itemIdx = ?)";
+		Object[] params = new Object[]{userIdx, itemIdx};
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				params);
+	}
+
+	public void deleteWish(Integer itemIdx, Integer userIdx) {
+		String query = "Update WishList set status='D' where userIdx=? and itemIdx=?";
+		Object[] params = new Object[]{userIdx, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public List<GetWishListRes> getWishList(Integer userIdx) {
+		String query = "select wishList.itemIdx itemIdx,\n" +
+				"       Item.name        name,\n" +
+				"       Item.price       price,\n" +
+				"       storeName,\n" +
+				"       storeImage,\n" +
+				"       Item.safePay     safePay,\n" +
+				"       (case\n" +
+				"            when timestampdiff(minute, Item.updatedAt, now()) < 1\n" +
+				"                then concat(timestampdiff(second, Item.updatedAt, now()), '초 전')\n" +
+				"            when timestampdiff(hour, Item.updatedAt, now()) < 1\n" +
+				"                then concat(timestampdiff(minute, Item.updatedAt, now()), '분 전')\n" +
+				"            when timestampdiff(hour, Item.updatedAt, now()) < 24\n" +
+				"                then concat(timestampdiff(hour, Item.updatedAt, now()), '시간 전')\n" +
+				"            when timestampdiff(day, Item.updatedAt, now()) < 31\n" +
+				"                then concat(timestampdiff(day, Item.updatedAt, now()), '일 전')\n" +
+				"            when timestampdiff(week, Item.updatedAt, now()) < 4\n" +
+				"                then concat(timestampdiff(week, Item.updatedAt, now()), '주 전')\n" +
+				"            when timestampdiff(month, Item.updatedAt, now()) < 12\n" +
+				"                then concat(timestampdiff(month, Item.updatedAt, now()), '개월 전')\n" +
+				"            else concat(timestampdiff(year, Item.updatedAt, now()), '년 전')\n" +
+				"           end) as      updatedAt\n" +
+				"from ((select * from WishList where status != 'D') wishList\n" +
+				"    left join Item on wishList.itemIdx = Item.idx)\n" +
+				"         left join User on Item.sellerIdx = User.idx\n" +
+				"where User.status != 'D' && wishList.status != 'D'\n" +
+				"  and Item.status != 'D'\n" +
+				"  and wishList.userIdx = ?\n" +
+				"order by Item.updatedAt desc;";
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetWishListRes(
+						String.valueOf(rs.getInt("itemIdx")),
+						null,
+						rs.getString("name"),
+						String.valueOf(rs.getInt("price")),
+						rs.getString("storeName"),
+						rs.getString("storeImage"),
+						rs.getString("updatedAt"),
+						String.valueOf(rs.getBoolean("safePay"))
+				),
+				userIdx
+		);
 	}
 }
