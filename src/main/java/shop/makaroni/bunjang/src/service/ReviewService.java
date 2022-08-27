@@ -52,6 +52,7 @@ public class ReviewService {
 	}
 
 	public Long saveReviewComment(Long reviewIdx, SaveReviewCommentRequest request) {
+		checkIfAlreadyDeleted(reviewIdx);
 		reviewDao.addReviewCommentOnParent(reviewIdx);
 		return reviewDao.saveReviewComment(reviewIdx, request.getPost());
 	}

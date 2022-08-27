@@ -231,12 +231,12 @@ public class ReviewDao {
 	}
 
 	public void cleanDeleteReviewImages(Long reviewIdx) {
-		var sql = "delete from ReviewImage where reviewIdx = :reviewIdx";
+		var sql = "delete from ReviewImage where reviewIdx = :reviewIdx and status = 'Y'";
 		template.update(sql, Map.of("reviewIdx", reviewIdx));
 	}
 
 	public Optional<SingleReviewDto> getReviewById(Long reviewIdx) {
-		var sql = "select idx reviewIdx, post post, rating, hasComment from Review where idx = :reviewIdx";
+		var sql = "select idx reviewIdx, post post, rating, hasComment from Review where idx = :reviewIdx and status = 'Y'";
 		try {
 			SingleReviewDto dto = template.queryForObject(sql, Map.of("reviewIdx", reviewIdx), BeanPropertyRowMapper.newInstance(SingleReviewDto.class));
 			return Optional.of(dto);
@@ -246,14 +246,15 @@ public class ReviewDao {
 	}
 
 	public List<String> getReviewImagesById(Long reviewIdx) {
-		var sql = "select image from ReviewImage where reviewIdx = :reviewIdx";
+		var sql = "select image from ReviewImage where reviewIdx = :reviewIdx and status = 'Y'";
 		return template.queryForList(sql, Map.of("reviewIdx", reviewIdx), String.class);
 	}
 
 	public void addReviewCommentOnParent(Long reviewIdx) {
 		var sql = "update Review " +
 				"set hasComment = 1 " +
-				"where idx = :reviewIdx";
+				"where idx = :reviewIdx " +
+				"and status = 'Y'";
 		template.update(sql, Map.of("reviewIdx", reviewIdx));
 	}
 }
