@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.review.UpdateReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.dto.PostReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.dto.SaveReviewCommentRequest;
+import shop.makaroni.bunjang.src.domain.review.dto.UpdateReviewCommentRequest;
 import shop.makaroni.bunjang.src.domain.review.view.PurchasedItemsView;
 import shop.makaroni.bunjang.src.domain.review.view.ReviewSpecificView;
 import shop.makaroni.bunjang.src.domain.review.view.SingleReviewResponse;
@@ -30,6 +31,7 @@ import java.util.List;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.DELETE_REVIEW_COMMENT_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_REVIEW_COMMENT_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_SUCCESS;
+import static shop.makaroni.bunjang.src.response.SuccessStatus.UPDATE_REVIEW_COMMENT_SUCCESS;
 
 @Slf4j
 @RestController
@@ -86,9 +88,17 @@ public class ReviewController {
 		return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_REVIEW_COMMENT_SUCCESS));
 	}
 
-	@PatchMapping("/{reviewIdx}/comments/{commentIdx}")
+	@PatchMapping("/{reviewIdx}/comments/d/{commentIdx}")
 	public ResponseEntity<ResponseInfo> deleteComment(@PathVariable Long reviewIdx, @PathVariable Long commentIdx) {
 		reviewService.deleteComment(reviewIdx, commentIdx);
 		return ResponseEntity.ok(ResponseInfo.of(DELETE_REVIEW_COMMENT_SUCCESS));
 	}
+
+	@PatchMapping("/{reviewIdx}/comments/{commentIdx}")
+	public ResponseEntity<ResponseInfo> updateComment(@PathVariable Long reviewIdx, @PathVariable Long commentIdx,
+													  @Valid @RequestBody UpdateReviewCommentRequest request) {
+		reviewService.updateComment(reviewIdx, commentIdx, request);
+		return ResponseEntity.ok(ResponseInfo.of(UPDATE_REVIEW_COMMENT_SUCCESS));
+	}
+
 }

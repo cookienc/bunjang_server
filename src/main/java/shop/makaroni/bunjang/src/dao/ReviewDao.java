@@ -293,4 +293,8 @@ public class ReviewDao {
 			return Optional.empty();
 		}
 	}
+
+	public void updateComment(Long reviewIdx, Long commentIdx, String post) {
+		reviewMapper.updateComment(reviewIdx, commentIdx, post);
+	}
 }

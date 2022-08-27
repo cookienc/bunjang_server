@@ -89,6 +89,7 @@
 - [x] 리뷰 단건 조회 API 추가
 - [x] 리뷰 댓글 작성 API 추가
 - [x] 리뷰 댓글 삭제 API 추가
+- [x] 리뷰 답글 수정 API 추가
 
 ### 워니
 - [x] 최근 본 상품 조회 response parameter 수정

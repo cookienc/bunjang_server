@@ -16,4 +16,12 @@
         where idx = #{reviewIdx}
         and status = 'Y';
     </update>
+
+    <update id="updateComment">
+        update Comment
+        set post = #{post}
+        where idx = #{commentIdx}
+        and reviewIdx = #{reviewIdx}
+        and status = 'Y';
+    </update>
 </mapper>

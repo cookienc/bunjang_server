@@ -8,6 +8,7 @@ public enum SuccessStatus {
 	LOGIN_SUCCESS(HttpStatus.OK, Messages.LOGIN_SUCCESS),
 	PATCH_SUCCESS(HttpStatus.OK, Messages.PATCH_SUCCESS),
 	UPDATE_REVIEW_SUCCESS(HttpStatus.OK, Messages.UPDATE_REVEIEW_SUCCESS),
+	UPDATE_REVIEW_COMMENT_SUCCESS(HttpStatus.OK, Messages.UPDATE_REVEIEW_COMMENT_SUCCESS),
 	CHECK_LOGIN_ID_SUCCESS(HttpStatus.OK, Messages.CHECK_LOGIN_ID_SUCCESS),
 
 	SAVE_SUCCESS(HttpStatus.CREATED, Messages.SAVE_SUCCESS),
@@ -22,6 +23,7 @@ public enum SuccessStatus {
 		public static String LOGIN_SUCCESS= "로그인에 성공했습니다.";
 		public static String PATCH_SUCCESS = "변경되었습니다.";
 		public static String UPDATE_REVEIEW_SUCCESS= "리뷰를 수정 했습니다.";
+		public static String UPDATE_REVEIEW_COMMENT_SUCCESS= "댓글을 수정 했습니다.";
 		public static String CHECK_LOGIN_ID_SUCCESS = "중복된 아이디가 없습니다.";
 
 		public static String SAVE_SUCCESS = "저장되었습니다.";

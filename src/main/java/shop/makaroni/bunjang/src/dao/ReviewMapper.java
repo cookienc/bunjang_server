@@ -8,4 +8,6 @@ import shop.makaroni.bunjang.src.domain.review.UpdateReviewRequest;
 public interface ReviewMapper {
 
 	void updateReview(@Param("reviewIdx") Long reviewIdx, @Param("request") UpdateReviewRequest request);
+
+	void updateComment(@Param("reviewIdx") Long reviewIdx, @Param("commentIdx") Long commentIdx, @Param("post") String post);
 }

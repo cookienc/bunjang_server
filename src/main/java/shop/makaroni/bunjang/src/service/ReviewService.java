@@ -8,6 +8,7 @@ import shop.makaroni.bunjang.src.domain.item.State;
 import shop.makaroni.bunjang.src.domain.review.UpdateReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.dto.PostReviewRequest;
 import shop.makaroni.bunjang.src.domain.review.dto.SaveReviewCommentRequest;
+import shop.makaroni.bunjang.src.domain.review.dto.UpdateReviewCommentRequest;
 import shop.makaroni.bunjang.src.provider.ReviewProvider;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
@@ -63,6 +64,11 @@ public class ReviewService {
 
 		reviewDao.deleteReviewComment(reviewIdx, commentIdx);
 		reviewDao.changeReviewCommentStatus(reviewIdx);
+	}
+
+	public void updateComment(Long reviewIdx, Long commentIdx, UpdateReviewCommentRequest request) {
+		checkCommentIfAlreadyDeleted(reviewIdx, commentIdx);
+		reviewDao.updateComment(reviewIdx, commentIdx, request.getPost());
 	}
 
 	private void modifyReview(Long reviewIdx, UpdateReviewRequest request) {
