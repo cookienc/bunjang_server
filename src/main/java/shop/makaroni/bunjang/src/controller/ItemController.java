@@ -347,11 +347,7 @@ public class ItemController {
         try {
             Long userIdx = jwtService.getUserIdx();
             logger.info(String.valueOf(userIdx));
-            if (tab.equals("order")) {
-                return new BaseResponse<>(itemProvider.getOrder(userIdx, status));
-            } else {
-                return new BaseResponse<>(itemProvider.getSale(userIdx, status));
-            }
+            return new BaseResponse<>(itemProvider.getDeals(userIdx, tab, status));
         }
         catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());

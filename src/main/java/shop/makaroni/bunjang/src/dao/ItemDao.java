@@ -791,30 +791,6 @@ public class ItemDao {
 
 	}
 
-	public List<GetDealRes> getOrder(Long userIdx, String status) {
-		String query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
-				"from Item\n" +
-				"where buyerIdx = ?\n" +
-				"  and status = ?;";
-		
-		if(status.equals("E")){
-			status = "('P','S','F')";
-		}
-		Object[] params = new Object[]{userIdx, "("+status+")"};
-		return this.jdbcTemplate.query(query,
-				(rs, rowNum) -> new GetDealRes(
-						rs.getString("itemIdx"),
-						null,
-						rs.getString("name"),
-						rs.getString("price"),
-						rs.getString("updatedAt"),
-						null,
-						String.valueOf(rs.getInt("hit")),
-						null,
-						rs.getString("location")),
-				params);
-	}
-
 	public int checkItemSold(Long itemIdx) {
 		String query = "select exists(select idx from Item where idx = ? and status != 'S')";
 		return this.jdbcTemplate.queryForObject(query,
@@ -831,16 +807,24 @@ public class ItemDao {
 				params);
 	}
 
-	public List<GetDealRes> getSale(Long userIdx, String status) {
-		String query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
-				"from Item\n" +
-				"where sellerIdx = ?\n" +
-				"  and status = ?;";
-
+	public List<GetDealRes> getDeals(Long userIdx, String target, String status) {
+		Object[] params;
+		String query;
 		if(status.equals("E")){
-			status = "('P','S','F')";
+			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
+					"from Item\n" +
+					"where " + target + " = ?\n" +
+					"  and status in ('P','S','F');";
+			params = new Object[]{userIdx};
 		}
-		Object[] params = new Object[]{userIdx, "("+status+")"};
+		else {
+			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
+					"from Item\n" +
+					"where " + target + " = ?\n" +
+					"  and status = ?;";
+			params = new Object[]{userIdx, status};
+		}
+
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetDealRes(
 						rs.getString("itemIdx"),
@@ -854,4 +838,32 @@ public class ItemDao {
 						rs.getString("location")),
 				params);
 	}
+
+//	public List<GetDealRes> getOrder(Long userIdx, String status) {
+//		String query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
+//				"from Item\n" +
+//				"where buyerIdx = ?\n" +
+//				"  and status = ?;";
+//
+//		if(status.equals("E")){
+//			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
+//					"from Item\n" +
+//					"where sellerIdx = ?\n" +
+//					"  and status in ('P','S','F');";
+//
+//		}
+//		Object[] params = new Object[]{userIdx, status};
+//		return this.jdbcTemplate.query(query,
+//				(rs, rowNum) -> new GetDealRes(
+//						rs.getString("itemIdx"),
+//						null,
+//						rs.getString("name"),
+//						rs.getString("price"),
+//						rs.getString("updatedAt"),
+//						null,
+//						String.valueOf(rs.getInt("hit")),
+//						null,
+//						rs.getString("location")),
+//				params);
+//	}
 }

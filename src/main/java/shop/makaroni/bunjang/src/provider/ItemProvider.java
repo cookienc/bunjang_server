@@ -212,8 +212,15 @@ public class ItemProvider {
 
 	}
 
-	public List<GetDealRes> getOrder(Long userIdx, String status) {
-		List<GetDealRes> res = itemDao.getOrder(userIdx, status);
+	public List<GetDealRes> getDeals(Long userIdx, String tab, String status) {
+		List<GetDealRes> res;
+		if(tab.equals("order")){
+			res = itemDao.getDeals(userIdx, "buyerIdx", status);
+		}
+		else{
+			res = itemDao.getDeals(userIdx, "sellerIdx", status);
+		}
+
 		for(GetDealRes each : res){
 			Long itemIdx = Long.parseLong(each.getItemIdx());
 			each.setImage(max(getItemImages(itemIdx)));
@@ -223,14 +230,14 @@ public class ItemProvider {
 		return res;
 	}
 
-	public List<GetDealRes> getSale(Long userIdx, String status) {
-		List<GetDealRes> res = itemDao.getSale(userIdx, status);
-		for(GetDealRes each : res){
-			Long itemIdx = Long.parseLong(each.getItemIdx());
-			each.setImage(max(getItemImages(itemIdx)));
-			each.setChat(getItemChatCnt(itemIdx));
-			each.setReviewIdx(String.valueOf(itemDao.getReviewIdx(itemIdx)));
-		}
-		return res;
-	}
+//	public List<GetDealRes> getSale(Long userIdx, String status) {
+//		List<GetDealRes> res = itemDao.getSale(userIdx, status);
+//		for(GetDealRes each : res){
+//			Long itemIdx = Long.parseLong(each.getItemIdx());
+//			each.setImage(max(getItemImages(itemIdx)));
+//			each.setChat(getItemChatCnt(itemIdx));
+//			each.setReviewIdx(String.valueOf(itemDao.getReviewIdx(itemIdx)));
+//		}
+//		return res;
+//	}
 }
