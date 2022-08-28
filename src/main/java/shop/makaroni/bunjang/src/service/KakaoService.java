@@ -33,13 +33,15 @@ public class KakaoService {
 
 	public static final String AUTHORIZATION_CODE = "authorization_code";
 	public static final String CLIENT_ID = "8e89ed1c355979f20e667f26fd926191";
-	public static final String REDIRECT_URI = "http://localhost:9000/login/kakao";
 	public static final String TOKEN_HOST = "https://kauth.kakao.com/oauth/token";
 	public static final String ACCESS_TOKEN = "access_token";
 	public static final String INFO_HOST = "https://kapi.kakao.com/v2/user/me";
 
 	@Value("${kakao.password}")
 	private String key;
+
+	@Value("${redirect_uri}")
+	private String REDIRECT_URI;
 
 	private final LoginService loginService;
 	private final UserService userService;
