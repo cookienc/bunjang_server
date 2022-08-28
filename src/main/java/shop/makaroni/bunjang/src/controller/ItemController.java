@@ -46,6 +46,9 @@ public class ItemController {
     @GetMapping("/{itemIdx}")
     public BaseResponse<GetItemRes> getItem(@PathVariable("itemIdx") Long itemIdx) {
         try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             return new BaseResponse<>(itemProvider.getItem(itemIdx));
         } catch (BaseException exception) {
             exception.printStackTrace();
@@ -57,6 +60,9 @@ public class ItemController {
     @GetMapping("/all")
     public BaseResponse<List<GetItemRes>> getItems() {
         try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             return new BaseResponse<>(itemProvider.getItems());
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -69,6 +75,9 @@ public class ItemController {
                                                       @RequestParam(required = false, defaultValue = "C") char sort,
                                                       @RequestParam() int count) {
         try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             if (name == null) {
                 throw new BaseException(ITEM_NO_NAME);
             }
@@ -85,17 +94,14 @@ public class ItemController {
     }
 
     @ResponseBody
-    @GetMapping("/{userIdx}/last")
-    public BaseResponse<List<GetLogRes>> getItemLastN(@PathVariable("userIdx") Long userIdx,
-                                                      @RequestParam() int count) {
+    @GetMapping("/last")
+    public BaseResponse<List<GetLogRes>> getItemLastN(@RequestParam() int count) {
 
-        if (userIdx < 0) {
-            return new BaseResponse<>(USERS_INVALID_IDX);
-        }
         if (count <= 0) {
             return new BaseResponse<>(ITEM_NO_COUNT);
         }
         try {
+            Long userIdx = jwtService.getUserIdx();
             return new BaseResponse<>(itemProvider.getItemLastN(userIdx, count));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -103,9 +109,8 @@ public class ItemController {
     }
 
     @ResponseBody
-    @GetMapping("/brand/follow/{userIdx}")
-    public BaseResponse<List<GetUserBrandRes>> getUserBrand(@PathVariable("userIdx") Long userIdx,
-                                                            @RequestParam(required = false, defaultValue = "K") char sort) {
+    @GetMapping("/brand/follow")
+    public BaseResponse<List<GetUserBrandRes>> getUserBrand(@RequestParam(required = false, defaultValue = "K") char sort) {
 
 
         if (!(sort == 'K' || sort == 'E')) {
@@ -114,6 +119,7 @@ public class ItemController {
         List<GetUserBrandRes> getUserBrandRes;
         Long brandIdx;
         try {
+            Long userIdx = jwtService.getUserIdx();
             if (userIdx <= 0) {
                 return new BaseResponse<>(USERS_INVALID_IDX);
             }
@@ -128,11 +134,9 @@ public class ItemController {
         }
     }
 
-    // TODO
     @ResponseBody
     @GetMapping("/brand")
-    public BaseResponse<List<GetBrandRes>> getBrand(
-                                                    @RequestParam(required = false, defaultValue = "K") char sort) throws BaseException {
+    public BaseResponse<List<GetBrandRes>> getBrand(@RequestParam(required = false, defaultValue = "K") char sort) throws BaseException {
 
         if (!(sort == 'K' || sort == 'E')) {
             return new BaseResponse<>(ITEM_INVALID_SORT);
@@ -155,14 +159,14 @@ public class ItemController {
     }
 
     @ResponseBody
-    @GetMapping("/brand/{userIdx}/search")
-    public BaseResponse<List<GetBrandRes>> getBrandSearch(@PathVariable("userIdx") Long userIdx,
-                                                          @RequestParam(required = false) String name) {
+    @GetMapping("/brand/search")
+    public BaseResponse<List<GetBrandRes>> getBrandSearch(@RequestParam(required = false) String name) {
 
         ArrayList blank = new ArrayList();
         List<GetBrandRes> getBrandRes;
         Long brandIdx;
         try {
+            Long userIdx = jwtService.getUserIdx();
             if (userIdx <= 0) {
                 return new BaseResponse<>(USERS_INVALID_IDX);
             }
@@ -196,6 +200,9 @@ public class ItemController {
             return new BaseResponse<>(ITEM_NO_COUNT);
         }
         try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             GetCategoryRes getCategoryRes = itemProvider.getCategory(code, sort, count);
             return new BaseResponse<>(getCategoryRes);
         } catch (BaseException baseException) {
@@ -210,6 +217,9 @@ public class ItemController {
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
         }
         try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             validateItems(itemReq);
             ItemRes itemRes = itemService.createItem(itemReq);
             return new BaseResponse<>(itemRes);
@@ -226,6 +236,9 @@ public class ItemController {
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
         }
         try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             validateItems(itemReq);
             itemService.patchItem(idx, itemReq);
             return new BaseResponse<>(itemProvider.getItem(idx));
@@ -244,6 +257,9 @@ public class ItemController {
             return new BaseResponse<>(REQUEST_ERROR);
         }
         try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             return new BaseResponse<>(itemService.PatchItemStatus(idx, param.get("status")));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -254,6 +270,9 @@ public class ItemController {
     @DeleteMapping("/{idx}/sellers")
     public BaseResponse<HashMap<String, String>> DeleteItem(@PathVariable("idx") Long idx) {
         try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             return new BaseResponse<>(itemService.PatchItemStatus(idx, "D"));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -264,21 +283,26 @@ public class ItemController {
     @ResponseBody
     @GetMapping("/{idx}/wishers")
     public BaseResponse<GetWisherRes> GetWishers(@PathVariable("idx") Long idx) {
-        return itemProvider.getWisher(idx);
+        try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            return itemProvider.getWisher(idx);
+        } catch (BaseException baseException) {
+                    return new BaseResponse<>(baseException.getStatus());
+        }
+
     }
 
     @ResponseBody
-    @PostMapping("/wish-lists/{userIdx}")
-    public BaseResponse<HashMap<String, String>> PostWish(@PathVariable("userIdx") Long userIdx,
-                                                          @RequestBody Map<String, Long> param) {
+    @PostMapping("/wish-lists")
+    public BaseResponse<HashMap<String, String>> PostWish(@RequestBody Map<String, Long> param) {
         Long itemIdx = param.get("itemIdx");
-        if (userIdx < 0) {
-            return new BaseResponse<>(USERS_INVALID_IDX);
-        }
         if (itemIdx < 0) {
             return new BaseResponse<>(ITEM_NO_EXIST);
         }
         try {
+            Long userIdx = jwtService.getUserIdx();
             return new BaseResponse<>(itemService.PostWish(itemIdx, userIdx));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -287,15 +311,12 @@ public class ItemController {
 
     @ResponseBody
     @DeleteMapping("/wish-lists")
-    public BaseResponse<HashMap<String, String>> PostWish(@RequestParam() Long itemIdx,
-                                                          @RequestParam() Long userIdx) {
-        if (userIdx < 0) {
-            return new BaseResponse<>(USERS_INVALID_IDX);
-        }
+    public BaseResponse<HashMap<String, String>> PostWish(@RequestParam() Long itemIdx) {
         if (itemIdx < 0) {
             return new BaseResponse<>(ITEM_NO_EXIST);
         }
         try {
+            Long userIdx = jwtService.getUserIdx();
             return new BaseResponse<>(itemService.DeleteWish(itemIdx, userIdx));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -303,13 +324,12 @@ public class ItemController {
     }
 
     @ResponseBody
-    @GetMapping("/wish-lists/{userIdx}")
-    public BaseResponse<List<GetWishListRes>> getWishList(@PathVariable("userIdx") Long userIdx)
+    @GetMapping("/wish-lists")
+    public BaseResponse<List<GetWishListRes>> getWishList()
             throws BaseException {
-        if (userIdx < 0) {
-            return new BaseResponse<>(USERS_INVALID_IDX);
-        }
+
         try {
+            Long userIdx = jwtService.getUserIdx();
             return new BaseResponse<>(itemProvider.getWishList(userIdx));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -327,6 +347,9 @@ public class ItemController {
             return new BaseResponse<>(INVALID_SEARCH_WORD);
         }
         try {
+            if(!jwtService.validateJWT(jwtService.getJwt())){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             return new BaseResponse<>(itemProvider.getSearchWord(q));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -370,7 +393,6 @@ public class ItemController {
         try{
             Long userIdx = jwtService.getUserIdx();
             itemService.postReport(userIdx, postReportReq);
-
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException e) {
             return new BaseResponse(e.getStatus());
