@@ -22,7 +22,7 @@ public class ItemDao {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-	public GetItemRes getItem(int itemIdx){
+	public GetItemRes getItem(Long itemIdx){
 		String query = "select idx, price, name,\n" +
 				"       IF(isnull(location),'지역정보 없음', location) location,\n" +
 				"       (case\n" +
@@ -119,7 +119,7 @@ public class ItemDao {
 
 	}
 
-	public int checkItemIdx(int itemIdx){
+	public int checkItemIdx(Long itemIdx){
 		String query = "select exists(select idx from Item where idx = ? and status != 'D')";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
@@ -127,21 +127,21 @@ public class ItemDao {
 
 	}
 
-	public int getItemWishCnt(int itemIdx){
+	public int getItemWishCnt(Long itemIdx){
 		String query = "select count(idx) as wish from WishList where itemIdx = ? and status != 'D'";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				itemIdx);
 	}
 
-	public int getItemChatCnt(int itemIdx){
+	public int getItemChatCnt(Long itemIdx){
 		String query = "select count(idx) as chat from ChatRoom where itemIdx=? and status != 'D' ";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				itemIdx
 		);
 	}
-	public List<String> getItemTags(int itemIdx){
+	public List<String> getItemTags(Long itemIdx){
 		String query = "select name from Tag where itemIdx = ? and status != 'D'";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> rs.getString("name"),
@@ -150,7 +150,7 @@ public class ItemDao {
 	}
 
 
-	public List<String> getItemImages(int itemIdx) {
+	public List<String> getItemImages(Long itemIdx) {
 		String query = "select path from ItemImage where itemIdx = ? and status != 'D';";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new  String(
@@ -265,7 +265,7 @@ public class ItemDao {
 
 	}
 
-	public List<GetLogRes> getItemLastN(int userIdx, int count) {
+	public List<GetLogRes> getItemLastN(long userIdx, int count) {
 		String query =
 				"select distinct Log.itemIdx itemIdx, name, price, safePay, isAd, max(Log.createdAt) createdAt, path\n" +
 				"from (Log join Item I on Log.itemIdx = I.idx)\n" +
@@ -292,21 +292,21 @@ public class ItemDao {
 	}
 
 
-	public int checkBrandIdx(int brandIdx) {
+	public int checkBrandIdx(Long brandIdx) {
 		String query = "select exists(select idx from Brand where idx = ? and status != 'D');";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				brandIdx);
 	}
 
-	public int getItemCnt(int brandIdx) {
+	public int getItemCnt(Long brandIdx) {
 		String query = "select count(idx) from Item where brandIdx = ? and status !='D';";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				brandIdx);
 	}
 
-	public List<GetBrandRes> getBrand(int userIdx, char sort) {
+	public List<GetBrandRes> getBrand(Long userIdx, char sort) {
 		String query;
 		if(sort == 'K'){
 			query =	"select distinct logo, idx brandIdx, name brandName, englishName,\n" +
@@ -336,7 +336,7 @@ public class ItemDao {
 
 	}
 
-	public List<GetBrandRes> getBrandSearch(int userIdx, String name) {
+	public List<GetBrandRes> getBrandSearch(Long userIdx, String name) {
 		String query = "select distinct logo, idx brandIdx, name brandName, englishName,\n" +
 				"idx in (select brandIdx from Brand join (select * from BrandFollow where userIdx = ? and status!='D') follow\n" +
 				"on Brand.idx = brandIdx where Brand.status != 'D') follow\n" +
@@ -357,7 +357,7 @@ public class ItemDao {
 		);
 	}
 
-	public List<GetUserBrandRes> getUserBrand(int userIdx, char sort) {
+	public List<GetUserBrandRes> getUserBrand(Long userIdx, char sort) {
 		String query;
 		if(sort == 'K'){
 			query =	"select distinct logo, Brand.idx brandIdx, name brandName, englishName from Brand join\n" +
@@ -473,7 +473,7 @@ public class ItemDao {
 				params);
 	}
 
-	public int createItem(ItemReq itemReq) {
+	public Long createItem(ItemReq itemReq) {
 		String query =
 				"Insert into Item(sellerIdx, name, category, brandIdx, price, delivery, content, stock, isNew, exchange, safePay,\n" +
 						"                 inspection, location, isAd, buyerIdx)\n" +
@@ -481,38 +481,38 @@ public class ItemDao {
 		Object[] params = itemReq.getPostItemReq();
 		this.jdbcTemplate.update(query, params);
 		String lastInsertIdQuery = "select last_insert_id()";
-		return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+		return this.jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class);
 	}
 
-	public int findBrand(String tag) {
+	public Long findBrand(String tag) {
 		String query = "select IF((select exists(select idx from Brand where (name = ? or englishName = ?) and status!='D')),\n" +
 				"               (select idx from Brand where (name = ? or englishName = ?) and status!='D'),\n" +
 				"               0);";
 		Object[] params = new Object[]{tag, tag, tag, tag};
 		return this.jdbcTemplate.queryForObject(query,
-				int.class,
+				Long.class,
 				params);
 	}
 
-	public void setBrand(int itemIdx, int brandIdx){
+	public void setBrand(Long itemIdx, Long brandIdx){
 		String query = "update Item set brandIdx = ? where idx=?;";
 		Object[] params = new Object[]{brandIdx,itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public void setTags(int itemIdx, String tag) {
+	public void setTags(Long itemIdx, String tag) {
 		String query = "insert into Tag(itemIdx, name) values(?, ?);";
 		Object[] params = new Object[]{itemIdx, tag};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public void setImage(int itemIdx, String image) {
+	public void setImage(Long itemIdx, String image) {
 		String query = "insert into ItemImage(itemIdx, path) values(?, ?);";
 		Object[] params = new Object[]{itemIdx, image};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public int checkImage(int itemIdx, String image) {
+	public int checkImage(Long itemIdx, String image) {
 		String query = "select IF(exists(select idx from ItemImage where itemIdx = ? and path = ?),\n" +
 				"          (select idx from ItemImage where itemIdx = ? and path = ?),\n" +
 				"          0);";
@@ -526,18 +526,18 @@ public class ItemDao {
 		this.jdbcTemplate.update(query, imgIdx);
 	}
 
-	public void updateName(int itemIdx, String name){
+	public void updateName(Long itemIdx, String name){
 		String query = "update Item set name=? where idx = ?;";
 		Object[] params = new Object[]{name, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public void updateCategory(int itemIdx, String category) {
+	public void updateCategory(Long itemIdx, String category) {
 		String query = "update Item set category=? where idx = ?;";
 		Object[] params = new Object[]{category, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
-	public int checkTag(int itemIdx, String Tag) {
+	public int checkTag(Long itemIdx, String Tag) {
 		String query = "select IF(exists(select idx from Tag where itemIdx = ? and name = ?),\n" +
 				"          (select idx from Tag where itemIdx = ? and name = ?),\n" +
 				"          0);";
@@ -547,7 +547,7 @@ public class ItemDao {
 				params);
 	}
 
-	public void setTag(int itemIdx, String tag) {
+	public void setTag(Long itemIdx, String tag) {
 		String query = "insert into Tag(itemIdx, name) values(?, ?);";
 		Object[] params = new Object[]{itemIdx, tag};
 		this.jdbcTemplate.update(query, params);
@@ -558,104 +558,104 @@ public class ItemDao {
 		this.jdbcTemplate.update(query, tagIdx);
 	}
 
-	public void updatePrice(int itemIdx, Integer price) {
+	public void updatePrice(Long itemIdx, Integer price) {
 		String query = "update Item set price = ? where idx = ?;";
 		Object[] params = new Object[]{price, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
-	public void updateDelivery(int itemIdx, Integer delivery) {
+	public void updateDelivery(Long itemIdx, Integer delivery) {
 		String query = "update Item set delivery = ? where idx = ?;";
 		Object[] params = new Object[]{delivery, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public void updateStock(int itemIdx, Integer stock) {
+	public void updateStock(Long itemIdx, Integer stock) {
 		String query = "update Item set stock = ? where idx = ?;";
 		Object[] params = new Object[]{stock, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public void updateIsNew(int itemIdx, Integer isNew) {
+	public void updateIsNew(Long itemIdx, Integer isNew) {
 		String query = "update Item set isNew = ? where idx = ?;";
 		Object[] params = new Object[]{isNew, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public void updateExchange(int itemIdx, Integer exchange) {
+	public void updateExchange(Long itemIdx, Integer exchange) {
 		String query = "update Item set exchange = ? where idx = ?;";
 		Object[] params = new Object[]{exchange, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
-	public void updateSafePay(int itemIdx,Integer safePay){
+	public void updateSafePay(Long itemIdx,Integer safePay){
 		String query = "update Item set safePay = ? where idx = ?;";
 		Object[] params = new Object[]{safePay, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
-	public void updateSellerIdx(int itemIdx,Integer sellerIdx){
+	public void updateSellerIdx(Long itemIdx,Long sellerIdx){
 		String query = "update Item set sellerIdx = ? where idx = ?;";
 		Object[] params = new Object[]{sellerIdx, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
-	public void updateLocation(int itemIdx, String location){
+	public void updateLocation(Long itemIdx, String location){
 		String query = "update Item set location = ? where idx = ?;";
 		Object[] params = new Object[]{location, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
-	public void updateIsAd(int itemIdx, Integer isAd){
+	public void updateIsAd(Long itemIdx, Integer isAd){
 		String query = "update Item set isAd = ? where idx = ?;";
 		Object[] params = new Object[]{isAd, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
-	public void updateInspection(int itemIdx,Integer inspection){
+	public void updateInspection(Long itemIdx,Integer inspection){
 		String query = "update Item set inspection = ? where idx = ?;";
 		Object[] params = new Object[]{inspection, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public void updateContent(int itemIdx, String content) {
+	public void updateContent(Long itemIdx, String content) {
 		String query = "update Item set content = ? where idx = ?;";
 		Object[] params = new Object[]{content, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public void deleteAllTags(int itemIdx) {
+	public void deleteAllTags(Long itemIdx) {
 		String query = "update Tag set status = 'D' where itemIdx = ?;";
 		this.jdbcTemplate.update(query, itemIdx);
 	}
 
-	public void deleteAllImages(int itemIdx) {
+	public void deleteAllImages(Long itemIdx) {
 		String query = "update ItemImage set status = 'D' where itemIdx = ?;";
 		this.jdbcTemplate.update(query, itemIdx);
 	}
 
-	public void patchStatus(Integer idx, String status) {
+	public void patchStatus(Long idx, String status) {
 		String query = "update Item set status = ? where idx = ?;";
 		Object[] params = new Object[]{status, idx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public char getStatus(Integer idx) {
+	public char getStatus(Long idx) {
 		String query = "select status from Item where idx = ?";
 		return this.jdbcTemplate.queryForObject(query,
 				char.class,
 				idx);
 	}
 
-	public String getPrice(Integer idx) {
+	public String getPrice(Long idx) {
 		String query = "select price from Item where idx = ?";
 		return String.valueOf(this.jdbcTemplate.queryForObject(query,
 				int.class,
 				idx));
 	}
 
-	public String getItemName(Integer idx) {
+	public String getItemName(Long idx) {
 		String query = "select name from Item where idx = ?";
 		return this.jdbcTemplate.queryForObject(query,
 				String.class,
 				idx);
 	}
 
-	public String getUpdatedAt(Integer idx) {
+	public String getUpdatedAt(Long idx) {
 		String query = "select (case\n" +
 				"    when timestampdiff(minute , updatedAt, now()) < 1 then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
 				"    when timestampdiff(hour, updatedAt, now()) < 1 then concat(timestampdiff(minute, updatedAt, now()), '분 전')\n" +
@@ -672,7 +672,7 @@ public class ItemDao {
 			idx);
 	}
 
-	public List<WishList> getWisher(int idx) {
+	public List<WishList> getWisher(Long idx) {
 		String query = "select User.idx userIdx, User.storeName name, User.storeImage image\n" +
 				"from WishList\n" +
 				"         left join User on WishList.userIdx = User.idx\n" +
@@ -687,13 +687,13 @@ public class ItemDao {
 		);
 	}
 
-	public void postWish(int itemIdx, Integer userIdx) {
+	public void postWish(Long itemIdx, Long userIdx) {
 		String query = "insert WishList(userIdx, itemIdx) values(?,?)";
 		Object[] params = new Object[]{userIdx, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public int checkWishList(Integer userIdx, Integer itemIdx) {
+	public int checkWishList(Long userIdx, Long itemIdx) {
 		String query = "select exists(select idx from WishList where userIdx = ? and itemIdx = ?)";
 		Object[] params = new Object[]{userIdx, itemIdx};
 		return this.jdbcTemplate.queryForObject(query,
@@ -701,13 +701,13 @@ public class ItemDao {
 				params);
 	}
 
-	public void deleteWish(Integer itemIdx, Integer userIdx) {
+	public void deleteWish(Long itemIdx, Long userIdx) {
 		String query = "Update WishList set status='D' where userIdx=? and itemIdx=?";
 		Object[] params = new Object[]{userIdx, itemIdx};
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public List<GetWishListRes> getWishList(Integer userIdx) {
+	public List<GetWishListRes> getWishList(Long userIdx) {
 		String query = "select wishList.itemIdx itemIdx,\n" +
 				"       Item.name        name,\n" +
 				"       Item.price       price,\n" +
@@ -789,5 +789,29 @@ public class ItemDao {
 						rs.getString("name")),
 				param);
 
+	}
+
+	public List<GetDealRes> getOrder(Long userIdx) {
+		String query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') location\n" +
+				"from Item\n" +
+				"where sellerIdx = ?\n" +
+				"  and status = ?;";
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetDealRes(
+						rs.getString("itemIdx"),
+						null,
+						rs.getString("name"),
+						rs.getString("price"),
+						rs.getString("updatedAt"),
+						null, null, null,
+						rs.getString("location")),
+				userIdx);
+	}
+
+	public int checkItemSold(Long itemIdx) {
+		String query = "select exists(select idx from Item where idx = ? and status != 'S')";
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				itemIdx);
 	}
 }

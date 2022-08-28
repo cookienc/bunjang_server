@@ -122,7 +122,7 @@ public class UserDao {
 		return itemMapper.searchStoreItemByName(userId, itemName, condition, pagingCond);
 	}
 
-	public int checkUserIdx(int userIdx){
+	public int checkUserIdx(long userIdx){
 		String query = "select exists(select idx from User where idx = ?)";
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,

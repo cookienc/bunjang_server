@@ -34,7 +34,7 @@ public class ItemService {
 		itemProvider.validateCategory(itemReq.getCategory());
 
 		// brand validation
-		int itemIdx = itemDao.createItem(itemReq);
+		Long itemIdx = itemDao.createItem(itemReq);
 		List<String> tags = itemDao.getItemTags(itemIdx);
 		setBrand(itemIdx, tags);
 
@@ -53,9 +53,9 @@ public class ItemService {
 		return new ItemRes(itemIdx);
 	}
 
-	public void setBrand(int itemIdx, List<String> tags) throws BaseException {
-		int brandIdx = 0;
-		int find;
+	public void setBrand(Long itemIdx, List<String> tags) throws BaseException {
+		Long brandIdx = Long.valueOf(0);
+		Long find;
 		for(String tag : tags){
 			find = itemDao.findBrand(tag);
 			if(find != 0){
@@ -65,7 +65,7 @@ public class ItemService {
 		itemDao.setBrand(itemIdx, brandIdx);
 	}
 
-	public void patchItem(int itemIdx, ItemReq itemReq) throws BaseException {
+	public void patchItem(Long itemIdx, ItemReq itemReq) throws BaseException {
 
 		if (itemReq.getImages() != null) {
 			patchImages(itemIdx, itemReq.getImages());
@@ -115,76 +115,76 @@ public class ItemService {
 		}
 	}
 
-	private void patchContent(int itemIdx, String content) throws BaseException{
+	private void patchContent(Long itemIdx, String content) throws BaseException{
 		if(content == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateContent(itemIdx, content);
 	}
 
-	private void patchSafePay(int itemIdx, Integer safePay) throws BaseException{
+	private void patchSafePay(Long itemIdx, Integer safePay) throws BaseException{
 		if(safePay == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateSafePay(itemIdx, safePay);
 	}
-	private void patchSellerIdx(int itemIdx, Integer sellerIdx) throws BaseException{
+	private void patchSellerIdx(Long itemIdx, Long sellerIdx) throws BaseException{
 		if(sellerIdx == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateSellerIdx(itemIdx, sellerIdx);
 	}
-	private void patchLocation(int itemIdx, String location) throws BaseException{
+	private void patchLocation(Long itemIdx, String location) throws BaseException{
 		if(location == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateLocation(itemIdx, location);
 	}
-	private void patchIsAd(int itemIdx, Integer isAd) throws BaseException{
+	private void patchIsAd(Long itemIdx, Integer isAd) throws BaseException{
 		if(isAd == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateIsAd(itemIdx, isAd);
 	}
-	private void patchInspection(int itemIdx, Integer inspection) throws BaseException{
+	private void patchInspection(Long itemIdx, Integer inspection) throws BaseException{
 		if(inspection == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateInspection(itemIdx, inspection);
 	}
-	private void patchExchange(int itemIdx, Integer exchange) throws BaseException{
+	private void patchExchange(Long itemIdx, Integer exchange) throws BaseException{
 		if(exchange == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateExchange(itemIdx, exchange);
 	}
 
-	private void patchIsNew(int itemIdx, Integer isNew) throws BaseException{
+	private void patchIsNew(Long itemIdx, Integer isNew) throws BaseException{
 		if(isNew == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateIsNew(itemIdx, isNew);
 	}
-	private void patchStock(int itemIdx, Integer stock) throws BaseException{
+	private void patchStock(Long itemIdx, Integer stock) throws BaseException{
 		if(stock == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateStock(itemIdx, stock);
 	}
-	private void patchDelivery(int itemIdx, Integer delivery) throws BaseException{
+	private void patchDelivery(Long itemIdx, Integer delivery) throws BaseException{
 		if(delivery == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updateDelivery(itemIdx, delivery);
 	}
-	private void patchPrice(int itemIdx, Integer price) throws BaseException{
+	private void patchPrice(Long itemIdx, Integer price) throws BaseException{
 		if(price == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
 		itemDao.updatePrice(itemIdx, price);
 	}
 
-	public void patchTag(int itemIdx, List<String> tags) throws BaseException {
+	public void patchTag(Long itemIdx, List<String> tags) throws BaseException {
 		if(tags == null){
 			throw new BaseException(REQUEST_ERROR);
 		}
@@ -200,13 +200,13 @@ public class ItemService {
 		}
 		setBrand(itemIdx, tags);
 	}
-	public void patchCategory(int itemIdx, String category) throws BaseException {
+	public void patchCategory(Long itemIdx, String category) throws BaseException {
 		if(category == null){
 			throw new BaseException(ITEM_INVALID_CATEGORY);
 		}
 		itemDao.updateCategory(itemIdx, category);
 	}
-	public void patchName(int itemIdx, String name) throws BaseException {
+	public void patchName(Long itemIdx, String name) throws BaseException {
 		if(name == null){
 			throw new BaseException(ITEM_NO_NAME);
 		}
@@ -215,7 +215,7 @@ public class ItemService {
 		}
 		itemDao.updateName(itemIdx, name);
 	}
-	public void patchImages(int itemIdx, List<String> images) throws BaseException{
+	public void patchImages(Long itemIdx, List<String> images) throws BaseException{
 		// images
 		if(images == null){
 			throw new BaseException(POST_ITEM_EMPTY_IMAGE);
@@ -232,15 +232,15 @@ public class ItemService {
 		}
 	}
 
-	public void deleteAllTags(int itemIdx){
+	public void deleteAllTags(Long itemIdx){
 		itemDao.deleteAllTags(itemIdx);
 	}
 
-	public void deleteAllImages(int itemIdx){
+	public void deleteAllImages(Long itemIdx){
 		itemDao.deleteAllImages(itemIdx);
 	}
 
-	public HashMap<String, String> PatchItemStatus(Integer idx, String status) throws BaseException{
+	public HashMap<String, String> PatchItemStatus(Long idx, String status) throws BaseException{
 		if(itemDao.checkItemIdx(idx) == 0){
 			throw new BaseException(ITEM_NO_EXIST);
 		}
@@ -253,7 +253,7 @@ public class ItemService {
 		return itemRes;
 	}
 
-	public HashMap<String, String> PostWish(int itemIdx, Integer userIdx) throws BaseException {
+	public HashMap<String, String> PostWish(Long itemIdx, Long userIdx) throws BaseException {
 		if(userDao.checkUserIdx(userIdx) == 0){
 			throw new BaseException(USERS_INVALID_IDX);
 		}
@@ -267,7 +267,7 @@ public class ItemService {
 
 	}
 
-	public HashMap<String, String> DeleteWish(Integer itemIdx, Integer userIdx) throws BaseException {
+	public HashMap<String, String> DeleteWish(Long itemIdx, Long userIdx) throws BaseException {
 		if(userDao.checkUserIdx(userIdx) == 0){
 			throw new BaseException(USERS_INVALID_IDX);
 		}

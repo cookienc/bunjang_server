@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import shop.makaroni.bunjang.src.provider.ItemProvider;
 import shop.makaroni.bunjang.src.service.ItemService;
 import shop.makaroni.bunjang.src.domain.item.model.*;
+import shop.makaroni.bunjang.utils.JwtService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
-import static shop.makaroni.bunjang.src.validation.validation.*;
+import static shop.makaroni.bunjang.utils.Itemvalidation.validation.*;
 
 
 @Transactional
@@ -30,18 +31,20 @@ public class ItemController {
     private final ItemProvider itemProvider;
     @Autowired
     private final ItemService itemService;
+    @Autowired
+    JwtService jwtService;
 
-    public ItemController(ItemProvider itemProvider, ItemService itemService) {
+    public ItemController(ItemProvider itemProvider, ItemService itemService, JwtService jwtService) {
         this.itemProvider = itemProvider;
         this.itemService = itemService;
+        this.jwtService = jwtService;
     }
 
 
     @ResponseBody
     @GetMapping("/{itemIdx}")
-    public BaseResponse<GetItemRes> getItem(@PathVariable("itemIdx") int itemIdx) {
+    public BaseResponse<GetItemRes> getItem(@PathVariable("itemIdx") Long itemIdx) {
         try {
-
             return new BaseResponse<>(itemProvider.getItem(itemIdx));
         } catch (BaseException exception) {
             exception.printStackTrace();
@@ -58,20 +61,21 @@ public class ItemController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
     @ResponseBody
     @GetMapping("")
     public BaseResponse<List<GetSearchRes>> getSearch(@RequestParam() String name,
-                                                      @RequestParam(required = false, defaultValue="C") char sort,
+                                                      @RequestParam(required = false, defaultValue = "C") char sort,
                                                       @RequestParam() int count) {
         try {
             if (name == null) {
                 throw new BaseException(ITEM_NO_NAME);
             }
-            if(count == 0){
+            if (count == 0) {
                 throw new BaseException(ITEM_NO_COUNT);
             }
-            if(sort != 'C' && sort != 'R' && sort != 'L' && sort != 'H'){
-                 throw new BaseException(ITEM_INVALID_SORT);
+            if (sort != 'C' && sort != 'R' && sort != 'L' && sort != 'H') {
+                throw new BaseException(ITEM_INVALID_SORT);
             }
             return new BaseResponse<>(itemProvider.getSearch(name, sort, count));
         } catch (BaseException exception) {
@@ -81,13 +85,13 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/{userIdx}/last")
-    public BaseResponse<List<GetLogRes>> getItemLastN(@PathVariable("userIdx") int userIdx,
-                                                      @RequestParam() int count){
+    public BaseResponse<List<GetLogRes>> getItemLastN(@PathVariable("userIdx") Long userIdx,
+                                                      @RequestParam() int count) {
 
-        if(userIdx < 0){
+        if (userIdx < 0) {
             return new BaseResponse<>(USERS_INVALID_IDX);
         }
-        if(count <= 0){
+        if (count <= 0) {
             return new BaseResponse<>(ITEM_NO_COUNT);
         }
         try {
@@ -96,80 +100,81 @@ public class ItemController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
     @ResponseBody
     @GetMapping("/brand/follow/{userIdx}")
-    public BaseResponse<List<GetUserBrandRes>> getUserBrand(@PathVariable("userIdx") int userIdx,
-                                                    @RequestParam(required = false, defaultValue = "K") char sort) {
+    public BaseResponse<List<GetUserBrandRes>> getUserBrand(@PathVariable("userIdx") Long userIdx,
+                                                            @RequestParam(required = false, defaultValue = "K") char sort) {
 
 
-        if(!(sort == 'K' || sort == 'E')){
+        if (!(sort == 'K' || sort == 'E')) {
             return new BaseResponse<>(ITEM_INVALID_SORT);
         }
         List<GetUserBrandRes> getUserBrandRes;
-        int brandIdx;
+        Long brandIdx;
         try {
             if (userIdx <= 0) {
                 return new BaseResponse<>(USERS_INVALID_IDX);
             }
-            getUserBrandRes = itemProvider.getUserBrand(userIdx,sort);
+            getUserBrandRes = itemProvider.getUserBrand(userIdx, sort);
             for (GetUserBrandRes eachRes : getUserBrandRes) {
-                brandIdx = Integer.parseInt(eachRes.getBrandIdx());
+                brandIdx = Long.parseLong(eachRes.getBrandIdx());
                 eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
             }
             return new BaseResponse<>(getUserBrandRes);
-        }catch (BaseException exception){
+        } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-    @ResponseBody
-    @GetMapping("/brand/{userIdx}")
-    public BaseResponse<List<GetBrandRes>> getBrand(@PathVariable("userIdx") int userIdx,
-                                                    @RequestParam(required = false, defaultValue = "K") char sort){
 
-        if(!(sort == 'K' || sort == 'E')){
+    // TODO
+    @ResponseBody
+    @GetMapping("/brand")
+    public BaseResponse<List<GetBrandRes>> getBrand(
+                                                    @RequestParam(required = false, defaultValue = "K") char sort) throws BaseException {
+
+        if (!(sort == 'K' || sort == 'E')) {
             return new BaseResponse<>(ITEM_INVALID_SORT);
         }
         List<GetBrandRes> getBrandRes;
-        int brandIdx;
+        Long brandIdx;
         try {
-            getBrandRes = itemProvider.getBrand(userIdx,sort);
+            Long userIdx = jwtService.getUserIdx();
+            getBrandRes = itemProvider.getBrand(userIdx, sort);
             for (GetBrandRes eachRes : getBrandRes) {
-                brandIdx = Integer.parseInt(eachRes.getBrandIdx());
+                brandIdx = Long.parseLong(eachRes.getBrandIdx());
                 eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
             }
             return new BaseResponse<>(getBrandRes);
-        }catch (BaseException exception){
+        } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
-
-
 
 
     }
 
     @ResponseBody
     @GetMapping("/brand/{userIdx}/search")
-    public BaseResponse<List<GetBrandRes>> getBrandSearch(@PathVariable("userIdx") int userIdx,
-                                                    @RequestParam(required = false) String name) {
+    public BaseResponse<List<GetBrandRes>> getBrandSearch(@PathVariable("userIdx") Long userIdx,
+                                                          @RequestParam(required = false) String name) {
 
         ArrayList blank = new ArrayList();
         List<GetBrandRes> getBrandRes;
-        int brandIdx;
+        Long brandIdx;
         try {
             if (userIdx <= 0) {
                 return new BaseResponse<>(USERS_INVALID_IDX);
             }
-            if(name == null){
-//                return new BaseResponse<>(blank);
+            if (name == null) {
                 return new BaseResponse<>(blank);
             }
             getBrandRes = itemProvider.getBrandSearch(userIdx, name);
             for (GetBrandRes eachRes : getBrandRes) {
-                brandIdx = Integer.parseInt(eachRes.getBrandIdx());
+                brandIdx = Long.parseLong(eachRes.getBrandIdx());
                 eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
             }
             return new BaseResponse<>(getBrandRes);
-        }catch (BaseException exception){
+        } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
     }
@@ -178,81 +183,78 @@ public class ItemController {
     @GetMapping("/category/{code}")
     public BaseResponse<GetCategoryRes> getCategory(@PathVariable("code") String code,
                                                     @RequestParam(required = false, defaultValue = "R") char sort,
-                                                    @RequestParam() Integer count)
-    {
+                                                    @RequestParam() Integer count) {
 
-        if (code.length() > 10 || code.length() < 1 ) {
+        if (code.length() > 10 || code.length() < 1) {
             return new BaseResponse<>(ITEM_INVALID_CATEGORY);
         }
-        if(code.length()!=1 && code.length() % 2 != 0){
+        if (code.length() != 1 && code.length() % 2 != 0) {
             return new BaseResponse<>(ITEM_INVALID_CATEGORY);
         }
-        if(count != null && count < 0 ){
+        if (count != null && count < 0) {
             return new BaseResponse<>(ITEM_NO_COUNT);
         }
-        try{
+        try {
             GetCategoryRes getCategoryRes = itemProvider.getCategory(code, sort, count);
             return new BaseResponse<>(getCategoryRes);
-        }catch(BaseException baseException){
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
+
     @ResponseBody
     @PostMapping("/sellers")
     public BaseResponse<ItemRes> CreateItem(@RequestBody ItemReq itemReq) {
-        if(itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()){
+        if (itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()) {
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
         }
         try {
             validateItems(itemReq);
             ItemRes itemRes = itemService.createItem(itemReq);
             return new BaseResponse<>(itemRes);
-        }
-        catch(BaseException baseException){
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
 
     @ResponseBody
     @PatchMapping("/{idx}/sellers")
-    public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Integer idx,
-                                           @RequestBody ItemReq itemReq) {
-        if(itemReq.getImages() != null && (itemReq.getImages().isEmpty() || itemReq.getImages().get(0).equals(""))){
+    public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Long idx,
+                                              @RequestBody ItemReq itemReq) {
+        if (itemReq.getImages() != null && (itemReq.getImages().isEmpty() || itemReq.getImages().get(0).equals(""))) {
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
         }
         try {
             validateItems(itemReq);
-            itemService.patchItem(idx,itemReq);
+            itemService.patchItem(idx, itemReq);
             return new BaseResponse<>(itemProvider.getItem(idx));
-        }
-        catch(BaseException baseException){
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
+
     @ResponseBody
     @PatchMapping("/{idx}/status/sellers")
-    public BaseResponse<HashMap<String, String>> PatchItemStatus(@PathVariable("idx") Integer idx,
-                                              @RequestBody Map<String, String> param) {
+    public BaseResponse<HashMap<String, String>> PatchItemStatus(@PathVariable("idx") Long idx,
+                                                                 @RequestBody Map<String, String> param) {
 
         char statusC = param.get("status").charAt(0);
-        if(!(statusC == 'Y'||statusC=='R'||statusC=='S'||statusC=='D')){
+        if (!(statusC == 'Y' || statusC == 'R' || statusC == 'S' || statusC == 'D')) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
         try {
             return new BaseResponse<>(itemService.PatchItemStatus(idx, param.get("status")));
-        }
-        catch(BaseException baseException){
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
 
     @ResponseBody
     @DeleteMapping("/{idx}/sellers")
-    public BaseResponse<HashMap<String, String>> DeleteItem(@PathVariable("idx") Integer idx) {
+    public BaseResponse<HashMap<String, String>> DeleteItem(@PathVariable("idx") Long idx) {
         try {
             return new BaseResponse<>(itemService.PatchItemStatus(idx, "D"));
-        }
-        catch(BaseException baseException){
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
 
@@ -260,57 +262,55 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/{idx}/wishers")
-    public BaseResponse<GetWisherRes> GetWishers (@PathVariable("idx") Integer idx) {
-            return itemProvider.getWisher(idx);
+    public BaseResponse<GetWisherRes> GetWishers(@PathVariable("idx") Long idx) {
+        return itemProvider.getWisher(idx);
     }
 
     @ResponseBody
     @PostMapping("/wish-lists/{userIdx}")
-    public BaseResponse<HashMap<String, String>> PostWish(@PathVariable("userIdx") Integer userIdx,
-                                                          @RequestBody Map<String, Integer> param) {
-        int itemIdx = param.get("itemIdx");
-        if(userIdx < 0){
+    public BaseResponse<HashMap<String, String>> PostWish(@PathVariable("userIdx") Long userIdx,
+                                                          @RequestBody Map<String, Long> param) {
+        Long itemIdx = param.get("itemIdx");
+        if (userIdx < 0) {
             return new BaseResponse<>(USERS_INVALID_IDX);
         }
-        if(itemIdx < 0){
+        if (itemIdx < 0) {
             return new BaseResponse<>(ITEM_NO_EXIST);
         }
         try {
             return new BaseResponse<>(itemService.PostWish(itemIdx, userIdx));
-        }
-        catch(BaseException baseException){
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
 
     @ResponseBody
     @DeleteMapping("/wish-lists")
-    public BaseResponse<HashMap<String, String>> PostWish(@RequestParam() Integer itemIdx,
-                                                          @RequestParam() Integer userIdx) {
-        if(userIdx < 0){
+    public BaseResponse<HashMap<String, String>> PostWish(@RequestParam() Long itemIdx,
+                                                          @RequestParam() Long userIdx) {
+        if (userIdx < 0) {
             return new BaseResponse<>(USERS_INVALID_IDX);
         }
-        if(itemIdx < 0){
+        if (itemIdx < 0) {
             return new BaseResponse<>(ITEM_NO_EXIST);
         }
         try {
             return new BaseResponse<>(itemService.DeleteWish(itemIdx, userIdx));
-        }
-        catch(BaseException baseException){
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
+
     @ResponseBody
     @GetMapping("/wish-lists/{userIdx}")
-    public BaseResponse<List<GetWishListRes>> getWishList(@PathVariable("userIdx") Integer userIdx)
+    public BaseResponse<List<GetWishListRes>> getWishList(@PathVariable("userIdx") Long userIdx)
             throws BaseException {
-        if(userIdx < 0){
+        if (userIdx < 0) {
             return new BaseResponse<>(USERS_INVALID_IDX);
         }
         try {
             return new BaseResponse<>(itemProvider.getWishList(userIdx));
-        }
-        catch(BaseException baseException){
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
@@ -319,16 +319,45 @@ public class ItemController {
     @GetMapping("/search")
     public BaseResponse<GetSearchWordRes> getSearchWord(@RequestParam() String q)
             throws BaseException {
-        try{
-            return new BaseResponse<>(itemProvider.getSearchWord(q));
+        if (q.isEmpty()) {
+            return new BaseResponse<>(EMPTY_SEARCH_WORD);
         }
-        catch(BaseException baseException){
+        if(q.length() > 4096){
+            return new BaseResponse<>(INVALID_SEARCH_WORD);
+        }
+        try {
+            return new BaseResponse<>(itemProvider.getSearchWord(q));
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
 
-}
 
+//    @ResponseBody
+//    @GetMapping("/deals")
+//    public BaseResponse<List<GetDealRes>> getDeal(@RequestParam() String tab,
+//                                                  @RequestParam(defaultValue = "E") Character status)
+//            throws BaseException {
+//        Long userIdx = jwtService.getUserIdx();
+//        if (!(tab.equals("order") || tab.equals("sale"))) {
+//            return new BaseResponse<>(REQUEST_ERROR);
+//        }
+//        if(!(status=='E'||status=='P'||status=='S'||status=='F')){
+//            return new BaseResponse<>(REQUEST_ERROR);
+//        }
+//        try {
+//            if(tab.equals("order")) {
+//                return new BaseResponse<>(itemProvider.getOrder(userIdx));
+//            }
+//            else{
+//                return new BaseResponse<>(itemProvider.getSale(userIdx));
+//            }
+//        } catch (BaseException baseException) {
+//            return new BaseResponse<>(baseException.getStatus());
+//        }
+//
+//    }
+}
 /*
 
     @ResponseBody

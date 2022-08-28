@@ -1,4 +1,4 @@
-package shop.makaroni.bunjang.src.validation;
+package shop.makaroni.bunjang.utils.Itemvalidation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

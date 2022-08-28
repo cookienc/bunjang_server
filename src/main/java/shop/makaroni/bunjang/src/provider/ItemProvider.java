@@ -1,5 +1,7 @@
 package shop.makaroni.bunjang.src.provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,20 +24,24 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 public class ItemProvider {
 	private final ItemDao itemDao;
 	private final UserDao userDao;
-
+	final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	public ItemProvider(ItemDao itemDao, UserDao userDao) {
 		this.itemDao = itemDao;
 		this.userDao = userDao;
 	}
 
-	public GetItemRes getItem(int itemIdx) throws BaseException {
+	public GetItemRes getItem(Long itemIdx) throws BaseException {
 		if (itemDao.checkItemIdx(itemIdx) == 0) {
+			throw new BaseException(ITEM_NO_EXIST);
+		}
+		if (itemDao.checkItemSold(itemIdx) == 0) {
 			throw new BaseException(ITEM_NO_EXIST);
 		}
 		GetItemRes getItemRes = null;
 		try {
 			getItemRes = itemDao.getItem(itemIdx);
+			logger.info("getItemRes");
 			getItemRes.setWish(getItemWishCnt(itemIdx));
 			getItemRes.setChat(getItemChatCnt(itemIdx));
 			getItemRes.setTags(getItemTags(itemIdx));
@@ -51,11 +57,11 @@ public class ItemProvider {
 		try {
 			getItemRes = itemDao.getItems();
 			for (GetItemRes eachRes : getItemRes) {
-				eachRes.setWish(getItemWishCnt(Integer.parseInt(eachRes.getIdx())));
-				eachRes.setWish(getItemWishCnt(Integer.parseInt(eachRes.getIdx())));
-				eachRes.setChat(getItemChatCnt(Integer.parseInt(eachRes.getIdx())));
-				eachRes.setTags(getItemTags(Integer.parseInt(eachRes.getIdx())));
-				eachRes.setImages(getItemImages(Integer.parseInt(eachRes.getIdx())));
+				eachRes.setWish(getItemWishCnt(Long.parseLong(eachRes.getIdx())));
+				eachRes.setWish(getItemWishCnt(Long.parseLong(eachRes.getIdx())));
+				eachRes.setChat(getItemChatCnt(Long.parseLong(eachRes.getIdx())));
+				eachRes.setTags(getItemTags(Long.parseLong(eachRes.getIdx())));
+				eachRes.setImages(getItemImages(Long.parseLong(eachRes.getIdx())));
 			}
 			return getItemRes;
 		} catch (Exception exception) {
@@ -63,19 +69,19 @@ public class ItemProvider {
 		}
 	}
 
-	public String getItemWishCnt(int itemIdx) {
+	public String getItemWishCnt(Long itemIdx) {
 		return String.valueOf(itemDao.getItemWishCnt(itemIdx));
 	}
 
-	public String getItemChatCnt(int itemIdx) {
+	public String getItemChatCnt(Long itemIdx) {
 		return String.valueOf(itemDao.getItemChatCnt(itemIdx));
 	}
 
-	public List<String> getItemTags(int itemIdx) {
+	public List<String> getItemTags(Long itemIdx) {
 		return itemDao.getItemTags(itemIdx);
 	}
 
-	public List<String> getItemImages(int itemIdx) {
+	public List<String> getItemImages(Long itemIdx) {
 		return itemDao.getItemImages(itemIdx);
 	}
 
@@ -87,7 +93,7 @@ public class ItemProvider {
 		}
 	}
 
-	public List<GetLogRes> getItemLastN(int userIdx, int count) throws BaseException {
+	public List<GetLogRes> getItemLastN(Long userIdx, int count) throws BaseException {
 		if (userDao.checkUserIdx(userIdx) == 0) {
 			throw new BaseException(USERS_INVALID_IDX);
 		}
@@ -98,7 +104,7 @@ public class ItemProvider {
 		}
 	}
 
-	public int getItemCnt(int brandIdx) throws BaseException {
+	public int getItemCnt(Long brandIdx) throws BaseException {
 		if (itemDao.checkBrandIdx(brandIdx) == 0) {
 			throw new BaseException(ITEM_INVALID_BRAND);
 		}
@@ -109,7 +115,7 @@ public class ItemProvider {
 		}
 	}
 
-	public List<GetBrandRes> getBrand(int userIdx, char sort) throws BaseException {
+	public List<GetBrandRes> getBrand(Long userIdx, char sort) throws BaseException {
 		if (userDao.checkUserIdx(userIdx) == 0) {
 			throw new BaseException(USERS_INVALID_IDX);
 		}
@@ -119,7 +125,7 @@ public class ItemProvider {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
-	public List<GetBrandRes> getBrandSearch(int userIdx, String name) throws BaseException {
+	public List<GetBrandRes> getBrandSearch(Long userIdx, String name) throws BaseException {
 		if (userDao.checkUserIdx(userIdx) == 0) {
 			throw new BaseException(USERS_INVALID_IDX);
 		}
@@ -131,7 +137,7 @@ public class ItemProvider {
 	}
 
 
-	public List<GetUserBrandRes> getUserBrand(int userIdx, char sort) throws BaseException {
+	public List<GetUserBrandRes> getUserBrand(Long userIdx, char sort) throws BaseException {
 		if (userDao.checkUserIdx(userIdx) == 0) {
 			throw new BaseException(USERS_INVALID_IDX);
 		}
@@ -173,7 +179,7 @@ public class ItemProvider {
 		return codes;
 	}
 
-	public BaseResponse<GetWisherRes> getWisher(Integer idx){
+	public BaseResponse<GetWisherRes> getWisher(Long idx){
 		if(itemDao.checkItemIdx(idx) == 0){
 			return new BaseResponse<>(ITEM_NO_EXIST);
 		}
@@ -186,13 +192,13 @@ public class ItemProvider {
 	}
 
 
-	public  List<GetWishListRes> getWishList(Integer userIdx) throws BaseException {
+	public  List<GetWishListRes> getWishList(Long userIdx) throws BaseException {
 		if(userDao.checkUserIdx(userIdx) == 0){
 			throw new BaseException(USERS_INVALID_IDX);
 		}
 		List<GetWishListRes> res = itemDao.getWishList(userIdx);
 		for(GetWishListRes each : res){
-			each.setImage(max(itemDao.getItemImages(Integer.parseInt(each.getItemIdx()))));
+			each.setImage(max(itemDao.getItemImages(Long.parseLong(each.getItemIdx()))));
 		}
 		return res;
 	}
@@ -206,6 +212,15 @@ public class ItemProvider {
 		return new GetSearchWordRes(categories,itemDao.getWords(q));
 
 	}
+
+//	public List<GetDealRes> getOrder(Long userIdx) {
+//		List<GetDealRes> res = itemDao.getOrder(userIdx);
+//		for(GetDealRes each : res){
+//			each.setImage(getItemImages(Long.parseLong(each.getItemIdx())));
+//					//image, chat, reviewIdx
+//		}
+//		return res;
+//	}
 
 //	public List<GetSearchWordRes> getSearchWord(String q) {
 //

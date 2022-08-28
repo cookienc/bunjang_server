@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class ItemRes {
-    int idx;
+    Long idx;
 
 }

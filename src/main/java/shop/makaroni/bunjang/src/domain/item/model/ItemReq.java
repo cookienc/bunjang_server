@@ -21,7 +21,7 @@ public class ItemReq {
     private Integer exchange;
     private String content;
     private Integer safePay;
-    private Integer sellerIdx;
+    private Long sellerIdx;
     private String location;
     private Integer isAd;
     private Integer inspection;
