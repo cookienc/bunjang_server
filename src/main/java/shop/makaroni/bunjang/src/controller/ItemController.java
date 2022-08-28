@@ -315,17 +315,17 @@ public class ItemController {
         }
     }
 
-//    @ResponseBody
-//    @GetMapping("/search")
-//    public BaseResponse<List<GetSearchWordRes>> getSearchWord(@RequestParam() String q)
-//            throws BaseException {
-//        try{
-//            return new BaseResponse<>(itemProvider.getSearchWord(q));
-//        }
-//        catch(BaseException baseException){
-//            return new BaseResponse<>(baseException.getStatus());
-//        }
-//    }
+    @ResponseBody
+    @GetMapping("/search")
+    public BaseResponse<GetSearchWordRes> getSearchWord(@RequestParam() String q)
+            throws BaseException {
+        try{
+            return new BaseResponse<>(itemProvider.getSearchWord(q));
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
 
 }
 

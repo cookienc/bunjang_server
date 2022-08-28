@@ -197,6 +197,16 @@ public class ItemProvider {
 		return res;
 	}
 
+	public GetSearchWordRes getSearchWord(String q) throws BaseException {
+		List<GetSearchCategoryRes> categories = itemDao.getCategories(q);
+		for(GetSearchCategoryRes category : categories){
+			HashMap<String,String> codes = validateCategory(category.getParent());
+			category.setParent(itemDao.getCategoryName(codes));
+		}
+		return new GetSearchWordRes(categories,itemDao.getWords(q));
+
+	}
+
 //	public List<GetSearchWordRes> getSearchWord(String q) {
 //
 //	}

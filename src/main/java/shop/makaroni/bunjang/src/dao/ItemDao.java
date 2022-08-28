@@ -766,4 +766,28 @@ public class ItemDao {
 				String.class,
 				params);
 	}
+
+	public List<String> getWords(String q) {
+		String query = "select distinct name from Item where name like ?";
+		String param = "%"+q+"%";
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> rs.getString("name"),
+				param);
+	}
+
+	public List<GetSearchCategoryRes> getCategories(String q){
+		String query = "select distinct concat(parentCode,code) code, Category.name name, Category.parentCode parent, image\n" +
+				"from (select * from Item where name like ? and Item.status != 'D')Item\n" +
+				"         left join Category on Item.category = concat(Category.parentCode, Category.code)\n" +
+				"where Category.status != 'D';\n";
+		String param = "%"+q+"%";
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetSearchCategoryRes(
+						rs.getString("image"),
+						rs.getString("code"),
+						rs.getString("parent"),
+						rs.getString("name")),
+				param);
+
+	}
 }
