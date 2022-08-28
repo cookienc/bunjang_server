@@ -800,7 +800,7 @@ public class ItemDao {
 		if(status.equals("E")){
 			status = "('P','S','F')";
 		}
-		Object[] params = new Object[]{userIdx, status};
+		Object[] params = new Object[]{userIdx, "("+status+")"};
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetDealRes(
 						rs.getString("itemIdx"),
@@ -840,7 +840,7 @@ public class ItemDao {
 		if(status.equals("E")){
 			status = "('P','S','F')";
 		}
-		Object[] params = new Object[]{userIdx, status};
+		Object[] params = new Object[]{userIdx, "("+status+")"};
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetDealRes(
 						rs.getString("itemIdx"),

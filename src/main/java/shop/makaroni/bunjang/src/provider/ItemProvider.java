@@ -41,7 +41,6 @@ public class ItemProvider {
 		GetItemRes getItemRes = null;
 		try {
 			getItemRes = itemDao.getItem(itemIdx);
-			logger.info("getItemRes");
 			getItemRes.setWish(getItemWishCnt(itemIdx));
 			getItemRes.setChat(getItemChatCnt(itemIdx));
 			getItemRes.setTags(getItemTags(itemIdx));

@@ -336,20 +336,25 @@ public class ItemController {
     @ResponseBody
     @GetMapping("/deals")
     public BaseResponse<List<GetDealRes>> getDeal(@RequestParam() String tab,
-                                                  @RequestParam(defaultValue = "E") String status)
+                                                  @RequestParam(required = false, defaultValue = "E") String status)
             throws BaseException {
-        Long userIdx = jwtService.getUserIdx();
         if (!(tab.equals("order") || tab.equals("sale"))) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
         if(!("EPSF".contains(status))){
             return new BaseResponse<>(REQUEST_ERROR);
         }
-        if(tab.equals("order")) {
-            return new BaseResponse<>(itemProvider.getOrder(userIdx, status));
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            logger.info(String.valueOf(userIdx));
+            if (tab.equals("order")) {
+                return new BaseResponse<>(itemProvider.getOrder(userIdx, status));
+            } else {
+                return new BaseResponse<>(itemProvider.getSale(userIdx, status));
+            }
         }
-        else{
-            return new BaseResponse<>(itemProvider.getSale(userIdx, status));
+        catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
         }
 
     }
