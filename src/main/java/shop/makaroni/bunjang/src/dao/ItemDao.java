@@ -791,11 +791,16 @@ public class ItemDao {
 
 	}
 
-	public List<GetDealRes> getOrder(Long userIdx) {
-		String query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') location\n" +
+	public List<GetDealRes> getOrder(Long userIdx, String status) {
+		String query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
 				"from Item\n" +
-				"where sellerIdx = ?\n" +
+				"where buyerIdx = ?\n" +
 				"  and status = ?;";
+		
+		if(status.equals("E")){
+			status = "('P','S','F')";
+		}
+		Object[] params = new Object[]{userIdx, status};
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetDealRes(
 						rs.getString("itemIdx"),
@@ -803,9 +808,11 @@ public class ItemDao {
 						rs.getString("name"),
 						rs.getString("price"),
 						rs.getString("updatedAt"),
-						null, null, null,
+						null,
+						String.valueOf(rs.getInt("hit")),
+						null,
 						rs.getString("location")),
-				userIdx);
+				params);
 	}
 
 	public int checkItemSold(Long itemIdx) {
@@ -813,5 +820,38 @@ public class ItemDao {
 		return this.jdbcTemplate.queryForObject(query,
 				int.class,
 				itemIdx);
+	}
+
+	public Long getReviewIdx(Long itemIdx) {
+		String query = "select IF((select EXISTS(select idx from Review where itemIdx = ? and status != 'D')),\n" +
+				"          (select idx from Review where itemIdx = ? and status != 'D'), 0);";
+		Object[] params = new Object[]{itemIdx, itemIdx};
+		return this.jdbcTemplate.queryForObject(query,
+				Long.class,
+				params);
+	}
+
+	public List<GetDealRes> getSale(Long userIdx, String status) {
+		String query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
+				"from Item\n" +
+				"where sellerIdx = ?\n" +
+				"  and status = ?;";
+
+		if(status.equals("E")){
+			status = "('P','S','F')";
+		}
+		Object[] params = new Object[]{userIdx, status};
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetDealRes(
+						rs.getString("itemIdx"),
+						null,
+						rs.getString("name"),
+						rs.getString("price"),
+						rs.getString("updatedAt"),
+						null,
+						String.valueOf(rs.getInt("hit")),
+						null,
+						rs.getString("location")),
+				params);
 	}
 }

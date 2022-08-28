@@ -213,16 +213,25 @@ public class ItemProvider {
 
 	}
 
-//	public List<GetDealRes> getOrder(Long userIdx) {
-//		List<GetDealRes> res = itemDao.getOrder(userIdx);
-//		for(GetDealRes each : res){
-//			each.setImage(getItemImages(Long.parseLong(each.getItemIdx())));
-//					//image, chat, reviewIdx
-//		}
-//		return res;
-//	}
+	public List<GetDealRes> getOrder(Long userIdx, String status) {
+		List<GetDealRes> res = itemDao.getOrder(userIdx, status);
+		for(GetDealRes each : res){
+			Long itemIdx = Long.parseLong(each.getItemIdx());
+			each.setImage(max(getItemImages(itemIdx)));
+			each.setChat(getItemChatCnt(itemIdx));
+			each.setReviewIdx(String.valueOf(itemDao.getReviewIdx(itemIdx)));
+		}
+		return res;
+	}
 
-//	public List<GetSearchWordRes> getSearchWord(String q) {
-//
-//	}
+	public List<GetDealRes> getSale(Long userIdx, String status) {
+		List<GetDealRes> res = itemDao.getSale(userIdx, status);
+		for(GetDealRes each : res){
+			Long itemIdx = Long.parseLong(each.getItemIdx());
+			each.setImage(max(getItemImages(itemIdx)));
+			each.setChat(getItemChatCnt(itemIdx));
+			each.setReviewIdx(String.valueOf(itemDao.getReviewIdx(itemIdx)));
+		}
+		return res;
+	}
 }
