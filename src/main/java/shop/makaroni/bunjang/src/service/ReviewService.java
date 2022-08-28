@@ -12,12 +12,14 @@ import shop.makaroni.bunjang.src.domain.review.dto.UpdateReviewCommentRequest;
 import shop.makaroni.bunjang.src.provider.ReviewProvider;
 import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
+import shop.makaroni.bunjang.src.response.exception.AlreadyHasCommentEx;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_REVIEW_COMMENT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_REVIEW_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_HAS_COMMENT_EXCEPTION;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +57,7 @@ public class ReviewService {
 
 	public Long saveReviewComment(Long reviewIdx, SaveReviewCommentRequest request) {
 		checkReviewIfAlreadyDeleted(reviewIdx);
+		checkReviewIfAlreadyCommented(reviewIdx);
 		reviewDao.addReviewCommentOnParent(reviewIdx);
 		return reviewDao.saveReviewComment(reviewIdx, request.getPost());
 	}
@@ -94,6 +97,14 @@ public class ReviewService {
 
 		if (State.isAlreadyDeleted(state)) {
 			throw new AlreadyDeletedException(ALREADY_DELETED_REVIEW_COMMENT_EXCEPTION.getMessages());
+		}
+	}
+
+	private void checkReviewIfAlreadyCommented(Long reviewIdx) {
+		boolean hasComment = reviewDao.findReviewHasCommentById(reviewIdx).orElseThrow(NoSuchElementException::new);
+
+		if (hasComment) {
+			throw new AlreadyHasCommentEx(ALREADY_HAS_COMMENT_EXCEPTION.getMessages());
 		}
 	}
 }

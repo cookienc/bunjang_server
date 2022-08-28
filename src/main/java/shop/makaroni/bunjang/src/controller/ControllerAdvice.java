@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import shop.makaroni.bunjang.src.response.BeanErrorResponse;
 import shop.makaroni.bunjang.src.response.ErrorResponse;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
+import shop.makaroni.bunjang.src.response.exception.AlreadyHasCommentEx;
 import shop.makaroni.bunjang.src.response.exception.AlreadySavedException;
 import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
@@ -28,6 +29,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_MEMBER_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_HAS_COMMENT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_SAVED_REVIEW;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_DECODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
@@ -58,6 +60,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(INVALID_INPUT_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(INVALID_INPUT_EXCEPTION, e.getMessage(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(AlreadyHasCommentEx.class)
+	public ResponseEntity<ErrorResponse> alreadyHasCommentExHandler(AlreadyHasCommentEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(ALREADY_HAS_COMMENT_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(ALREADY_HAS_COMMENT_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(AlreadyDeletedException.class)

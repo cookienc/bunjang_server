@@ -297,4 +297,15 @@ public class ReviewDao {
 	public void updateComment(Long reviewIdx, Long commentIdx, String post) {
 		reviewMapper.updateComment(reviewIdx, commentIdx, post);
 	}
+
+	public Optional<Boolean> findReviewHasCommentById(Long reviewIdx) {
+		var sql = "select hasComment from Review where idx = :reviewIdx and status = 'Y'";
+
+		try {
+			Boolean hasComment = template.queryForObject(sql, Map.of("reviewIdx", reviewIdx), Boolean.class);
+			return Optional.of(hasComment);
+		} catch (Exception e) {
+			return Optional.empty();
+		}
+	}
 }
