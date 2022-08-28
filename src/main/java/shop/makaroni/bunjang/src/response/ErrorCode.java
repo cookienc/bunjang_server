@@ -16,6 +16,7 @@ public enum ErrorCode {
 	DUPLICATE_LOGIN_ID_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.DUPLICATE_LOGIN_ID),
 	CANNOT_ENCODE_PASSWORD(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_ENCODE_PASSWORD),
 	CANNOT_DECODE_PASSWORD(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_DECODE_PASSWORD),
+	CANNOT_PARSING_OBJECT(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_PARSING_OBJECT),
 	NO_SUCH_ELEMENT_EXCEPTION(HttpStatus.NOT_FOUND, Messages.NO_ELEMENT),
 	ALREADY_DELETED_MEMBER_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_MEMBER),
 	ALREADY_DELETED_REVIEW_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW),
@@ -33,6 +34,7 @@ public enum ErrorCode {
 		public static final String DUPLICATE_LOGIN_ID = "중복된 아이디로 가입할 수 없습니다.";
 		public static final String CANNOT_ENCODE_PASSWORD = "비밀번호를 암호화 할 수 없습니다.";
 		public static final String CANNOT_DECODE_PASSWORD = "비밀번호를 복호화 할 수 없습니다.";
+		public static final String CANNOT_PARSING_OBJECT = "객체를 만들 수 없습니다.";
 		public static final String NO_ELEMENT = "결과 값을 찾을 수 없습니다.";
 		public static final String ALREADY_DELETED_MEMBER = "이미 탈퇴된 회원 입니다.";
 		public static final String ALREADY_DELETED_REVIEW = "이미 삭제된 리뷰 입니다.";

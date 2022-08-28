@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.login.LoginRequest;
 import shop.makaroni.bunjang.src.domain.user.User;
+import shop.makaroni.bunjang.src.domain.user.dto.SaveUserRequest;
+import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.utils.AES128;
 import shop.makaroni.bunjang.utils.JwtService;
@@ -21,6 +23,8 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWOR
 public class LoginService {
 
 	private final UserDao userDao;
+	private final UserService userService;
+	private final UserProvider userProvider;
 	private final JwtService jwtService;
 
 	public String login(LoginRequest loginRequest) {
@@ -34,5 +38,14 @@ public class LoginService {
 		}
 
 		return jwtService.createJwt(user.getIdx());
+	}
+
+	public String saveAndLogin(SaveUserRequest request) {
+		userService.save(request);
+		return login(LoginRequest.of(request.getLoginId(), request.getPassword()));
+	}
+
+	public boolean alreadySignUp(String id) {
+		return userProvider.alreadySignUp(id);
 	}
 }

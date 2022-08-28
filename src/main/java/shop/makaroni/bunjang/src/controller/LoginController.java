@@ -16,7 +16,6 @@ import shop.makaroni.bunjang.src.service.LoginService;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Map;
 
 import static shop.makaroni.bunjang.src.response.SuccessStatus.LOGIN_SUCCESS;
 
@@ -36,11 +35,9 @@ public class LoginController {
 	}
 
 	@GetMapping("/kakao")
-	public ResponseEntity<Void> getCI(@RequestParam String code) throws IOException {
-
-		log.info("kakao Code = {} ", code);
-		String access_token = kakaoService.getToken(code);
-		Map<String, Object> userInfo = kakaoService.getUserInfo(access_token);
-		return ResponseEntity.noContent().build();
+	public ResponseEntity<ResponseInfoWithJwt> getJwt(@RequestParam String code) throws IOException {
+		String accessToken = kakaoService.getToken(code);
+		String jwt = kakaoService.getJwt(accessToken);
+		return ResponseEntity.ok(ResponseInfoWithJwt.of(LOGIN_SUCCESS, jwt));
 	}
 }

@@ -84,7 +84,7 @@ public class UserProvider {
 
 		if (isNotDuplicate) {
 			return;
-		};
+		}
 
 		throw new DuplicateLoginIdEx(DUPLICATE_LOGIN_ID_EXCEPTION.getMessages());
 	}
@@ -140,5 +140,9 @@ public class UserProvider {
 		if (purchasedItems.isEmpty()) {
 			throw new DontPurchaseItemEx(DONT_PURCHASE_ITEM_EXCEPTION.getMessages());
 		}
+	}
+
+	public boolean alreadySignUp(String id) {
+		return userDao.findByLoginId(id).isPresent();
 	}
 }

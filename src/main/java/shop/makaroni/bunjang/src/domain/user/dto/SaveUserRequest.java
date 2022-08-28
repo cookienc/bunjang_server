@@ -26,4 +26,11 @@ public class SaveUserRequest {
 		this.loginId = loginId;
 		this.password = password;
 	}
+
+	public static SaveUserRequest of(Long kakaoId, String key) {
+		return SaveUserRequest.builder()
+				.loginId(String.valueOf(kakaoId))
+				.password(key)
+				.build();
+	}
 }
