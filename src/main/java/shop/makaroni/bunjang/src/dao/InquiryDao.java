@@ -2,7 +2,9 @@ package shop.makaroni.bunjang.src.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -10,16 +12,22 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.inquiry.Inquiry;
+import shop.makaroni.bunjang.src.domain.inquiry.model.GetInquiryRes;
 import shop.makaroni.bunjang.src.domain.inquiry.view.InquirySimpleResponse;
-
+import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
 public class InquiryDao {
-
+	private JdbcTemplate jdbcTemplate;
 	private final NamedParameterJdbcTemplate template;
+	@Autowired
+	public void setDataSource(DataSource dataSource) {
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
+	}
 
 	public Inquiry save(Inquiry inquiry) {
 		var sql = "insert into Inquiry (userIdx, storeIdx, parentIdx, post) " +
@@ -60,10 +68,53 @@ public class InquiryDao {
 				"        end) as date " +
 				"from Inquiry i " +
 				"inner join User u on u.idx = i.userIdx " +
-				"where i.storeIdx = :storeIdx " +
+				"where i.targetIdx = :storeIdx " +
 				"and i.status = 'Y' " +
 				"and i.parentIdx = 0 " +
 				"limit 2";
 		return template.query(sql, Map.of("storeIdx", storeIdx), BeanPropertyRowMapper.newInstance(InquirySimpleResponse.class));
 	}
+
+    public List<GetInquiryRes> getInquiry(Long targetIdx, char type) {
+		String typeS =String.valueOf(type);
+		String query =
+				"select Inquiry.idx,\n" +
+						"       userIdx,\n" +
+						"       User.storeImage image,\n" +
+						"       User.storeName  userName,\n" +
+						"       post,\n" +
+						"       (case\n" +
+						"\n" +
+						"            when timestampdiff(minute, Inquiry.updatedAt, now()) < 1\n" +
+						"                then concat(timestampdiff(second, Inquiry.updatedAt, now()), '초 전')\n" +
+						"            when timestampdiff(hour, Inquiry.updatedAt, now()) < 1\n" +
+						"                then concat(timestampdiff(minute, Inquiry.updatedAt, now()), '분 전')\n" +
+						"            when timestampdiff(hour, Inquiry.updatedAt, now()) < 24\n" +
+						"                then concat(timestampdiff(hour, Inquiry.updatedAt, now()), '시간 전')\n" +
+						"            when timestampdiff(day, Inquiry.updatedAt, now()) < 31\n" +
+						"                then concat(timestampdiff(day, Inquiry.updatedAt, now()), '일 전')\n" +
+						"            when timestampdiff(week, Inquiry.updatedAt, now()) < 4\n" +
+						"                then concat(timestampdiff(week, Inquiry.updatedAt, now()), '주 전')\n" +
+						"            when timestampdiff(month, Inquiry.updatedAt, now()) < 12\n" +
+						"                then concat(timestampdiff(month, Inquiry.updatedAt, now()), '개월 전')\n" +
+						"            else concat(timestampdiff(year, Inquiry.updatedAt, now()), '년 전')\n" +
+						"           end) as     updatedAt\n" +
+						"from Inquiry\n" +
+						"         left join User on Inquiry.userIdx = User.idx\n" +
+						"where Inquiry.status != 'D'\n" +
+						"  and User.status != 'D'\n" +
+						"  and type = ?\n" +
+						"  and targetIdx = ?\n" +
+						"order by Inquiry.updatedAt Desc;";
+		Object[] params = new Object[]{typeS, targetIdx};
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetInquiryRes(
+						String.valueOf(rs.getInt("idx")),
+						String.valueOf(rs.getInt("userIdx")),
+						rs.getString("image"),
+						rs.getString("userName"),
+						rs.getString("post"),
+						rs.getString("updatedAt")),
+				params);
+    }
 }

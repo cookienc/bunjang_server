@@ -59,7 +59,9 @@ public enum BaseResponseStatus {
     POST_REPORT_INVALID_TARGET(false, 2041, "신고 대상의 식별자를 확인해 주세요."),
     POST_REPORT_CONTENT_LENGTH(false, 2042, "신고 내용은 1자 이상 100자 이하로 입력하세요"),
 
-
+    // Inquiry
+    INQUIRY_INVALID_TYPE(false, 2051, "문의 작성 대상을 확인해 주세요"),
+    INQUIRY_INVALID_TARGET(false, 2052, "문의 작성 대상의 식별자를 확인해 주세요"),
 
     /**
      * 3000 : Response 오류

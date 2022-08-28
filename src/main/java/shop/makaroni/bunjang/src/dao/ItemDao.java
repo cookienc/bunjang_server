@@ -7,11 +7,8 @@ import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 
 import javax.sql.DataSource;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class ItemDao {
