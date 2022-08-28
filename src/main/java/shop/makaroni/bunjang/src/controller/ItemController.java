@@ -1,5 +1,6 @@
 package shop.makaroni.bunjang.src.controller;
 
+import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -352,8 +353,31 @@ public class ItemController {
         catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
-
     }
+
+    @ResponseBody
+    @PostMapping("/reports")
+    public BaseResponse PostReport(@RequestBody PostReportReq postReportReq) {
+        if(!(postReportReq.getType().charAt(0) == 'I' || postReportReq.getType().charAt(0) == 'R')){
+            return new BaseResponse<>(POST_REPORT_INVALID_TYPE);
+        }
+        if(postReportReq.getTarget() < 0){
+            return new BaseResponse(POST_REPORT_INVALID_TARGET);
+        }
+        if(postReportReq.getContent().length() < 1 || postReportReq.getContent().length() > 100 ){
+            return new BaseResponse(POST_REPORT_CONTENT_LENGTH);
+        }
+        try{
+            Long userIdx = jwtService.getUserIdx();
+            itemService.postReport(userIdx, postReportReq);
+
+            return new BaseResponse<>(SUCCESS);
+        } catch (BaseException e) {
+            return new BaseResponse(e.getStatus());
+        }
+    }
+
+
 }
 /*
 

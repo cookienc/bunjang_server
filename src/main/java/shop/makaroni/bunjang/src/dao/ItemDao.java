@@ -839,6 +839,12 @@ public class ItemDao {
 				params);
 	}
 
+	public void postReport(Long userIdx, PostReportReq postReportReq) {
+		String query = "insert Into Report(target, writerIdx, type, content) values(?,?,?,?)";
+		Object[] params = new Object[]{postReportReq.getTarget(), userIdx, postReportReq.getType(), postReportReq.getContent()};
+		this.jdbcTemplate.update(query, params);
+	}
+
 //	public List<GetDealRes> getOrder(Long userIdx, String status) {
 //		String query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
 //				"from Item\n" +

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
-import shop.makaroni.bunjang.config.BaseResponse;
 import shop.makaroni.bunjang.src.dao.ItemDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.item.model.*;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
+import static shop.makaroni.bunjang.utils.Itemvalidation.validationRegex.*;
 
 
 @Service
@@ -281,5 +281,15 @@ public class ItemService {
 		HashMap<String,String> res = new HashMap<>();
 		res.put("itemIdx", String.valueOf(itemIdx));
 		return res;
+	}
+
+    public void postReport(Long userIdx, PostReportReq postReportReq) throws BaseException {
+		if(itemDao.checkItemIdx(postReportReq.getTarget()) == 0){
+			throw new BaseException(POST_REPORT_INVALID_TARGET);
+		}
+		if(!isRegexReportType(postReportReq.getType())){
+			throw new BaseException(POST_REPORT_INVALID_TYPE);
+		}
+		itemDao.postReport(userIdx, postReportReq);
 	}
 }

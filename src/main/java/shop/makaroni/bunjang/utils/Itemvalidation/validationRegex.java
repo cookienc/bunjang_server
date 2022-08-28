@@ -22,7 +22,15 @@ public class validationRegex {
         Matcher matcher = pattern.matcher(name);
         return matcher.find();
     }
-
+    public static boolean isRegexReportType(String type){
+        String itemRegex = "^I[A-E][1-3]$";
+        String reviewRegex = "^R[A-C]$";
+        Pattern itemPattern = Pattern.compile(itemRegex, Pattern.CASE_INSENSITIVE);
+        Matcher itemMatcher = itemPattern.matcher(type);
+        Pattern reviewPattern = Pattern.compile(reviewRegex, Pattern.CASE_INSENSITIVE);
+        Matcher reviewMatcher = reviewPattern.matcher(type);
+        return (itemMatcher.find() || reviewMatcher.find());
+    }
 
 
 }
