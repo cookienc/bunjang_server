@@ -138,4 +138,20 @@ public class InquiryDao {
 		res.put("idx", String.valueOf(this.jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class)));
 		return res;
 	}
+
+	public Long getUserIdx(Long inquiryIdx) {
+		String query = "select userIdx from Inquiry where idx = ?";
+		return this.jdbcTemplate.queryForObject(query,
+				Long.class,
+				inquiryIdx);
+	}
+
+	public HashMap<String, String> DeleteInquiry(Long inquiryIdx) {
+		String query = "update Inquiry set status = 'D' where idx = ? or parentIdx=?";
+		Object[] params = new Object[]{inquiryIdx, inquiryIdx};
+		this.jdbcTemplate.update(query, params);
+		HashMap<String,String> res = new HashMap<>();
+		res.put("idx", String.valueOf(inquiryIdx));
+		return res;
+	}
 }

@@ -46,4 +46,14 @@ public class InquiryService {
 		}
 		return inquiryDao.PostInquiry(userIdx, postInqueryReq);
 	}
+
+	public HashMap<String, String> DeleteInquiry(Long userIdx, Long inquiryIdx) throws BaseException {
+		if(inquiryDao.checkInquiry(inquiryIdx) == 0){
+			throw new BaseException(REQUEST_ERROR);
+		}
+		if(!userIdx.equals(inquiryDao.getUserIdx(inquiryIdx))){
+			throw new BaseException(INVALID_USER_JWT);
+		}
+		return inquiryDao.DeleteInquiry(inquiryIdx);
+	}
 }

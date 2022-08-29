@@ -70,4 +70,19 @@ public class InquiryController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+
+    @ResponseBody
+    @DeleteMapping("")
+    public BaseResponse<HashMap<String, String>> DeleteInquiry(@RequestParam() Long idx) {
+        if(idx <= 0){
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            return new BaseResponse<>(inquiryService.DeleteInquiry(userIdx,idx));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }
