@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import shop.makaroni.bunjang.src.domain.review.dto.FollowersDto;
+import shop.makaroni.bunjang.src.domain.follow.dto.FollowersDto;
+import shop.makaroni.bunjang.src.domain.follow.dto.FollowingsDto;
 
 import java.util.List;
 import java.util.Map;
@@ -36,11 +37,27 @@ public class FollowDao {
 				"       count(case when i.status in ('Y', 'R', 'S', 'F') then 1 end) items, " +
 				"       (select count(idx) from Follow where storeIdx = u.idx) followers " +
 				"from Follow f " +
-				"         inner join User u on u.idx = f.userIdx " +
-				"         inner join Item i on i.sellerIdx = u.idx " +
-				"where f.storeIdx = 1 " +
+				"         left join User u on u.idx = f.userIdx " +
+				"         left join Item i on i.sellerIdx = u.idx " +
+				"where f.storeIdx = :userIdx " +
 				"  and f.status = 'Y' " +
 				"group by u.idx, u.storeName, u.storeImage";
 		return template.query(sql, Map.of("userIdx", userIdx), BeanPropertyRowMapper.newInstance(FollowersDto.class));
+	}
+
+
+	public List<FollowingsDto> getFollowings(Long userIdx) {
+		var sql = "select u.idx                                                        storeIdx, " +
+				"       u.storeName                                                  storeName, " +
+				"       ifnull(u.storeImage, '이미지가 없습니다.')                           storeImage, " +
+				"       count(case when i.status in ('Y', 'R', 'S', 'F') then 1 end) items, " +
+				"       (select count(idx) from Follow where userIdx = u.idx)       followers " +
+				"from Follow f " +
+				"         left join User u on u.idx = f.storeIdx " +
+				"         left join Item i on i.sellerIdx = u.idx " +
+				"where f.userIdx = :userIdx " +
+				"  and f.status = 'Y' " +
+				"group by u.idx, u.storeName, u.storeImage";
+		return template.query(sql, Map.of("userIdx", userIdx), BeanPropertyRowMapper.newInstance(FollowingsDto.class));
 	}
 }

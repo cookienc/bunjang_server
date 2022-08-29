@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import shop.makaroni.bunjang.src.domain.follow.view.ItemFollowingView;
 import shop.makaroni.bunjang.src.domain.item.Item;
 import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
@@ -206,5 +207,19 @@ public class UserDao {
 				.addValue("storeIdx", storeIdx)
 				.addValue("userIdx", userIdx);
 		return template.query(sql, params, BeanPropertyRowMapper.newInstance(PurchasedItemsDto.class));
+	}
+
+	public List<ItemFollowingView> findItemAndItemImages(Long userIdx) {
+		var sql = "select ii.idx, " +
+				"    ii.path itemImage, " +
+				"       i.idx itemIdx, " +
+				"       i.price price " +
+				"from ItemImage ii " +
+				"inner join Item i on i.idx = ii.itemidx " +
+				"where ii.idx = (select min(ii.idx) from ItemImage ii group by ii.itemIdx having ii.itemIdx = i.idx) " +
+				"and i.sellerIdx = :userIdx " +
+				"limit 3";
+
+		return template.query(sql, Map.of("userIdx", userIdx), BeanPropertyRowMapper.newInstance(ItemFollowingView.class));
 	}
 }

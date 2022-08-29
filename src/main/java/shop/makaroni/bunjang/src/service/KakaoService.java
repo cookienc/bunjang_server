@@ -102,7 +102,6 @@ public class KakaoService {
 	}
 
 	private String login(Long kakaoId) {
-		loginService.alreadySignUp(String.valueOf(kakaoId));
 		if (loginService.alreadySignUp(String.valueOf(kakaoId))) {
 			return loginService.login(LoginRequest.of(kakaoId, key));
 		}

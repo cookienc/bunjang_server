@@ -3,7 +3,7 @@ package shop.makaroni.bunjang.src.domain.follow.view;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.makaroni.bunjang.src.domain.review.dto.FollowersDto;
+import shop.makaroni.bunjang.src.domain.follow.dto.FollowersDto;
 
 @Getter
 @NoArgsConstructor
