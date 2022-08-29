@@ -117,7 +117,8 @@ public class FollowDao {
 		var sql = "update Follow " +
 				"set notification = 1 " +
 				"where userIdx = :userIdx " +
-				"and storeIdx = :storeIdx";
+				"and storeIdx = :storeIdx " +
+				"and status = 'Y'";
 		SqlParameterSource params = new MapSqlParameterSource()
 				.addValue("userIdx", userIdx)
 				.addValue("storeIdx", storeIdx);
@@ -133,5 +134,18 @@ public class FollowDao {
 				.addValue("userIdx", userIdx)
 				.addValue("storeIdx", storeIdx);
 		return template.queryForObject(sql, params, Long.class);
+	}
+
+	public void deleteNotification(Long userIdx, Long storeIdx) {
+		var sql = "update Follow " +
+				"set notification = 0 " +
+				"where userIdx = :userIdx " +
+				"and storeIdx = :storeIdx " +
+				"and status = 'Y'";
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("userIdx", userIdx)
+				.addValue("storeIdx", storeIdx);
+
+		template.update(sql, params);
 	}
 }

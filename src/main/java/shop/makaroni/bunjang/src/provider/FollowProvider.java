@@ -44,19 +44,34 @@ public class FollowProvider {
 	}
 
 	public void isAlreadyExist(Long userIdx, Long storeIdx) {
+		isAlreadyFollow(userIdx, storeIdx);
+	}
+
+	private void isAlreadyFollow(Long userIdx, Long storeIdx) {
 		if (alreadyExistFollow(userIdx, storeIdx)) {
 			throw new AlreadySavedException(ALREADY_SAVED_FOLLOW_REVIEW.getMessages());
 		}
 	}
 
 	public void isAlreadyNotification(Long userIdx, Long storeIdx) {
-		if (doNotExistFollow(userIdx, storeIdx)) {
+		notFollow(userIdx, storeIdx);
+		isNotify(userIdx, storeIdx);
+	}
+
+	public void notFollow(Long userIdx, Long storeIdx) {
+		if (alreadyNotFollow(userIdx, storeIdx)) {
 			throw new NotExistFollowEx(NOT_EXIST_FOLLOW_EXCEPTION.getMessages());
 		}
+	}
 
+	private void isNotify(Long userIdx, Long storeIdx) {
 		if (alreadyNotification(userIdx, storeIdx)) {
 			throw new AlreadyNotificationEx(ALREADY_NOTIFICATION_EXCEPTION.getMessages());
 		}
+	}
+
+	private boolean alreadyNotFollow(Long userIdx, Long storeIdx) {
+		return !followDao.alreadyExistFollow(userIdx, storeIdx);
 	}
 
 	private boolean alreadyNotification(Long userIdx, Long storeIdx) {
@@ -67,7 +82,4 @@ public class FollowProvider {
 		return followDao.alreadyExistFollow(userIdx, storeIdx);
 	}
 
-	private Boolean doNotExistFollow(Long userIdx, Long storeIdx) {
-		return !followDao.alreadyExistFollow(userIdx, storeIdx);
-	}
 }

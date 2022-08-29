@@ -30,4 +30,9 @@ public class FollowService {
 		followDao.saveNotification(userIdx, storeIdx);
 		return followDao.findIdByUserIdAndStoreId(userIdx, storeIdx);
 	}
+
+	public void deleteNotification(Long userIdx, Long storeIdx) {
+		followProvider.notFollow(userIdx, storeIdx);
+		followDao.deleteNotification(userIdx, storeIdx);
+	}
 }

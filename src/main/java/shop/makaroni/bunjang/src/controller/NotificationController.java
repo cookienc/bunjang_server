@@ -2,6 +2,7 @@ package shop.makaroni.bunjang.src.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import shop.makaroni.bunjang.src.service.FollowService;
 
 import java.net.URI;
 
+import static shop.makaroni.bunjang.src.response.SuccessStatus.DELETE_NOTIFICATION_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_NOTIFICATION_SUCCESS;
 
 @RestController
@@ -27,4 +29,9 @@ public class NotificationController {
 		return ResponseEntity.created(URI.create(url)).body(ResponseInfo.of(SAVE_NOTIFICATION_SUCCESS));
 	}
 
+	@PatchMapping("/users/{userIdx}/stores/{storeIdx}")
+	public ResponseEntity<ResponseInfo> deleteNotification(@PathVariable Long userIdx, @PathVariable Long storeIdx) {
+		followService.deleteNotification(userIdx, storeIdx);
+		return ResponseEntity.ok(ResponseInfo.of(DELETE_NOTIFICATION_SUCCESS));
+	}
 }
