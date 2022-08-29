@@ -739,10 +739,11 @@ public class ItemDao {
 						null,
 						rs.getString("name"),
 						String.valueOf(rs.getInt("price")),
+						String.valueOf(rs.getBoolean("safePay")),
 						rs.getString("storeName"),
 						rs.getString("storeImage"),
-						rs.getString("updatedAt"),
-						String.valueOf(rs.getBoolean("safePay"))
+						rs.getString("updatedAt")
+
 				),
 				userIdx
 		);
