@@ -9,6 +9,7 @@ import shop.makaroni.bunjang.src.domain.follow.dto.FollowersDto;
 import shop.makaroni.bunjang.src.domain.follow.dto.FollowingsDto;
 import shop.makaroni.bunjang.src.domain.follow.view.FollowersView;
 import shop.makaroni.bunjang.src.domain.follow.view.FollowingsView;
+import shop.makaroni.bunjang.src.response.exception.AlreadySavedException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,5 +35,11 @@ public class FollowProvider {
 		return dtos.stream()
 				.map(dto -> FollowingsView.of(dto, userDao.findItemAndItemImages(dto.getStoreIdx())))
 				.collect(Collectors.toList());
+	}
+
+	public void isAlreadyExist(Long userIdx, Long storeIdx) {
+		if (followDao.alreadyExistFollow(userIdx, storeIdx)) {
+			throw new AlreadySavedException("이미 저장된 팔로우입니다.");
+		}
 	}
 }
