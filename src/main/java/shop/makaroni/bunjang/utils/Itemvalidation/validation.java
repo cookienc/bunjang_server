@@ -6,12 +6,12 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 public class validation {
     public static void validateItems(ItemReq itemReq) throws BaseException {
-        if( (itemReq.getDelivery() != null && !(itemReq.getDelivery() == 0)) || (itemReq.getDelivery() == 1) ||
-                (itemReq.getIsNew() != null && !(itemReq.getIsNew() == 0)) || (itemReq.getIsNew() == 1) ||
-                (itemReq.getExchange() !=null && !(itemReq.getExchange() == 0)) || (itemReq.getExchange() == 1) ||
-                (itemReq.getSafePay() != null && !(itemReq.getSafePay() == 0)) || (itemReq.getSafePay() == 1) ||
-                (itemReq.getIsAd() != null && !(itemReq.getIsAd() == 0 ) || (itemReq.getIsAd() == 1))||
-                (itemReq.getInspection()!= null && !(itemReq.getInspection() == 0 ) || (itemReq.getInspection() == 1))){
+        if( (itemReq.getDelivery() != null && !((itemReq.getDelivery() == 0) || (itemReq.getDelivery() == 1))) ||
+                (itemReq.getIsNew() != null && !((itemReq.getIsNew() == 0) || (itemReq.getIsNew() == 1))) ||
+                (itemReq.getExchange() !=null && !((itemReq.getExchange() == 0) || (itemReq.getExchange() == 1))) ||
+                (itemReq.getSafePay() != null && !((itemReq.getSafePay() == 0) || (itemReq.getSafePay() == 1))) ||
+                (itemReq.getIsAd() != null && !((itemReq.getIsAd() == 0 ) || (itemReq.getIsAd() == 1)))||
+                (itemReq.getInspection()!= null && !((itemReq.getInspection() == 0 ) || (itemReq.getInspection() == 1)))){
             throw new BaseException(REQUEST_ERROR);
         }
         if(itemReq.getName() != null && !validationRegex.isRegexItemName(itemReq.getName())){
