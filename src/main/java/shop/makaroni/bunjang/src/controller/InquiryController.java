@@ -19,7 +19,7 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 @Transactional
 @RestController
-@RequestMapping("/inquiry")
+@RequestMapping("/inquiries")
 public class InquiryController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
