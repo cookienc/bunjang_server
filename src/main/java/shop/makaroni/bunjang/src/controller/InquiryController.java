@@ -12,10 +12,10 @@ import shop.makaroni.bunjang.src.provider.InquiryProvider;
 import shop.makaroni.bunjang.src.service.InquiryService;
 import shop.makaroni.bunjang.utils.JwtService;
 
+import java.util.HashMap;
 import java.util.List;
 
-import static shop.makaroni.bunjang.config.BaseResponseStatus.INQUIRY_INVALID_TYPE;
-import static shop.makaroni.bunjang.config.BaseResponseStatus.INVALID_USER_JWT;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 @Transactional
 @RestController
@@ -51,5 +51,23 @@ public class InquiryController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
+    @ResponseBody
+    @PostMapping("")
+    public BaseResponse<HashMap<String, String>> PostInquiry(@RequestBody PostInqueryReq postInqueryReq) {
+        if(postInqueryReq.getTargetIdx() <= 0){
+            return new BaseResponse<>(INQUIRY_INVALID_TARGET);
+        }
+        if(postInqueryReq.getPost().length() > 100 || postInqueryReq.getPost().isEmpty()){
+            return new BaseResponse<>(INQUIRY_POST);
+        }
+        if(!(postInqueryReq.getType().equals("S")|| postInqueryReq.getType().equals("I"))){
+            return new BaseResponse<>(INQUIRY_INVALID_TYPE);
+        }
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            return new BaseResponse<>(inquiryService.PostInquiry(userIdx, postInqueryReq));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }

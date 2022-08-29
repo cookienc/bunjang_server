@@ -26,7 +26,10 @@ public enum BaseResponseStatus {
 
 
     // users
+    USERS_EMPTY_NAME(false, 2008, "사용자의 상점 이름을 입력하세요"),
+    USERS_IMAGE(false, 2009, "사용자의 상점 이미지 경로를 입력하세요."),
     USERS_INVALID_IDX(false, 2010, "유저 아이디 값을 확인해주세요."),
+
 
     // [POST] /Item
     POST_ITEM_INVALID_SELLER(false, 2012, "판매자 아이디를 확인해주세요"),
@@ -62,6 +65,8 @@ public enum BaseResponseStatus {
     // Inquiry
     INQUIRY_INVALID_TYPE(false, 2051, "문의 작성 대상을 확인해 주세요"),
     INQUIRY_INVALID_TARGET(false, 2052, "문의 작성 대상의 식별자를 확인해 주세요"),
+    INQUIRY_POST(false, 2053, "문의 내용은 1자 이상 100자 이하로 입력하세요"),
+    INQUIRY_INVALID_PARENTIDX(false, 2054, "답글을 달고자 하는 상위 댓글의 식별자값이 유효하지 않습니다."),
 
     /**
      * 3000 : Response 오류

@@ -13,9 +13,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.inquiry.Inquiry;
 import shop.makaroni.bunjang.src.domain.inquiry.model.GetInquiryRes;
+import shop.makaroni.bunjang.src.domain.inquiry.model.PostInqueryReq;
 import shop.makaroni.bunjang.src.domain.inquiry.view.InquirySimpleResponse;
 import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,4 +119,23 @@ public class InquiryDao {
 						rs.getString("updatedAt")),
 				params);
     }
+
+	public int checkInquiry(Long parentIdx) {
+		String query = "select exists(select idx from Inquiry where idx = ?)";
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				parentIdx);
+
+	}
+
+	public HashMap<String, String> PostInquiry(Long userIdx, PostInqueryReq postInqueryReq) {
+		String query = "insert into Inquiry(targetIdx, parentIdx,  userIdx, post, type) values(?,?,?,?,?)";
+		Object[] params = new Object[]{postInqueryReq.getTargetIdx(), postInqueryReq.getParentIdx(),
+				userIdx, postInqueryReq.getPost(), postInqueryReq.getType()};
+		this.jdbcTemplate.update(query, params);
+		String lastInsertIdQuery = "select last_insert_id()";
+		HashMap<String,String> res =  new HashMap<String,String>();
+		res.put("idx", String.valueOf(this.jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class)));
+		return res;
+	}
 }
