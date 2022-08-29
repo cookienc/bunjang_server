@@ -89,6 +89,18 @@ public class FollowDao {
 		return template.queryForObject(sql, params, Boolean.class);
 	}
 
+	public boolean alreadyNotification(Long userIdx, Long storeIdx) {
+		var sql = "select notification from Follow " +
+				"where userIdx = :userIdx " +
+				"and storeIdx = :storeIdx " +
+				"and status = 'Y'";
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("userIdx", userIdx)
+				.addValue("storeIdx", storeIdx);
+
+		return template.queryForObject(sql, params, Boolean.class);
+	}
+
 	public void delete(Long userIdx, Long storeIdx) {
 		var sql = "update Follow " +
 				"set status = 'D' " +
@@ -99,5 +111,27 @@ public class FollowDao {
 				.addValue("userIdx", userIdx)
 				.addValue("storeIdx", storeIdx);
 		template.update(sql, params);
+	}
+
+	public void saveNotification(Long userIdx, Long storeIdx) {
+		var sql = "update Follow " +
+				"set notification = 1 " +
+				"where userIdx = :userIdx " +
+				"and storeIdx = :storeIdx";
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("userIdx", userIdx)
+				.addValue("storeIdx", storeIdx);
+		template.update(sql, params);
+	}
+
+	public Long findIdByUserIdAndStoreId(Long userIdx, Long storeIdx) {
+		var sql = "select idx from Follow " +
+				"where userIdx = :userIdx " +
+				"and storeIdx = :storeIdx " +
+				"and status = 'Y'";
+		SqlParameterSource params = new MapSqlParameterSource()
+				.addValue("userIdx", userIdx)
+				.addValue("storeIdx", storeIdx);
+		return template.queryForObject(sql, params, Long.class);
 	}
 }

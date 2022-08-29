@@ -24,4 +24,10 @@ public class FollowService {
 			followDao.delete(userIdx, storeIdx);
 		}
 	}
+
+	public Long saveNotification(Long userIdx, Long storeIdx) {
+		followProvider.isAlreadyNotification(userIdx, storeIdx);
+		followDao.saveNotification(userIdx, storeIdx);
+		return followDao.findIdByUserIdAndStoreId(userIdx, storeIdx);
+	}
 }

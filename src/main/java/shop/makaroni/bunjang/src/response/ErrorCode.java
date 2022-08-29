@@ -18,10 +18,12 @@ public enum ErrorCode {
 	INVALID_INPUT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.PLEASE_ENTER_RIGHT_PARAMETER),
 	NOT_MATCH_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_MATCH_PASSWORD),
 	NOT_RIGHT_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_RIGHT_PASSWORD),
+	NOT_EXIST_FOLLOW_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_EXIST_FOLLOW),
 
 	ALREADY_SAVED_REVIEW(HttpStatus.BAD_REQUEST, Messages.ALREADY_SAVED_REVIEW),
 	ALREADY_SAVED_FOLLOW_REVIEW(HttpStatus.BAD_REQUEST, Messages.ALREADY_SAVED_FOLLOW),
 	ALREADY_HAS_COMMENT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_HAS_COMMENTED),
+	ALREADY_NOTIFICATION_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_NOTIFICATION),
 	ALREADY_DELETED_MEMBER_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_MEMBER),
 	ALREADY_DELETED_REVIEW_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW),
 	ALREADY_DELETED_REVIEW_COMMENT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW_COMMENT),
@@ -42,10 +44,12 @@ public enum ErrorCode {
 		public static final String PLEASE_ENTER_RIGHT_PARAMETER = "올바른 파라미터를 넣어주세요.";
 		public static final String NOT_MATCH_PASSWORD = "아이디와 비밀번호가 일치하지 않습니다.";
 		public static final String NOT_RIGHT_PASSWORD = "올바르지 않은 비밀번호 입니다.";
+		public static final String NOT_EXIST_FOLLOW = "팔로우를 먼저 해주세요.";
 
 		public static final String ALREADY_SAVED_REVIEW= "이미 등록된 리뷰 입니다.";
 		public static final String ALREADY_SAVED_FOLLOW= "이미 등록된 팔로우 입니다.";
 		public static final String ALREADY_HAS_COMMENTED = "이미 답글이 있습니다.";
+		public static final String ALREADY_NOTIFICATION = "이미 알림 설정이 되어 있습니다.";
 		public static final String ALREADY_DELETED_MEMBER = "이미 탈퇴된 회원 입니다.";
 		public static final String ALREADY_DELETED_REVIEW = "이미 삭제된 리뷰 입니다.";
 		public static final String ALREADY_DELETED_REVIEW_COMMENT = "이미 삭제된 댓글 입니다.";

@@ -11,6 +11,7 @@ import shop.makaroni.bunjang.src.response.BeanErrorResponse;
 import shop.makaroni.bunjang.src.response.ErrorResponse;
 import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
 import shop.makaroni.bunjang.src.response.exception.AlreadyHasCommentEx;
+import shop.makaroni.bunjang.src.response.exception.AlreadyNotificationEx;
 import shop.makaroni.bunjang.src.response.exception.AlreadySavedException;
 import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
@@ -21,6 +22,7 @@ import shop.makaroni.bunjang.src.response.exception.DontPurchaseItemEx;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
 import shop.makaroni.bunjang.src.response.exception.EmptyParamEx;
 import shop.makaroni.bunjang.src.response.exception.InvalidInputEx;
+import shop.makaroni.bunjang.src.response.exception.NotExistFollowEx;
 import shop.makaroni.bunjang.src.response.exception.NotRightPasswordEx;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_DELETED_MEMBER_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_HAS_COMMENT_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_NOTIFICATION_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_SAVED_REVIEW;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_DECODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
@@ -40,6 +43,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.DUPLICATE_LOGIN_ID_EX
 import static shop.makaroni.bunjang.src.response.ErrorCode.EMPTY_PARAM_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.MISSING_PARAMETER_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_EXIST_FOLLOW_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_MATCH_PASSWORD_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_RIGHT_PASSWORD_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NO_SUCH_ELEMENT_EXCEPTION;
@@ -83,6 +87,13 @@ public class ControllerAdvice {
 				.body(ErrorResponse.of(ALREADY_SAVED_REVIEW, e.getMessage(), request.getRequestURI()));
 	}
 
+	@ExceptionHandler(AlreadyNotificationEx.class)
+	public ResponseEntity<ErrorResponse> alreadyNotificationExHandler(AlreadyNotificationEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(ALREADY_NOTIFICATION_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(ALREADY_NOTIFICATION_EXCEPTION, e.getMessage(), request.getRequestURI()));
+	}
+
 	@ExceptionHandler(NoSuchElementException.class)
 	public ResponseEntity<ErrorResponse> noSuchElementExHandler(NoSuchElementException e, HttpServletRequest request) {
 		printLog(e, request);
@@ -123,6 +134,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(NOT_MATCH_PASSWORD_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(NOT_MATCH_PASSWORD_EXCEPTION, e.getMessage(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(NotExistFollowEx.class)
+	public ResponseEntity<ErrorResponse> notExistsFollowExExHandler(NotExistFollowEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(NOT_EXIST_FOLLOW_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(NOT_EXIST_FOLLOW_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(NotRightPasswordEx.class)
