@@ -59,7 +59,7 @@ public class FollowProvider {
 	}
 
 	public void notFollow(Long userIdx, Long storeIdx) {
-		if (alreadyNotFollow(userIdx, storeIdx)) {
+		if (currentNotFollow(userIdx, storeIdx)) {
 			throw new NotExistFollowEx(NOT_EXIST_FOLLOW_EXCEPTION.getMessages());
 		}
 	}
@@ -70,7 +70,7 @@ public class FollowProvider {
 		}
 	}
 
-	private boolean alreadyNotFollow(Long userIdx, Long storeIdx) {
+	private boolean currentNotFollow(Long userIdx, Long storeIdx) {
 		return !followDao.alreadyExistFollow(userIdx, storeIdx);
 	}
 

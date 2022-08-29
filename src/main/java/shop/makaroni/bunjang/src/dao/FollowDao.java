@@ -66,7 +66,7 @@ public class FollowDao {
 	}
 
 	public Long doFollow(Long userIdx, Long storeIdx) {
-		var sql = "insert into follow (userIdx, storeIdx) " +
+		var sql = "insert into Follow (userIdx, storeIdx) " +
 				"values (:userIdx, :storeIdx)";
 		SqlParameterSource params = new MapSqlParameterSource()
 				.addValue("userIdx", userIdx)

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.follow.view.FollowersView;
+import shop.makaroni.bunjang.src.domain.follow.view.FollowingsView;
 import shop.makaroni.bunjang.src.provider.FollowProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.SuccessStatus;
@@ -43,5 +44,10 @@ public class FollowController {
 	@GetMapping("/users/{userIdx}/followers")
 	public ResponseEntity<List<FollowersView>> getFollowers(@PathVariable Long userIdx) {
 		return ResponseEntity.ok(followProvider.getFollowers(userIdx));
+	}
+
+	@GetMapping("/users/{userIdx}/followings")
+	public ResponseEntity<List<FollowingsView>> getFollowings(@PathVariable Long userIdx) {
+		return ResponseEntity.ok(followProvider.getFollowings(userIdx));
 	}
 }
