@@ -45,13 +45,14 @@ public enum BaseResponseStatus {
     // items
     ITEM_NO_EXIST(false, 2021, "존재하지 않는 상품 아이디 값입니다."),
     ITEM_NO_NAME(false, 2022, "검색어를 입력해주세요"),
-    ITEM_NO_COUNT(false, 2023, "반환받고자 하는 결과의 개수를 입력해주세요"),
+
     ITEM_INVALID_CATEGORY(false, 2024, "잘못된 카데고리 값입니다."),
     ITEM_INVALID_BRAND(false, 2025, "잘못된 브랜드 아이디 값입니다."),
     ITEM_INVALID_PRICE_MIN(false, 2026, "최소 금액 값을 확인해주세요"),
     ITEM_INVALID_SORT(false, 2027, "잘못된 정렬 기준 값입니다"),
 
     ITEM_INVALID_PERIOD(false, 2028, "잘못된 기간입니다"),
+    ITEM_INVALID_PAGE(false, 2029, "조회하고자 하는 페이지 번호를 입력해주세요"),
 
 
     ITEM_INVALID_DELIVERY(false, 2030, "잘못된 배송비 포함 여부 값입니다"),

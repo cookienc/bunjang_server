@@ -84,20 +84,20 @@ public class ItemProvider {
 		return itemDao.getItemImages(itemIdx);
 	}
 
-	public List<GetSearchRes> getSearch(String name, char sort, int count) throws BaseException {
+	public List<GetSearchRes> getSearch(String name, char sort, int page) throws BaseException {
 		try {
-			return itemDao.getSearchRes(name, sort, count);
+			return itemDao.getSearchRes(name, sort, page);
 		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
 
-	public List<GetLogRes> getItemLastN(Long userIdx, int count) throws BaseException {
+	public List<GetLogRes> getItemLastN(Long userIdx, int page) throws BaseException {
 		if (userDao.checkUserIdx(userIdx) == 0) {
 			throw new BaseException(USERS_INVALID_IDX);
 		}
 		try {
-			return itemDao.getItemLastN(userIdx, count);
+			return itemDao.getItemLastN(userIdx, page);
 		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}
@@ -114,40 +114,40 @@ public class ItemProvider {
 		}
 	}
 
-	public List<GetBrandRes> getBrand(Long userIdx, char sort) throws BaseException {
+	public List<GetBrandRes> getBrand(Long userIdx, int page, char sort) throws BaseException {
 		if (userDao.checkUserIdx(userIdx) == 0) {
 			throw new BaseException(USERS_INVALID_IDX);
 		}
 		try {
-			return itemDao.getBrand(userIdx, sort);
+			return itemDao.getBrand(userIdx,page, sort);
 		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
-	public List<GetBrandRes> getBrandSearch(Long userIdx, String name) throws BaseException {
+	public List<GetBrandRes> getBrandSearch(Long userIdx, String name, int page) throws BaseException {
 		if (userDao.checkUserIdx(userIdx) == 0) {
 			throw new BaseException(USERS_INVALID_IDX);
 		}
 		try {
-			return itemDao.getBrandSearch(userIdx,name);
-		} catch (Exception exception) {
-			throw new BaseException(RESPONSE_ERROR);
-		}
-	}
-
-
-	public List<GetUserBrandRes> getUserBrand(Long userIdx, char sort) throws BaseException {
-		if (userDao.checkUserIdx(userIdx) == 0) {
-			throw new BaseException(USERS_INVALID_IDX);
-		}
-		try {
-			return itemDao.getUserBrand(userIdx, sort);
+			return itemDao.getBrandSearch(userIdx,name, page);
 		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}
 	}
 
-    public GetCategoryRes getCategory(String code, char sort, int count) throws BaseException{
+
+	public List<GetUserBrandRes> getUserBrand(Long userIdx, char sort, int page) throws BaseException {
+		if (userDao.checkUserIdx(userIdx) == 0) {
+			throw new BaseException(USERS_INVALID_IDX);
+		}
+		try {
+			return itemDao.getUserBrand(userIdx, page, sort);
+		} catch (Exception exception) {
+			throw new BaseException(RESPONSE_ERROR);
+		}
+	}
+
+    public GetCategoryRes getCategory(String code, char sort, int page) throws BaseException{
 		try {
 			validateCategory(code);
 		} catch(BaseException baseException){
@@ -155,10 +155,11 @@ public class ItemProvider {
 		}
 		GetCategoryRes getCategoryRes = new GetCategoryRes();
 		HashMap<String,String> codes = validateCategory(code);
+
 		getCategoryRes.setName(itemDao.getCategoryName(codes));
 		getCategoryRes.setImage(itemDao.getCategoryImg(codes));
 		getCategoryRes.setSubCategory(itemDao.getSubcategory(code));
-		getCategoryRes.setItems(itemDao.getCategoryItems(code, sort, count));
+		getCategoryRes.setItems(itemDao.getCategoryItems(code, sort, page));
 		return getCategoryRes;
 	}
 
@@ -178,7 +179,7 @@ public class ItemProvider {
 		return codes;
 	}
 
-	public BaseResponse<GetWisherRes> getWisher(Long idx){
+	public BaseResponse<GetWisherRes> getWisher(Long idx, int page){
 		if(itemDao.checkItemIdx(idx) == 0){
 			return new BaseResponse<>(ITEM_NO_EXIST);
 		}
@@ -186,39 +187,39 @@ public class ItemProvider {
 				itemDao.getItemName(idx),
 				itemDao.getUpdatedAt(idx));
 		int wishCnt = itemDao.getItemWishCnt(idx);
-		List<WishList> wishList = itemDao.getWisher(idx);
+		List<WishList> wishList = itemDao.getWisher(idx,page);
 		return new BaseResponse<>(new GetWisherRes(item, wishCnt, wishList));
 	}
 
 
-	public  List<GetWishListRes> getWishList(Long userIdx) throws BaseException {
+	public  List<GetWishListRes> getWishList(Long userIdx, int page) throws BaseException {
 		if(userDao.checkUserIdx(userIdx) == 0){
 			throw new BaseException(USERS_INVALID_IDX);
 		}
-		List<GetWishListRes> res = itemDao.getWishList(userIdx);
+		List<GetWishListRes> res = itemDao.getWishList(userIdx, page);
 		for(GetWishListRes each : res){
 			each.setImage(max(itemDao.getItemImages(Long.parseLong(each.getItemIdx()))));
 		}
 		return res;
 	}
 
-	public GetSearchWordRes getSearchWord(String q) throws BaseException {
-		List<GetSearchCategoryRes> categories = itemDao.getCategories(q);
+	public GetSearchWordRes getSearchWord(String q, int page) throws BaseException {
+		List<GetSearchCategoryRes> categories = itemDao.getCategories(q, page);
 		for(GetSearchCategoryRes category : categories){
 			HashMap<String,String> codes = validateCategory(category.getParent());
 			category.setParent(itemDao.getCategoryName(codes));
 		}
-		return new GetSearchWordRes(categories,itemDao.getWords(q));
+		return new GetSearchWordRes(categories,itemDao.getWords(q, page));
 
 	}
 
-	public List<GetDealRes> getDeals(Long userIdx, String tab, String status) {
+	public List<GetDealRes> getDeals(Long userIdx, String tab, String status, int page) {
 		List<GetDealRes> res;
 		if(tab.equals("order")){
-			res = itemDao.getDeals(userIdx, "buyerIdx", status);
+			res = itemDao.getDeals(userIdx, "buyerIdx", status, page);
 		}
 		else{
-			res = itemDao.getDeals(userIdx, "sellerIdx", status);
+			res = itemDao.getDeals(userIdx, "sellerIdx", status, page);
 		}
 
 		for(GetDealRes each : res){

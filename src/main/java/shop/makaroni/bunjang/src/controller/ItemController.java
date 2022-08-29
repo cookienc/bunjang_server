@@ -73,7 +73,7 @@ public class ItemController {
     @GetMapping("")
     public BaseResponse<List<GetSearchRes>> getSearch(@RequestParam() String name,
                                                       @RequestParam(required = false, defaultValue = "C") char sort,
-                                                      @RequestParam() int count) {
+                                                      @RequestParam() int page) {
         try {
             if(!jwtService.validateJWT(jwtService.getJwt())){
                 return new BaseResponse<>(INVALID_USER_JWT);
@@ -81,13 +81,13 @@ public class ItemController {
             if (name == null) {
                 throw new BaseException(ITEM_NO_NAME);
             }
-            if (count == 0) {
-                throw new BaseException(ITEM_NO_COUNT);
+            if (page <= 0) {
+                throw new BaseException(ITEM_INVALID_PAGE);
             }
             if (sort != 'C' && sort != 'R' && sort != 'L' && sort != 'H') {
                 throw new BaseException(ITEM_INVALID_SORT);
             }
-            return new BaseResponse<>(itemProvider.getSearch(name, sort, count));
+            return new BaseResponse<>(itemProvider.getSearch(name, sort, page));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -95,14 +95,14 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/last")
-    public BaseResponse<List<GetLogRes>> getItemLastN(@RequestParam() int count) {
+    public BaseResponse<List<GetLogRes>> getItemLastN(@RequestParam() int page) {
 
-        if (count <= 0) {
-            return new BaseResponse<>(ITEM_NO_COUNT);
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
         }
         try {
             Long userIdx = jwtService.getUserIdx();
-            return new BaseResponse<>(itemProvider.getItemLastN(userIdx, count));
+            return new BaseResponse<>(itemProvider.getItemLastN(userIdx, page));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -110,11 +110,16 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/brand/follow")
-    public BaseResponse<List<GetUserBrandRes>> getUserBrand(@RequestParam(required = false, defaultValue = "K") char sort) {
+    public BaseResponse<List<GetUserBrandRes>> getUserBrand(@RequestParam(required = false, defaultValue = "K") char sort,
+                                                            @RequestParam() int page
+    ) {
 
 
         if (!(sort == 'K' || sort == 'E')) {
             return new BaseResponse<>(ITEM_INVALID_SORT);
+        }
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
         }
         List<GetUserBrandRes> getUserBrandRes;
         Long brandIdx;
@@ -123,7 +128,7 @@ public class ItemController {
             if (userIdx <= 0) {
                 return new BaseResponse<>(USERS_INVALID_IDX);
             }
-            getUserBrandRes = itemProvider.getUserBrand(userIdx, sort);
+            getUserBrandRes = itemProvider.getUserBrand(userIdx, sort, page);
             for (GetUserBrandRes eachRes : getUserBrandRes) {
                 brandIdx = Long.parseLong(eachRes.getBrandIdx());
                 eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
@@ -136,16 +141,20 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/brand")
-    public BaseResponse<List<GetBrandRes>> getBrand(@RequestParam(required = false, defaultValue = "K") char sort) throws BaseException {
+    public BaseResponse<List<GetBrandRes>> getBrand(@RequestParam(required = false, defaultValue = "K") char sort,
+                                                    @RequestParam() int page) throws BaseException {
 
         if (!(sort == 'K' || sort == 'E')) {
             return new BaseResponse<>(ITEM_INVALID_SORT);
+        }
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
         }
         List<GetBrandRes> getBrandRes;
         Long brandIdx;
         try {
             Long userIdx = jwtService.getUserIdx();
-            getBrandRes = itemProvider.getBrand(userIdx, sort);
+            getBrandRes = itemProvider.getBrand(userIdx,page, sort);
             for (GetBrandRes eachRes : getBrandRes) {
                 brandIdx = Long.parseLong(eachRes.getBrandIdx());
                 eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
@@ -160,11 +169,15 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/brand/search")
-    public BaseResponse<List<GetBrandRes>> getBrandSearch(@RequestParam(required = false) String name) {
+    public BaseResponse<List<GetBrandRes>> getBrandSearch(@RequestParam(required = false) String name,
+                                                          @RequestParam() int page) {
 
         ArrayList blank = new ArrayList();
         List<GetBrandRes> getBrandRes;
         Long brandIdx;
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
+        }
         try {
             Long userIdx = jwtService.getUserIdx();
             if (userIdx <= 0) {
@@ -173,7 +186,7 @@ public class ItemController {
             if (name == null) {
                 return new BaseResponse<>(blank);
             }
-            getBrandRes = itemProvider.getBrandSearch(userIdx, name);
+            getBrandRes = itemProvider.getBrandSearch(userIdx, name, page);
             for (GetBrandRes eachRes : getBrandRes) {
                 brandIdx = Long.parseLong(eachRes.getBrandIdx());
                 eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
@@ -188,7 +201,7 @@ public class ItemController {
     @GetMapping("/category/{code}")
     public BaseResponse<GetCategoryRes> getCategory(@PathVariable("code") String code,
                                                     @RequestParam(required = false, defaultValue = "R") char sort,
-                                                    @RequestParam() Integer count) {
+                                                    @RequestParam() Integer page) {
 
         if (code.length() > 10 || code.length() < 1) {
             return new BaseResponse<>(ITEM_INVALID_CATEGORY);
@@ -196,14 +209,14 @@ public class ItemController {
         if (code.length() != 1 && code.length() % 2 != 0) {
             return new BaseResponse<>(ITEM_INVALID_CATEGORY);
         }
-        if (count != null && count < 0) {
-            return new BaseResponse<>(ITEM_NO_COUNT);
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
         }
         try {
             if(!jwtService.validateJWT(jwtService.getJwt())){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            GetCategoryRes getCategoryRes = itemProvider.getCategory(code, sort, count);
+            GetCategoryRes getCategoryRes = itemProvider.getCategory(code, sort, page);
             return new BaseResponse<>(getCategoryRes);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -274,12 +287,16 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/{idx}/wishers")
-    public BaseResponse<GetWisherRes> GetWishers(@PathVariable("idx") Long idx) {
+    public BaseResponse<GetWisherRes> GetWishers(@PathVariable("idx") Long idx,
+                                                 @RequestParam() Integer page) {
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
+        }
         try {
             if(!jwtService.validateJWT(jwtService.getJwt())){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            return itemProvider.getWisher(idx);
+            return itemProvider.getWisher(idx, page);
         } catch (BaseException baseException) {
                     return new BaseResponse<>(baseException.getStatus());
         }
@@ -317,12 +334,15 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/wish-lists")
-    public BaseResponse<List<GetWishListRes>> getWishList()
+    public BaseResponse<List<GetWishListRes>> getWishList(@RequestParam() int page)
             throws BaseException {
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
+        }
 
         try {
             Long userIdx = jwtService.getUserIdx();
-            return new BaseResponse<>(itemProvider.getWishList(userIdx));
+            return new BaseResponse<>(itemProvider.getWishList(userIdx, page));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
@@ -330,9 +350,13 @@ public class ItemController {
 
     @ResponseBody
     @GetMapping("/search")
-    public BaseResponse<GetSearchWordRes> getSearchWord(@RequestParam() String q)
+    public BaseResponse<GetSearchWordRes> getSearchWord(@RequestParam() String q,
+                                                        @RequestParam() int page)
             throws BaseException {
-        if (q.isEmpty()) {
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
+        }
+        if (q.isEmpty() || q.isBlank()) {
             return new BaseResponse<>(EMPTY_SEARCH_WORD);
         }
         if(q.length() > 4096){
@@ -342,7 +366,7 @@ public class ItemController {
             if(!jwtService.validateJWT(jwtService.getJwt())){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            return new BaseResponse<>(itemProvider.getSearchWord(q));
+            return new BaseResponse<>(itemProvider.getSearchWord(q, page));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
@@ -352,8 +376,12 @@ public class ItemController {
     @ResponseBody
     @GetMapping("/deals")
     public BaseResponse<List<GetDealRes>> getDeal(@RequestParam() String tab,
-                                                  @RequestParam(required = false, defaultValue = "E") String status)
+                                                  @RequestParam(required = false, defaultValue = "E") String status,
+                                                  @RequestParam() int page)
             throws BaseException {
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
+        }
         if (!(tab.equals("order") || tab.equals("sale"))) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
@@ -363,7 +391,7 @@ public class ItemController {
         try {
             Long userIdx = jwtService.getUserIdx();
             logger.info(String.valueOf(userIdx));
-            return new BaseResponse<>(itemProvider.getDeals(userIdx, tab, status));
+            return new BaseResponse<>(itemProvider.getDeals(userIdx, tab, status, page));
         }
         catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());

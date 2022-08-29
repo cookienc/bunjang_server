@@ -155,10 +155,11 @@ public class ItemDao {
 				itemIdx);
 	}
 
-	public List<GetSearchRes> getSearchRes(String name, char sort, int count){
+	public List<GetSearchRes> getSearchRes(String name, char sort, int page){
 		String query;
 		Object[] reqParams;
 		String[] param={name, name+"%", "%"+name+"%", "%"+name, "%"+name+"%"};
+		page = 6 * (page-1);
 		if (sort == 'C') {
 			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
@@ -172,8 +173,8 @@ public class ItemDao {
 					"              when name like ? then 3\n" +
 					"              else 4\n" +
 					"    end)\n" +
-					"limit ?;";
-			reqParams = new Object[]{param[4], param[0], param[1], param[2], param[3], count};
+					"limit 6 offset ?;";
+			reqParams = new Object[]{param[4], param[0], param[1], param[2], param[3], page};
 
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
@@ -190,7 +191,7 @@ public class ItemDao {
 
 		}
 		else if(sort == 'R'){
-			reqParams = new Object[]{param[4], count};
+			reqParams = new Object[]{param[4], page};
 			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select itemIdx, min(path) path from ItemImage where status = 'Y' group by itemIdx) img\n" +
@@ -198,7 +199,7 @@ public class ItemDao {
 					"where name like ?\n" +
 					"  and status != 'D'\n" +
 					"order by Item.updatedAt desc\n" +
-					"limit ?;\n";
+					"limit 6 offset ?;\n";
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
 							String.valueOf(rs.getInt("itemIdx")),
@@ -220,8 +221,8 @@ public class ItemDao {
 					"where name like ?\n" +
 					"  and status != 'D'\n" +
 					"order by price asc\n" +
-					"limit ?;\n;";
-			reqParams = new Object[]{param[4], count};
+					"limit 6 offset ?;";
+			reqParams = new Object[]{param[4], page};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
 							String.valueOf(rs.getInt("itemIdx")),
@@ -244,8 +245,8 @@ public class ItemDao {
 					"                    group by ItemImage.status, itemIdx) img\n" +
 					"                   on Item.idx = img.itemIdx\n" +
 					"where name like ?\n" +
-					"  and Item.status != 'D' order by price desc limit ?;";
-			reqParams = new Object[]{param[4], count};
+					"  and Item.status != 'D' order by price desc limit 6 offset ?;;";
+			reqParams = new Object[]{param[4], page};
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
 							String.valueOf(rs.getInt("itemIdx")),
@@ -262,7 +263,8 @@ public class ItemDao {
 
 	}
 
-	public List<GetLogRes> getItemLastN(long userIdx, int count) {
+	public List<GetLogRes> getItemLastN(long userIdx, int page) {
+		page = 6 * (page-1);
 		String query =
 				"select distinct Log.itemIdx itemIdx, name, price, safePay, isAd, max(Log.createdAt) createdAt, path\n" +
 				"from (Log join Item I on Log.itemIdx = I.idx)\n" +
@@ -273,8 +275,8 @@ public class ItemDao {
 				"  and status != 'D'\n" +
 				"group by itemIdx, name, price, safePay, isAd\n" +
 				"order by createdAt desc\n" +
-				"limit ?;";
-		Object[] params = new Object[]{userIdx, count};
+				"limit 6 offset ?;";
+		Object[] params = new Object[]{userIdx, page};
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetLogRes(
 						String.valueOf(rs.getInt("itemIdx")),
@@ -303,21 +305,25 @@ public class ItemDao {
 				brandIdx);
 	}
 
-	public List<GetBrandRes> getBrand(Long userIdx, char sort) {
+	public List<GetBrandRes> getBrand(Long userIdx, int page, char sort) {
 		String query;
+		page = 6 * (page-1);
+		Object[] params = new Object[]{userIdx, page};
 		if(sort == 'K'){
 			query =	"select distinct logo, idx brandIdx, name brandName, englishName,\n" +
 					"idx in (select brandIdx from Brand join (select * from BrandFollow where userIdx = ? and status!='D') follow\n" +
 					"on Brand.idx = brandIdx where Brand.status != 'D') follow\n" +
 					"from Brand\n" +
-					"order by brandName asc;";
+					"order by brandName asc\n" +
+					"limit 6 offset ?;";
 		}
 		else{
 			query = "select distinct logo, idx brandIdx, name brandName, englishName,\n" +
 					"idx in (select brandIdx from Brand join (select * from BrandFollow where userIdx = ? and status!='D') follow\n" +
 					"on Brand.idx = brandIdx where Brand.status != 'D') follow\n" +
 					"from Brand\n" +
-					"order by englishName asc;";
+					"order by englishName asc\n" +
+					"limit 6 offset ?;";
 		}
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetBrandRes(
@@ -328,19 +334,21 @@ public class ItemDao {
 						null,
 						rs.getBoolean("follow")
 				),
-				userIdx
+				params
 		);
 
 	}
 
-	public List<GetBrandRes> getBrandSearch(Long userIdx, String name) {
+	public List<GetBrandRes> getBrandSearch(Long userIdx, String name, int page) {
+		page = 6 * (page-1);
 		String query = "select distinct logo, idx brandIdx, name brandName, englishName,\n" +
 				"idx in (select brandIdx from Brand join (select * from BrandFollow where userIdx = ? and status!='D') follow\n" +
 				"on Brand.idx = brandIdx where Brand.status != 'D') follow\n" +
 				"from Brand\n" +
 				"where (Brand.name like ? or englishName like ?)\n" +
-				"order by brandName asc;";
-		Object[] params = new Object[]{userIdx, "%"+name+"%", "%"+name+"%"};
+				"order by brandName asc\n" +
+				"limit 6 offset ?;";
+		Object[] params = new Object[]{userIdx, "%"+name+"%", "%"+name+"%", page};
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetBrandRes(
 						rs.getString("logo"),
@@ -354,22 +362,26 @@ public class ItemDao {
 		);
 	}
 
-	public List<GetUserBrandRes> getUserBrand(Long userIdx, char sort) {
+	public List<GetUserBrandRes> getUserBrand(Long userIdx, int page, char sort) {
 		String query;
+		page = 5 * (page-1);
 		if(sort == 'K'){
 			query =	"select distinct logo, Brand.idx brandIdx, name brandName, englishName from Brand join\n" +
 					"(select * from BrandFollow where status != 'D') BrandFollow\n" +
 					"on Brand.idx = BrandFollow.brandIdx\n" +
 					"where userIdx = ? and Brand.status !='D'\n" +
-					"order by brandName asc;";
+					"order by brandName asc\n" +
+					"limit 6 offset ?;";
 		}
 		else{
 			query = "select distinct logo, Brand.idx brandIdx, name brandName, englishName from Brand join\n" +
 					"(select * from BrandFollow where status != 'D') BrandFollow\n" +
 					"on Brand.idx = BrandFollow.brandIdx\n" +
 					"where userIdx = ? and Brand.status !='D'\n" +
-					"order by englishName asc;";
+					"order by englishName asc\n" +
+					"limit 6 offset ?;";
 		}
+		Object[] params = new Object[]{userIdx, page};
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetUserBrandRes(
 						rs.getString("logo"),
@@ -378,7 +390,7 @@ public class ItemDao {
 						rs.getString("englishName"),
 						null
 				),
-				userIdx
+				params
 		);
 	}
 
@@ -394,8 +406,9 @@ public class ItemDao {
 		);
 	}
 
-	public List<GetSearchRes> getCategoryItems(String code, char sort, int count) {
-		Object[] reqParams = new Object[]{code + "%", count};
+	public List<GetSearchRes> getCategoryItems(String code, char sort, int page) {
+		page = 5 * (page-1);
+		Object[] reqParams = new Object[]{code + "%", page};
 		String query;
 		if(sort=='R') {
 			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
@@ -408,7 +421,7 @@ public class ItemDao {
 					"where category like ?\n" +
 					"  and Item.status != 'D'\n" +
 					"order by Item.updatedAt desc\n" +
-					"limit ?;\n";
+					"limit 6 offset ?;\n";
 		}
 		else if(sort=='F'){
 			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
@@ -421,7 +434,7 @@ public class ItemDao {
 					"where category like ?\n" +
 					"  and Item.status != 'D'\n" +
 					"order by Item.hit desc\n" +
-					"limit ?;\n";
+					"limit 6 offset ?;\n";
 		}
 		else if(sort=='L'){
 			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
@@ -434,7 +447,7 @@ public class ItemDao {
 					"where category like ?\n" +
 					"  and Item.status != 'D'\n" +
 					"order by Item.price asc\n" +
-					"limit ?;\n";
+					"limit 6 offset ?;\n";
 		}
 		else{
 			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
@@ -447,7 +460,7 @@ public class ItemDao {
 					"where category like ?\n" +
 					"  and Item.status != 'D'\n" +
 					"order by Item.price desc\n" +
-					"limit ?;\n";
+					"limit 6 offset ?;\n";
 		}
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetSearchRes(
@@ -669,18 +682,21 @@ public class ItemDao {
 			idx);
 	}
 
-	public List<WishList> getWisher(Long idx) {
+	public List<WishList> getWisher(Long idx, int page) {
+		page = 5 * (page-1);
+		Object[] params = new Object[]{idx, page};
 		String query = "select User.idx userIdx, User.storeName name, User.storeImage image\n" +
 				"from WishList\n" +
 				"         left join User on WishList.userIdx = User.idx\n" +
-				"where itemIdx = ? and WishList.status!='D' and User.status != 'D';";
+				"where itemIdx = ? and WishList.status!='D' and User.status != 'D'" +
+				"limit 6 offset ?;";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new WishList(
 						String.valueOf(rs.getInt("userIdx")),
 						rs.getString("name"),
 						rs.getString("image")
 				),
-				idx
+				params
 		);
 	}
 
@@ -704,7 +720,9 @@ public class ItemDao {
 		this.jdbcTemplate.update(query, params);
 	}
 
-	public List<GetWishListRes> getWishList(Long userIdx) {
+	public List<GetWishListRes> getWishList(Long userIdx, int page) {
+		page = 5 * (page-1);
+		Object[] params = new Object[]{userIdx, page};
 		String query = "select wishList.itemIdx itemIdx,\n" +
 				"       Item.name        name,\n" +
 				"       Item.price       price,\n" +
@@ -732,7 +750,8 @@ public class ItemDao {
 				"where User.status != 'D' && wishList.status != 'D'\n" +
 				"  and Item.status != 'D'\n" +
 				"  and wishList.userIdx = ?\n" +
-				"order by Item.updatedAt desc;";
+				"order by Item.updatedAt desc\n" +
+				"limit 6 offset ?;";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetWishListRes(
 						String.valueOf(rs.getInt("itemIdx")),
@@ -745,7 +764,7 @@ public class ItemDao {
 						rs.getString("updatedAt")
 
 				),
-				userIdx
+				params
 		);
 	}
 
@@ -765,27 +784,30 @@ public class ItemDao {
 				params);
 	}
 
-	public List<String> getWords(String q) {
-		String query = "select distinct name from Item where name like ?";
-		String param = "%"+q+"%";
+	public List<String> getWords(String q, int page) {
+		page = 5 * (page-1);
+		Object[] params = new Object[]{"%"+q+"%", page};
+		String query = "select distinct name from Item where name like ? limit 6 offset ?;";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> rs.getString("name"),
-				param);
+				params);
 	}
 
-	public List<GetSearchCategoryRes> getCategories(String q){
+	public List<GetSearchCategoryRes> getCategories(String q, int page){
+		page = 2 * (page-1);
+		Object[] params = new Object[]{"%"+q+"%", page};
 		String query = "select distinct concat(parentCode,code) code, Category.name name, Category.parentCode parent, image\n" +
 				"from (select * from Item where name like ? and Item.status != 'D')Item\n" +
 				"         left join Category on Item.category = concat(Category.parentCode, Category.code)\n" +
-				"where Category.status != 'D';\n";
-		String param = "%"+q+"%";
+				"where Category.status != 'D'\n" +
+				"limit 2 offset ?;";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetSearchCategoryRes(
 						rs.getString("image"),
 						rs.getString("code"),
 						rs.getString("parent"),
 						rs.getString("name")),
-				param);
+				params);
 
 	}
 
@@ -805,22 +827,23 @@ public class ItemDao {
 				params);
 	}
 
-	public List<GetDealRes> getDeals(Long userIdx, String target, String status) {
+	public List<GetDealRes> getDeals(Long userIdx, String target, String status, int page) {
 		Object[] params;
 		String query;
+		page = 6 * (page-1);
 		if(status.equals("E")){
 			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
 					"from Item\n" +
 					"where " + target + " = ?\n" +
-					"  and status in ('P','S','F');";
-			params = new Object[]{userIdx};
+					"  and status in ('P','S','F') limit 6 offset ?;";
+			params = new Object[]{userIdx, page};
 		}
 		else {
 			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
 					"from Item\n" +
 					"where " + target + " = ?\n" +
-					"  and status = ?;";
-			params = new Object[]{userIdx, status};
+					"  and status = ? limit 6 offset ?;";
+			params = new Object[]{userIdx, status, page};
 		}
 
 		return this.jdbcTemplate.query(query,
