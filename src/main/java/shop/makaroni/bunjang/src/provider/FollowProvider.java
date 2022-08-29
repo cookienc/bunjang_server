@@ -14,7 +14,7 @@ import shop.makaroni.bunjang.src.response.exception.AlreadySavedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_SAVED_REVIEW;
+import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_SAVED_FOLLOW_REVIEW;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,7 +41,7 @@ public class FollowProvider {
 
 	public void isAlreadyExist(Long userIdx, Long storeIdx) {
 		if (followDao.alreadyExistFollow(userIdx, storeIdx)) {
-			throw new AlreadySavedException(ALREADY_SAVED_REVIEW.getMessages());
+			throw new AlreadySavedException(ALREADY_SAVED_FOLLOW_REVIEW.getMessages());
 		}
 	}
 }

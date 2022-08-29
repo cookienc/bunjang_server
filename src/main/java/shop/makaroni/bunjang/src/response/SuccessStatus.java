@@ -17,6 +17,7 @@ public enum SuccessStatus {
 	SAVE_REVIEW_COMMENT_SUCCESS(HttpStatus.CREATED, Messages.SAVE_REVIEW_COMMENT_SUCCESS),
 
 	DELETE_REVIEW_SUCCESS(HttpStatus.NO_CONTENT, Messages.DELETE_REVIEW_SUCCESS),
+	DELETE_FOLLOW_SUCCESS(HttpStatus.NO_CONTENT, Messages.DELETE_FOLLOW_SUCCESS),
 	DELETE_REVIEW_COMMENT_SUCCESS(HttpStatus.NO_CONTENT, Messages.DELETE_REVIEW_COMMENT_SUCCESS),
 	WITHDRAWAL_SUCCESS(HttpStatus.NO_CONTENT, Messages.WITHDRAWAL_SUCCESS);
 
@@ -33,6 +34,7 @@ public enum SuccessStatus {
 		public static String SAVE_REVIEW_COMMENT_SUCCESS= "댓글을 저장 했습니다.";
 
 		public static String DELETE_REVIEW_SUCCESS= "리뷰를 삭제 하였습니다.";
+		public static String DELETE_FOLLOW_SUCCESS= "팔로우를 삭제 하였습니다.";
 		public static String DELETE_REVIEW_COMMENT_SUCCESS= "댓글이 삭제 되었습니다.";
 		public static String WITHDRAWAL_SUCCESS = "회원 탈퇴 되었습니다.";
 	}

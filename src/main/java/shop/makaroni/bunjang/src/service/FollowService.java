@@ -18,4 +18,10 @@ public class FollowService {
 		followProvider.isAlreadyExist(userIdx, storeIdx);
 		return followDao.doFollow(userIdx, storeIdx);
 	}
+
+	public void delete(Long userIdx, Long storeIdx) {
+		if (followDao.alreadyExistFollow(userIdx, storeIdx)) {
+			followDao.delete(userIdx, storeIdx);
+		}
+	}
 }
