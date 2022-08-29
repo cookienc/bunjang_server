@@ -20,6 +20,7 @@ public enum ErrorCode {
 	NOT_RIGHT_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_RIGHT_PASSWORD),
 
 	ALREADY_SAVED_REVIEW(HttpStatus.BAD_REQUEST, Messages.ALREADY_SAVED_REVIEW),
+	ALREADY_FOLLOW_REVIEW(HttpStatus.BAD_REQUEST, Messages.ALREADY_SAVED_REVIEW),
 	ALREADY_HAS_COMMENT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_HAS_COMMENTED),
 	ALREADY_DELETED_MEMBER_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_MEMBER),
 	ALREADY_DELETED_REVIEW_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW),
@@ -43,6 +44,7 @@ public enum ErrorCode {
 		public static final String NOT_RIGHT_PASSWORD = "올바르지 않은 비밀번호 입니다.";
 
 		public static final String ALREADY_SAVED_REVIEW= "이미 등록된 리뷰 입니다.";
+		public static final String ALREADY_SAVED_FOLLOW= "이미 등록된 팔로우 입니다.";
 		public static final String ALREADY_HAS_COMMENTED = "이미 답글이 있습니다.";
 		public static final String ALREADY_DELETED_MEMBER = "이미 탈퇴된 회원 입니다.";
 		public static final String ALREADY_DELETED_REVIEW = "이미 삭제된 리뷰 입니다.";
