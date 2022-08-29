@@ -32,8 +32,5 @@ public class validation {
         if(itemReq.getPrice() != null &&  itemReq.getPrice() < 500){
             throw new BaseException(POST_ITEM_INVALID_SAFEPAY);
         }
-        if(itemReq.getSellerIdx() != null && itemReq.getSellerIdx() < 0){
-            throw new BaseException(POST_ITEM_INVALID_SELLER);
-        }
     }
 }

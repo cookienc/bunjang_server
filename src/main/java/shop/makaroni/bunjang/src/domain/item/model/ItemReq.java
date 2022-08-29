@@ -21,12 +21,11 @@ public class ItemReq {
     private Integer exchange;
     private String content;
     private Integer safePay;
-    private Long sellerIdx;
     private String location;
     private Integer isAd;
     private Integer inspection;
 
-    public Object[] getPostItemReq(){
+    public Object[] getPostItemReq(Long sellerIdx){
         return new Object[]{sellerIdx, name, category, 0, price, delivery, content, stock, isNew,
                 exchange, safePay, inspection, location, isAd, 0};
     }

@@ -470,12 +470,12 @@ public class ItemDao {
 				params);
 	}
 
-	public Long createItem(ItemReq itemReq) {
+	public Long createItem(Long sellerIdx, ItemReq itemReq) {
 		String query =
 				"Insert into Item(sellerIdx, name, category, brandIdx, price, delivery, content, stock, isNew, exchange, safePay,\n" +
 						"                 inspection, location, isAd, buyerIdx)\n" +
 						"                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);";
-		Object[] params = itemReq.getPostItemReq();
+		Object[] params = itemReq.getPostItemReq(sellerIdx);
 		this.jdbcTemplate.update(query, params);
 		String lastInsertIdQuery = "select last_insert_id()";
 		return this.jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class);
@@ -840,6 +840,14 @@ public class ItemDao {
 		String query = "insert Into Report(target, writerIdx, type, content) values(?,?,?,?)";
 		Object[] params = new Object[]{postReportReq.getTarget(), userIdx, postReportReq.getType(), postReportReq.getContent()};
 		this.jdbcTemplate.update(query, params);
+	}
+
+	public Long getSellerIdx(Long itemIdx) {
+		String query = "select sellerIdx from Item where idx = ? and status != 'D';";
+		Object[] params = new Object[]{itemIdx};
+		return this.jdbcTemplate.queryForObject(query,
+				Long.class,
+				params);
 	}
 
 //	public List<GetDealRes> getOrder(Long userIdx, String status) {

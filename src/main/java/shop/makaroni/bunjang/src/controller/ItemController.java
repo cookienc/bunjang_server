@@ -217,11 +217,9 @@ public class ItemController {
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
         }
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            Long sellerIdx = jwtService.getUserIdx();
             validateItems(itemReq);
-            ItemRes itemRes = itemService.createItem(itemReq);
+            ItemRes itemRes = itemService.createItem(sellerIdx, itemReq);
             return new BaseResponse<>(itemRes);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -236,11 +234,9 @@ public class ItemController {
             return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
         }
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            Long sellerIdx = jwtService.getUserIdx();
             validateItems(itemReq);
-            itemService.patchItem(idx, itemReq);
+            itemService.patchItem(idx,sellerIdx, itemReq);
             return new BaseResponse<>(itemProvider.getItem(idx));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -257,10 +253,8 @@ public class ItemController {
             return new BaseResponse<>(REQUEST_ERROR);
         }
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
-            return new BaseResponse<>(itemService.PatchItemStatus(idx, param.get("status")));
+            Long userIdx = jwtService.getUserIdx();
+            return new BaseResponse<>(itemService.PatchItemStatus(idx, userIdx, param.get("status")));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
@@ -270,10 +264,8 @@ public class ItemController {
     @DeleteMapping("/{idx}/sellers")
     public BaseResponse<HashMap<String, String>> DeleteItem(@PathVariable("idx") Long idx) {
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
-            return new BaseResponse<>(itemService.PatchItemStatus(idx, "D"));
+            Long userIdx = jwtService.getUserIdx();
+            return new BaseResponse<>(itemService.PatchItemStatus(idx,userIdx, "D"));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }

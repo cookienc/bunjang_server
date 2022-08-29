@@ -11,6 +11,7 @@ import shop.makaroni.bunjang.src.provider.ItemProvider;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 import static shop.makaroni.bunjang.utils.Itemvalidation.validationRegex.*;
@@ -29,19 +30,14 @@ public class ItemService {
 		this.itemProvider = itemProvider;
 		this.userDao = userDao;
 	}
-	public ItemRes createItem(ItemReq itemReq) throws BaseException {
+	public ItemRes createItem(Long sellerIdx, ItemReq itemReq) throws BaseException {
 		// category validation
 		itemProvider.validateCategory(itemReq.getCategory());
 
 		// brand validation
-		Long itemIdx = itemDao.createItem(itemReq);
+		Long itemIdx = itemDao.createItem(sellerIdx, itemReq);
 		List<String> tags = itemDao.getItemTags(itemIdx);
 		setBrand(itemIdx, tags);
-
-		//sellerIdx validation
-		if(userDao.checkUserIdx(itemReq.getSellerIdx()) == 0){
-			throw new BaseException(POST_ITEM_INVALID_SELLER);
-		}
 
 		// add images & tags
 		for(String image : itemReq.getImages()){
@@ -65,7 +61,11 @@ public class ItemService {
 		itemDao.setBrand(itemIdx, brandIdx);
 	}
 
-	public void patchItem(Long itemIdx, ItemReq itemReq) throws BaseException {
+	public void patchItem(Long itemIdx, Long sellerIdx, ItemReq itemReq) throws BaseException {
+
+		if(itemDao.getSellerIdx(itemIdx) != sellerIdx ){
+			throw new BaseException(INVALID_USER_JWT);
+		}
 
 		if (itemReq.getImages() != null) {
 			patchImages(itemIdx, itemReq.getImages());
@@ -101,9 +101,7 @@ public class ItemService {
 		if(itemReq.getSafePay() != null){
 			patchSafePay(itemIdx, itemReq.getSafePay());
 		}
-		if(itemReq.getSellerIdx() != null){
-			patchSellerIdx(itemIdx, itemReq.getSellerIdx());
-		}
+
 		if(itemReq.getLocation() != null){
 			patchLocation(itemIdx, itemReq.getLocation());
 		}
@@ -240,7 +238,10 @@ public class ItemService {
 		itemDao.deleteAllImages(itemIdx);
 	}
 
-	public HashMap<String, String> PatchItemStatus(Long idx, String status) throws BaseException{
+	public HashMap<String, String> PatchItemStatus(Long idx, Long userIdx, String status) throws BaseException{
+		if(!Objects.equals(itemDao.getSellerIdx(idx), userIdx)){
+			throw new BaseException(INVALID_USER_JWT);
+		}
 		if(itemDao.checkItemIdx(idx) == 0){
 			throw new BaseException(ITEM_NO_EXIST);
 		}
