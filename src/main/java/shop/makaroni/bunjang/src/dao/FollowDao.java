@@ -103,7 +103,8 @@ public class FollowDao {
 
 	public void delete(Long userIdx, Long storeIdx) {
 		var sql = "update Follow " +
-				"set status = 'D' " +
+				"set status = 'D', " +
+				"notification = 0 " +
 				"where userIdx = :userIdx " +
 				"and storeIdx = :storeIdx " +
 				"and status = 'Y'";
