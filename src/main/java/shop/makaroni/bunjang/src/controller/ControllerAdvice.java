@@ -17,6 +17,7 @@ import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotFindPurchasedItem;
 import shop.makaroni.bunjang.src.response.exception.CannotParsingObjectEx;
+import shop.makaroni.bunjang.src.response.exception.DoLoginFirstException;
 import shop.makaroni.bunjang.src.response.exception.DoesNotMatchPasswordEx;
 import shop.makaroni.bunjang.src.response.exception.DontPurchaseItemEx;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
@@ -24,6 +25,7 @@ import shop.makaroni.bunjang.src.response.exception.EmptyParamEx;
 import shop.makaroni.bunjang.src.response.exception.InvalidInputEx;
 import shop.makaroni.bunjang.src.response.exception.NotExistFollowEx;
 import shop.makaroni.bunjang.src.response.exception.NotRightPasswordEx;
+import shop.makaroni.bunjang.src.response.exception.UnAuthorizedException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -39,6 +41,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWOR
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_PURCHASED_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_PARSING_OBJECT;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DONT_PURCHASE_ITEM_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.DO_LOGIN_FIRST_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.EMPTY_PARAM_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
@@ -47,6 +50,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_EXIST_FOLLOW_EXCE
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_MATCH_PASSWORD_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_RIGHT_PASSWORD_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NO_SUCH_ELEMENT_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.UNAUTHORIZED_EXCEPTION;
 
 @Slf4j
 @RestControllerAdvice
@@ -64,6 +68,20 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(INVALID_INPUT_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(INVALID_INPUT_EXCEPTION, e.getMessage(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(DoLoginFirstException.class)
+	public ResponseEntity<ErrorResponse> doLoginFirstExHandler(DoLoginFirstException e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(DO_LOGIN_FIRST_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(DO_LOGIN_FIRST_EXCEPTION, e.getMessage(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(UnAuthorizedException.class)
+	public ResponseEntity<ErrorResponse> unAuthorizedExHandler(UnAuthorizedException e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(UNAUTHORIZED_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(UNAUTHORIZED_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(AlreadyHasCommentEx.class)

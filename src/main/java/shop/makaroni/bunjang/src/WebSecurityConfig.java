@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import shop.makaroni.bunjang.utils.resolver.LoginArgumentResolver;
 import shop.makaroni.bunjang.utils.resolver.QueryStringArgumentResolver;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
     private final QueryStringArgumentResolver queryStringArgumentResolver;
+    private final LoginArgumentResolver loginArgumentResolver;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -26,5 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(queryStringArgumentResolver);
+        resolvers.add(loginArgumentResolver);
     }
 }
