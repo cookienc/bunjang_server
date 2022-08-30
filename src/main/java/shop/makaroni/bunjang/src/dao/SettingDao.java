@@ -3,9 +3,12 @@ package shop.makaroni.bunjang.src.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import shop.makaroni.bunjang.src.domain.setting.model.Address;
 import shop.makaroni.bunjang.src.domain.setting.model.Notification;
 
 import javax.sql.DataSource;
+import java.util.List;
+
 @Repository
 public class SettingDao {
     private JdbcTemplate jdbcTemplate;
@@ -86,5 +89,25 @@ public class SettingDao {
                 "where userIdx = ?";
         Object[] params = res.getNotification(userIdx);
         this.jdbcTemplate.update(query, params);
+    }
+
+    public List<Address> getAddress(Long userIdx) {
+        String query = "select idx,\n" +
+                "       name,\n" +
+                "       phoneNum,\n" +
+                "       address,\n" +
+                "       detail,\n" +
+                "       isDefault\n" +
+                "from Address\n" +
+                "where userIdx = ? and status != 'D';";
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new Address(
+                        rs.getString("idx"),
+                        rs.getString("name"),
+                        rs.getString("phoneNum"),
+                        rs.getString("address"),
+                        rs.getString("detail"),
+                        rs.getBoolean("isDefault")),
+                userIdx);
     }
 }

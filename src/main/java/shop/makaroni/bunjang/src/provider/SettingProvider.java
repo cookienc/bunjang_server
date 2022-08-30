@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.SettingDao;
+import shop.makaroni.bunjang.src.domain.setting.model.Address;
 import shop.makaroni.bunjang.src.domain.setting.model.Notification;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -21,5 +24,9 @@ public class SettingProvider {
 
     public Notification getNotification(Long userIdx) {
         return settingDao.getNotification(userIdx);
+    }
+
+    public List<Address> getAddress(Long userIdx) {
+        return settingDao.getAddress(userIdx);
     }
 }

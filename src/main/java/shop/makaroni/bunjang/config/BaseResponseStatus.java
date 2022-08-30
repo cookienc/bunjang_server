@@ -69,6 +69,9 @@ public enum BaseResponseStatus {
     INQUIRY_POST(false, 2053, "문의 내용은 1자 이상 100자 이하로 입력하세요"),
     INQUIRY_INVALID_PARENTIDX(false, 2054, "답글을 달고자 하는 상위 댓글의 식별자값이 유효하지 않습니다."),
 
+    //Setting
+    SETTING_INVALID_TIME(false, 2061, "유효하지 않은 시간 설정입니다"),
+    SETTING_INVALID_SILENCE(false, 2062, "방해금지 시간 설정을 활성화하지 않은 경우 시작시간과 종료시간을 설정할 수 없습니다"),
     /**
      * 3000 : Response 오류
      */

@@ -13,6 +13,10 @@ import shop.makaroni.bunjang.src.provider.SettingProvider;
 import shop.makaroni.bunjang.src.service.SettingService;
 import shop.makaroni.bunjang.utils.JwtService;
 
+import java.util.List;
+
+import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
+
 @Transactional
 @RestController
 @RequestMapping("/settings")
@@ -45,10 +49,32 @@ public class SettingController {
     @ResponseBody
     @PatchMapping("/notifications")
     public BaseResponse<Notification> patchNotification(Notification notification) {
+        if((notification.getNA0100() != null &&
+                (Integer.parseInt(notification.getNA0100()) < 0 ||
+                Integer.parseInt(notification.getNA0100()) > 23)) ||
+            (notification.getNA0101() != null &&
+                    (Integer.parseInt(notification.getNA0101()) < 0||
+                    Integer.parseInt(notification.getNA0101()) > 23))){
+            return new BaseResponse<>(SETTING_INVALID_TIME);
+        }
+        if(!notification.getNA01() &&
+                (notification.getNA0101() != null || notification.getNA0100() != null)){
+            return new BaseResponse<>(SETTING_INVALID_SILENCE);
+        }
         try {
             Long userIdx = jwtService.getUserIdx();
             settingService.patchNotification(userIdx, notification);
             return new BaseResponse<>(settingProvider.getNotification(userIdx));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+    @ResponseBody
+    @GetMapping("/addresses")
+    public BaseResponse<List<Address>> getAddress() {
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            return new BaseResponse<>(settingProvider.getAddress(userIdx));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
