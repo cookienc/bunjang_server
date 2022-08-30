@@ -21,7 +21,7 @@ public class ItemDao {
 	}
 
 	public GetItemRes getItem(Long itemIdx){
-		String query = "select idx, price, name,\n" +
+		String query = "select idx, format(price,0) price, name,\n" +
 				"       IF(isnull(location),'지역정보 없음', location) location,\n" +
 				"       (case\n" +
 				"            when timestampdiff(minute , updatedAt, now()) < 1 then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
@@ -70,7 +70,7 @@ public class ItemDao {
 
 	}
 	public List<GetItemRes> getItems(){
-		String query = "select idx, price, name,\n" +
+		String query = "select idx, format(price,0) price, name,\n" +
 				"       IF(isnull(location),'지역정보 없음', location) location,\n" +
 				"       (case\n" +
 				"            when timestampdiff(minute , updatedAt, now()) < 1 then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
@@ -162,7 +162,7 @@ public class ItemDao {
 		String[] param={name, name+"%", "%"+name+"%", "%"+name, "%"+name+"%"};
 		page = 6 * (page-1);
 		if (sort == 'C') {
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
+			query = "select Item.idx itemIdx, path, format(price,0) price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select itemIdx, min(path) path " +
 					"					from ItemImage where status !='D' group by itemIdx ) img on Item.idx = img.itemIdx\n" +
@@ -193,7 +193,7 @@ public class ItemDao {
 		}
 		else if(sort == 'R'){
 			reqParams = new Object[]{param[4], page};
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
+			query = "select Item.idx itemIdx, path, format(price,0) price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select itemIdx, min(path) path from ItemImage where status = 'Y' group by itemIdx) img\n" +
 					"                   on Item.idx = img.itemIdx\n" +
@@ -215,7 +215,7 @@ public class ItemDao {
 			);
 		}
 		else if(sort == 'L'){
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
+			query = "select Item.idx itemIdx, path, format(price,0) price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select itemIdx, min(path) path from ItemImage where status = 'Y' group by itemIdx) img\n" +
 					"                   on Item.idx = img.itemIdx\n" +
@@ -238,7 +238,7 @@ public class ItemDao {
 			);
 		}
 		else{
-			query = "select Item.idx itemIdx, path, price, name, safePay, isAd, Item.status status\n" +
+			query = "select Item.idx itemIdx, path, format(price,0) price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
 					"                    from ItemImage\n" +
@@ -267,7 +267,7 @@ public class ItemDao {
 	public List<GetLogRes> getItemLastN(long userIdx, int page) {
 		page = 6 * (page-1);
 		String query =
-				"select distinct Log.itemIdx itemIdx, name, price, safePay, isAd, max(Log.createdAt) createdAt, path\n" +
+				"select distinct Log.itemIdx itemIdx, name, format(price,0) price, safePay, isAd, max(Log.createdAt) createdAt, path\n" +
 				"from (Log join Item I on Log.itemIdx = I.idx)\n" +
 				"         left join\n" +
 				"     (select itemIdx, min(path) path from ItemImage where status != 'D' group by itemIdx) img\n" +
@@ -412,7 +412,7 @@ public class ItemDao {
 		Object[] reqParams = new Object[]{code + "%", page};
 		String query;
 		if(sort=='R') {
-			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
+			query = "select Item.idx itemIdx, path, format(price,0) price, Item.name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
 					"                    from ItemImage\n" +
@@ -425,7 +425,7 @@ public class ItemDao {
 					"limit 6 offset ?;\n";
 		}
 		else if(sort=='F'){
-			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
+			query = "select Item.idx itemIdx, path, format(price,0) price, Item.name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
 					"                    from ItemImage\n" +
@@ -438,7 +438,7 @@ public class ItemDao {
 					"limit 6 offset ?;\n";
 		}
 		else if(sort=='L'){
-			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
+			query = "select Item.idx itemIdx, path, format(price,0) price, Item.name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
 					"                    from ItemImage\n" +
@@ -451,7 +451,7 @@ public class ItemDao {
 					"limit 6 offset ?;\n";
 		}
 		else{
-			query = "select Item.idx itemIdx, path, price, Item.name, safePay, isAd, Item.status status\n" +
+			query = "select Item.idx itemIdx, path, format(price,0) price, Item.name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select ItemImage.status, itemIdx, min(path) path\n" +
 					"                    from ItemImage\n" +
@@ -653,7 +653,7 @@ public class ItemDao {
 	}
 
 	public String getPrice(Long idx) {
-		String query = "select price from Item where idx = ?";
+		String query = "select format(price,0) price from Item where idx = ?";
 		return String.valueOf(this.jdbcTemplate.queryForObject(query,
 				int.class,
 				idx));
@@ -726,7 +726,7 @@ public class ItemDao {
 		Object[] params = new Object[]{userIdx, page};
 		String query = "select wishList.itemIdx itemIdx,\n" +
 				"       Item.name        name,\n" +
-				"       Item.price       price,\n" +
+				"       format(Item.price,0)        price,\n" +
 				"       storeName,\n" +
 				"       storeImage,\n" +
 				"       Item.safePay     safePay,\n" +
@@ -758,7 +758,7 @@ public class ItemDao {
 						String.valueOf(rs.getInt("itemIdx")),
 						null,
 						rs.getString("name"),
-						String.valueOf(rs.getInt("price")),
+						rs.getString("price"),
 						String.valueOf(rs.getBoolean("safePay")),
 						rs.getString("storeName"),
 						rs.getString("storeImage"),
@@ -787,8 +787,8 @@ public class ItemDao {
 
 	public List<String> getWords(String q, int page) {
 		page = 5 * (page-1);
-		Object[] params = new Object[]{"%"+q+"%", page};
-		String query = "select distinct name from Item where name like ? limit 6 offset ?;";
+		Object[] params = new Object[]{"%"+q+"%","%"+q+"%", page};
+		String query = "select distinct name from Item where (name like ? or content like ?) and status != 'D' limit 6 offset ?;";
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> rs.getString("name"),
 				params);
@@ -796,9 +796,9 @@ public class ItemDao {
 
 	public List<GetSearchCategoryRes> getCategories(String q, int page){
 		page = 2 * (page-1);
-		Object[] params = new Object[]{"%"+q+"%", page};
+		Object[] params = new Object[]{"%"+q+"%", "%"+q+"%", page};
 		String query = "select distinct concat(parentCode,code) code, Category.name name, Category.parentCode parent, image\n" +
-				"from (select * from Item where name like ? and Item.status != 'D')Item\n" +
+				"from (select * from Item where name like ? or content like ? and Item.status != 'D')Item\n" +
 				"         left join Category on Item.category = concat(Category.parentCode, Category.code)\n" +
 				"where Category.status != 'D'\n" +
 				"limit 2 offset ?;";
@@ -833,14 +833,14 @@ public class ItemDao {
 		String query;
 		page = 6 * (page-1);
 		if(status.equals("E")){
-			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location), hit\n" +
+			query = "select idx itemIdx, name, format(price,0) price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location), hit\n" +
 					"from Item\n" +
 					"where " + target + " = ?\n" +
 					"  and status in ('P','S','F') limit 6 offset ?;";
 			params = new Object[]{userIdx, page};
 		}
 		else {
-			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location), hit\n" +
+			query = "select idx itemIdx, name, format(price,0) price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location), hit\n" +
 					"from Item\n" +
 					"where " + target + " = ?\n" +
 					"  and status = ? limit 6 offset ?;";
@@ -881,7 +881,7 @@ public class ItemDao {
 		page = 6 * (page-1);
 		if(userIdx == 0L) {
 			query = "select distinct Item.idx                                  idx,\n" +
-					"                price,\n" +
+					"                format(price,0) price,\n" +
 					"                name,\n" +
 					"                IF(isnull(location), '지역정보 없음', location) location,\n" +
 					"                safePay,\n" +
@@ -906,7 +906,7 @@ public class ItemDao {
 		}
 		else{
 			query = "select distinct Item.idx                                  idx,\n" +
-					"                price,\n" +
+					"                format(price,0) price,\n" +
 					"                name,\n" +
 					"                IF(isnull(location), '지역정보 없음', location) location,\n" +
 					"                safePay,\n" +
@@ -940,7 +940,7 @@ public class ItemDao {
 		return this.jdbcTemplate.query(query,
 				(rs, rowNum) -> new GetRecommendRes(
 						String.valueOf(rs.getLong("idx")),
-						String.valueOf(rs.getLong("price")),
+						rs.getString("price"),
 						rs.getString("name"),
 						rs.getString("location"),
 						rs.getString("updatedAt"),
