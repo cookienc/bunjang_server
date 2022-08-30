@@ -3,8 +3,7 @@ package shop.makaroni.bunjang.src.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
-import shop.makaroni.bunjang.src.domain.setting.model.GetNotificationRes;
+import shop.makaroni.bunjang.src.domain.setting.model.Notification;
 
 import javax.sql.DataSource;
 @Repository
@@ -16,7 +15,7 @@ public class SettingDao {
     }
 
 
-    public GetNotificationRes getNotification(Long userIdx) {
+    public Notification getNotification(Long userIdx) {
         String query = "select " +
                 "NA00,\n" +
                 "NA01,\n" +
@@ -40,7 +39,7 @@ public class SettingDao {
                 "from Notification\n" +
                 "where userIdx = ?;";
         return this.jdbcTemplate.queryForObject(query,
-                (rs, rowNum) -> new GetNotificationRes(
+                (rs, rowNum) -> new Notification(
                         rs.getBoolean("NA00"),
                         rs.getBoolean("NA01"),
                         String.valueOf(rs.getInt("NA0100")),
@@ -61,5 +60,31 @@ public class SettingDao {
                         rs.getBoolean("NG00"),
                         rs.getBoolean("NG01")),
                 userIdx);
+    }
+
+    public void patchNotification(Long userIdx, Notification res) {
+        String query = "update Notification\n" +
+                "set NA00 = ?,\n" +
+                "    NA01 = ?,\n" +
+                "    NA0100 = ?,\n" +
+                "    NA0101 = ?,\n" +
+                "    NB00 = ?,\n" +
+                "    NC00 = ?,\n" +
+                "    NC01 = ?,\n" +
+                "    NC02 = ?,\n" +
+                "    NC03 = ?,\n" +
+                "    NC04 = ?,\n" +
+                "    NC05 = ?,\n" +
+                "    ND00 = ?,\n" +
+                "    ND01 = ?,\n" +
+                "    ND02 = ?,\n" +
+                "    NE00 = ?,\n" +
+                "    NE01 = ?,\n" +
+                "    NF00 = ?,\n" +
+                "    NG00 = ?,\n" +
+                "    NG01 = ?\n" +
+                "where userIdx = ?";
+        Object[] params = res.getNotification(userIdx);
+        this.jdbcTemplate.update(query, params);
     }
 }

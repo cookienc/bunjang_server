@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GetNotificationRes {
+public class Notification {
     private Boolean NA00;
     private Boolean NA01;
     private String NA0100;
@@ -27,13 +27,13 @@ public class GetNotificationRes {
     private Boolean NG01;
 
 
-    public GetNotificationRes(Boolean NA00, Boolean NA01, String NA0100,
-                              String NA0101, Boolean NB00, Boolean NC00,
-                              Boolean NC01, Boolean NC02, Boolean NC03,
-                              Boolean NC04, Boolean NC05, Boolean ND00,
-                              Boolean ND01, Boolean ND02, Boolean NE00,
-                              Boolean NE01, Boolean NF00, Boolean NG00,
-                              Boolean NG01) {
+    public Notification(Boolean NA00, Boolean NA01, String NA0100,
+                        String NA0101, Boolean NB00, Boolean NC00,
+                        Boolean NC01, Boolean NC02, Boolean NC03,
+                        Boolean NC04, Boolean NC05, Boolean ND00,
+                        Boolean ND01, Boolean ND02, Boolean NE00,
+                        Boolean NE01, Boolean NF00, Boolean NG00,
+                        Boolean NG01) {
         this.NA00 = NA00;
         this.NA01 = NA01;
         this.NA0100 = NA0100;
@@ -54,16 +54,13 @@ public class GetNotificationRes {
         this.NG00 = NG00;
         this.NG01 = NG01;
     }
+
+    public Object[] getNotification(Long userIdx) {
+        return new Object[]{NA00, NA01, NA0100, NA0101, NB00, NC00,
+                NC01, NC02, NC03, NC04, NC05, ND00, ND01, ND02,
+                NE00, NE01, NF00, NG00, NG01, userIdx};
+    }
 }
-
-
-
-
-
-
-
-
-
 
 
 

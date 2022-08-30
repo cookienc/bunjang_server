@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.SettingDao;
-import shop.makaroni.bunjang.src.domain.setting.model.GetNotificationRes;
+import shop.makaroni.bunjang.src.domain.setting.model.Notification;
 
 @Service
 @Transactional
@@ -19,7 +19,7 @@ public class SettingProvider {
         this.settingDao = settingDao;
     }
 
-    public GetNotificationRes getNotification(Long userIdx) {
+    public Notification getNotification(Long userIdx) {
         return settingDao.getNotification(userIdx);
     }
 }

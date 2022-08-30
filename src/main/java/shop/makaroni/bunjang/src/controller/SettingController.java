@@ -13,8 +13,6 @@ import shop.makaroni.bunjang.src.provider.SettingProvider;
 import shop.makaroni.bunjang.src.service.SettingService;
 import shop.makaroni.bunjang.utils.JwtService;
 
-import static shop.makaroni.bunjang.config.BaseResponseStatus.INVALID_USER_JWT;
-
 @Transactional
 @RestController
 @RequestMapping("/settings")
@@ -35,7 +33,7 @@ public class SettingController {
 
     @ResponseBody
     @GetMapping("/notifications")
-    public BaseResponse<GetNotificationRes> getItem() {
+    public BaseResponse<Notification> getNotification() {
         try {
             Long userIdx = jwtService.getUserIdx();
             return new BaseResponse<>(settingProvider.getNotification(userIdx));
@@ -44,4 +42,15 @@ public class SettingController {
         }
     }
 
+    @ResponseBody
+    @PatchMapping("/notifications")
+    public BaseResponse<Notification> patchNotification(Notification notification) {
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            settingService.patchNotification(userIdx, notification);
+            return new BaseResponse<>(settingProvider.getNotification(userIdx));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }
