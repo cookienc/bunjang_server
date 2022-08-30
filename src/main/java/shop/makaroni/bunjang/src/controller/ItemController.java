@@ -51,7 +51,6 @@ public class ItemController {
             }
             return new BaseResponse<>(itemProvider.getItem(itemIdx));
         } catch (BaseException exception) {
-            exception.printStackTrace();
             return new BaseResponse<>((exception.getStatus()));
         }
     }
