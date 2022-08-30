@@ -14,6 +14,7 @@ import shop.makaroni.bunjang.src.provider.FollowProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.SuccessStatus;
 import shop.makaroni.bunjang.src.service.FollowService;
+import shop.makaroni.bunjang.utils.resolver.Login;
 
 import java.net.URI;
 import java.util.List;
@@ -28,26 +29,26 @@ public class FollowController {
 	private final FollowService followService;
 	private final FollowProvider followProvider;
 
-	@PostMapping("/users/{userIdx}/stores/{storeIdx}")
-	public ResponseEntity<ResponseInfo> doFollow(@PathVariable Long userIdx, @PathVariable Long storeIdx) {
+	@PostMapping("/stores/{storeIdx}")
+	public ResponseEntity<ResponseInfo> doFollow(@Login Long userIdx, @PathVariable Long storeIdx) {
 		Long followId = followService.doFollow(userIdx, storeIdx);
 		String url = "/follows/" + followId + "/users/" + userIdx + "/stores/" + storeIdx;
 		return ResponseEntity.created(URI.create(url)).body(ResponseInfo.of(FOLLOW_SUCCESS));
 	}
 
-	@PatchMapping("/users/{userIdx}/stores/{storeIdx}")
-	public ResponseEntity<ResponseInfo> deleteFollowing(@PathVariable Long userIdx, @PathVariable Long storeIdx) {
+	@PatchMapping("/stores/{storeIdx}")
+	public ResponseEntity<ResponseInfo> deleteFollowing(@Login Long userIdx, @PathVariable Long storeIdx) {
 		followService.delete(userIdx, storeIdx);
 		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.DELETE_FOLLOW_SUCCESS));
 	}
 
-	@GetMapping("/users/{userIdx}/followers")
-	public ResponseEntity<List<FollowersView>> getFollowers(@PathVariable Long userIdx) {
+	@GetMapping("/followers")
+	public ResponseEntity<List<FollowersView>> getFollowers(@Login Long userIdx) {
 		return ResponseEntity.ok(followProvider.getFollowers(userIdx));
 	}
 
-	@GetMapping("/users/{userIdx}/followings")
-	public ResponseEntity<List<FollowingsView>> getFollowings(@PathVariable Long userIdx) {
+	@GetMapping("/followings")
+	public ResponseEntity<List<FollowingsView>> getFollowings(@Login Long userIdx) {
 		return ResponseEntity.ok(followProvider.getFollowings(userIdx));
 	}
 }
