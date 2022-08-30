@@ -23,6 +23,7 @@ import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.SuccessStatus;
 import shop.makaroni.bunjang.src.service.ReviewService;
+import shop.makaroni.bunjang.utils.resolver.Login;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -50,13 +51,13 @@ public class ReviewController {
 		return ResponseEntity.ok(reviewProvider.findAllByStoreIdx(storeIdx, start, offset));
 	}
 
-	@GetMapping("/stores/{storeIdx}/users/{userIdx}")
-	public ResponseEntity<List<PurchasedItemsView>> getPurchasedItems(@PathVariable Long storeIdx, @PathVariable Long userIdx) {
+	@GetMapping("/stores/{storeIdx}/users")
+	public ResponseEntity<List<PurchasedItemsView>> getPurchasedItems(@PathVariable Long storeIdx, @Login Long userIdx) {
 		return ResponseEntity.ok(userProvider.getPurchasedItems(storeIdx, userIdx));
 	}
 
-	@PostMapping("/stores/{storeIdx}/users/{userIdx}")
-	public ResponseEntity<ResponseInfo> save(@PathVariable Long storeIdx, @PathVariable Long userIdx,
+	@PostMapping("/stores/{storeIdx}/users")
+	public ResponseEntity<ResponseInfo> save(@PathVariable Long storeIdx, @Login Long userIdx,
 											 @Valid @RequestBody PostReviewRequest request) {
 		Long reviewId = reviewService.save(storeIdx, userIdx, request);
 		String uri = "/reviews/" + reviewId;
