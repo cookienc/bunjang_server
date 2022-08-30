@@ -1,75 +1,60 @@
 package shop.makaroni.bunjang.src.domain.setting.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class GetNotificationRes {
-    private Boolean alarmSet;
-    private Boolean silentTime;
-    private String silentStart;
-    private String silentEnd;
-    private Boolean chat;
-    private Boolean itemComment;
-    private Boolean itemWish;
-    private Boolean itemDiscount;
-    private Boolean reservedUp;
-    private Boolean resell;
-    private Boolean priceSuggestion;
-    private Boolean storeComment;
-    private Boolean storeFollow;
-    private Boolean storeReview;
-    private Boolean deliveryProcess;
-    private Boolean deliveryDone;
-    private Boolean event;
-    private Boolean wishContact;
-    private Boolean townEvent;
+    private Boolean NA00;
+    private Boolean NA01;
+    private String NA0100;
+    private String NA0101;
+    private Boolean NB00;
+    private Boolean NC00;
+    private Boolean NC01;
+    private Boolean NC02;
+    private Boolean NC03;
+    private Boolean NC04;
+    private Boolean NC05;
+    private Boolean ND00;
+    private Boolean ND01;
+    private Boolean ND02;
+    private Boolean NE00;
+    private Boolean NE01;
+    private Boolean NF00;
+    private Boolean NG00;
+    private Boolean NG01;
 
 
-    public GetNotificationRes(boolean alarmSet, boolean silentTime, String silentStart, String silentEnd, boolean chat, boolean itemComment, boolean itemWish, boolean itemDiscount, boolean reservedUp, boolean resell, boolean priceSuggestion, boolean storeComment, boolean storeFollow, boolean storeReview, boolean deliveryProcess, boolean deliveryDone, boolean event, boolean wishContact, boolean townEvent) {
-        this.alarmSet = alarmSet;
-        this.silentTime = silentTime;
-        this.silentStart = silentStart;
-        this.silentEnd = silentEnd;
-        this.chat = chat;
-        this.itemComment = itemComment;
-        this.itemWish = itemWish;
-        this.itemDiscount = itemDiscount;
-        this.reservedUp = reservedUp;
-        this.resell = resell;
-        this.priceSuggestion = priceSuggestion;
-        this.storeComment = storeComment;
-        this.storeFollow = storeFollow;
-        this.storeReview = storeReview;
-        this.deliveryProcess = deliveryProcess;
-        this.deliveryDone = deliveryDone;
-        this.event = event;
-        this.wishContact = wishContact;
-        this.townEvent = townEvent;
+    public GetNotificationRes(Boolean NA00, Boolean NA01, String NA0100,
+                              String NA0101, Boolean NB00, Boolean NC00,
+                              Boolean NC01, Boolean NC02, Boolean NC03,
+                              Boolean NC04, Boolean NC05, Boolean ND00,
+                              Boolean ND01, Boolean ND02, Boolean NE00,
+                              Boolean NE01, Boolean NF00, Boolean NG00,
+                              Boolean NG01) {
+        this.NA00 = NA00;
+        this.NA01 = NA01;
+        this.NA0100 = NA0100;
+        this.NA0101 = NA0101;
+        this.NB00 = NB00;
+        this.NC00 = NC00;
+        this.NC01 = NC01;
+        this.NC02 = NC02;
+        this.NC03 = NC03;
+        this.NC04 = NC04;
+        this.NC05 = NC05;
+        this.ND00 = ND00;
+        this.ND01 = ND01;
+        this.ND02 = ND02;
+        this.NE00 = NE00;
+        this.NE01 = NE01;
+        this.NF00 = NF00;
+        this.NG00 = NG00;
+        this.NG01 = NG01;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

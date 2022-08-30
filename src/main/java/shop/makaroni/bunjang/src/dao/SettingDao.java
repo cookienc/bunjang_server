@@ -17,48 +17,49 @@ public class SettingDao {
 
 
     public GetNotificationRes getNotification(Long userIdx) {
-        String query = "select alarmSet,\n" +
-                "       silentTime,\n" +
-                "       silentStart,\n" +
-                "       silentEnd,\n" +
-                "       chat,\n" +
-                "       itemComment,\n" +
-                "       itemWish,\n" +
-                "       itemDiscount,\n" +
-                "       reservedUp,\n" +
-                "       resell,\n" +
-                "       priceSuggestion,\n" +
-                "       storeComment,\n" +
-                "       storeFollow,\n" +
-                "       storeReview,\n" +
-                "       deliveryProcess,\n" +
-                "       deliveryDone,\n" +
-                "       event,\n" +
-                "       wishContact,\n" +
-                "       townEvent\n"+
+        String query = "select " +
+                "NA00,\n" +
+                "NA01,\n" +
+                "NA0100,\n" +
+                "NA0101,\n" +
+                "NB00,\n" +
+                "NC00,\n" +
+                "NC01,\n" +
+                "NC02,\n" +
+                "NC03,\n" +
+                "NC04,\n" +
+                "NC05,\n" +
+                "ND00,\n" +
+                "ND01,\n" +
+                "ND02,\n" +
+                "NE00,\n" +
+                "NE01,\n" +
+                "NF00,\n" +
+                "NG00,\n" +
+                "NG01\n"+
                 "from Notification\n" +
                 "where userIdx = ?;";
         return this.jdbcTemplate.queryForObject(query,
                 (rs, rowNum) -> new GetNotificationRes(
-                        rs.getBoolean("alarmSet"),
-                        rs.getBoolean("silentTime"),
-                        String.valueOf(rs.getInt("silentStart")),
-                        String.valueOf(rs.getInt("silentEnd")),
-                        rs.getBoolean("chat"),
-                        rs.getBoolean("itemComment"),
-                        rs.getBoolean("itemWish"),
-                        rs.getBoolean("itemDiscount"),
-                        rs.getBoolean("reservedUp"),
-                        rs.getBoolean("resell"),
-                        rs.getBoolean("priceSuggestion"),
-                        rs.getBoolean("storeComment"),
-                        rs.getBoolean("storeFollow"),
-                        rs.getBoolean("storeReview"),
-                        rs.getBoolean("deliveryProcess"),
-                        rs.getBoolean("deliveryDone"),
-                        rs.getBoolean("event"),
-                        rs.getBoolean("wishContact"),
-                        rs.getBoolean("townEvent")),
+                        rs.getBoolean("NA00"),
+                        rs.getBoolean("NA01"),
+                        String.valueOf(rs.getInt("NA0100")),
+                        String.valueOf(rs.getInt("NA0101")),
+                        rs.getBoolean("NB00"),
+                        rs.getBoolean("NC00"),
+                        rs.getBoolean("NC01"),
+                        rs.getBoolean("NC02"),
+                        rs.getBoolean("NC03"),
+                        rs.getBoolean("NC04"),
+                        rs.getBoolean("NC05"),
+                        rs.getBoolean("ND00"),
+                        rs.getBoolean("ND01"),
+                        rs.getBoolean("ND02"),
+                        rs.getBoolean("NE00"),
+                        rs.getBoolean("NE01"),
+                        rs.getBoolean("NF00"),
+                        rs.getBoolean("NG00"),
+                        rs.getBoolean("NG01")),
                 userIdx);
     }
 }
