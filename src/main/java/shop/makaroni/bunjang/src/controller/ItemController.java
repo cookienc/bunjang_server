@@ -46,7 +46,7 @@ public class ItemController {
     @GetMapping("/{itemIdx}")
     public BaseResponse<GetItemRes> getItem(@PathVariable("itemIdx") Long itemIdx) {
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
+            if (!jwtService.validateJWT(jwtService.getJwt())) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             return new BaseResponse<>(itemProvider.getItem(itemIdx));
@@ -60,7 +60,7 @@ public class ItemController {
     @GetMapping("/all")
     public BaseResponse<List<GetItemRes>> getItems() {
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
+            if (!jwtService.validateJWT(jwtService.getJwt())) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             return new BaseResponse<>(itemProvider.getItems());
@@ -75,7 +75,7 @@ public class ItemController {
                                                       @RequestParam(required = false, defaultValue = "C") char sort,
                                                       @RequestParam() int page) {
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
+            if (!jwtService.validateJWT(jwtService.getJwt())) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             if (name == null) {
@@ -154,7 +154,7 @@ public class ItemController {
         Long brandIdx;
         try {
             Long userIdx = jwtService.getUserIdx();
-            getBrandRes = itemProvider.getBrand(userIdx,page, sort);
+            getBrandRes = itemProvider.getBrand(userIdx, page, sort);
             for (GetBrandRes eachRes : getBrandRes) {
                 brandIdx = Long.parseLong(eachRes.getBrandIdx());
                 eachRes.setItemCnt(String.valueOf(itemProvider.getItemCnt(brandIdx)));
@@ -213,7 +213,7 @@ public class ItemController {
             return new BaseResponse<>(ITEM_INVALID_PAGE);
         }
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
+            if (!jwtService.validateJWT(jwtService.getJwt())) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             GetCategoryRes getCategoryRes = itemProvider.getCategory(code, sort, page);
@@ -249,7 +249,7 @@ public class ItemController {
         try {
             Long sellerIdx = jwtService.getUserIdx();
             validateItems(itemReq);
-            itemService.patchItem(idx,sellerIdx, itemReq);
+            itemService.patchItem(idx, sellerIdx, itemReq);
             return new BaseResponse<>(itemProvider.getItem(idx));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -278,7 +278,7 @@ public class ItemController {
     public BaseResponse<HashMap<String, String>> DeleteItem(@PathVariable("idx") Long idx) {
         try {
             Long userIdx = jwtService.getUserIdx();
-            return new BaseResponse<>(itemService.PatchItemStatus(idx,userIdx, "D"));
+            return new BaseResponse<>(itemService.PatchItemStatus(idx, userIdx, "D"));
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
@@ -293,12 +293,12 @@ public class ItemController {
             return new BaseResponse<>(ITEM_INVALID_PAGE);
         }
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
+            if (!jwtService.validateJWT(jwtService.getJwt())) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             return itemProvider.getWisher(idx, page);
         } catch (BaseException baseException) {
-                    return new BaseResponse<>(baseException.getStatus());
+            return new BaseResponse<>(baseException.getStatus());
         }
 
     }
@@ -359,11 +359,11 @@ public class ItemController {
         if (q.isEmpty() || q.isBlank()) {
             return new BaseResponse<>(EMPTY_SEARCH_WORD);
         }
-        if(q.length() > 4096){
+        if (q.length() > 4096) {
             return new BaseResponse<>(INVALID_SEARCH_WORD);
         }
         try {
-            if(!jwtService.validateJWT(jwtService.getJwt())){
+            if (!jwtService.validateJWT(jwtService.getJwt())) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             return new BaseResponse<>(itemProvider.getSearchWord(q, page));
@@ -385,15 +385,14 @@ public class ItemController {
         if (!(tab.equals("order") || tab.equals("sale"))) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
-        if(!("EPSF".contains(status))){
+        if (!("EPSF".contains(status))) {
             return new BaseResponse<>(REQUEST_ERROR);
         }
         try {
             Long userIdx = jwtService.getUserIdx();
             logger.info(String.valueOf(userIdx));
             return new BaseResponse<>(itemProvider.getDeals(userIdx, tab, status, page));
-        }
-        catch (BaseException baseException) {
+        } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
@@ -401,25 +400,37 @@ public class ItemController {
     @ResponseBody
     @PostMapping("/reports")
     public BaseResponse PostReport(@RequestBody PostReportReq postReportReq) {
-        if(!(postReportReq.getType().charAt(0) == 'I' || postReportReq.getType().charAt(0) == 'R')){
+        if (!(postReportReq.getType().charAt(0) == 'I' || postReportReq.getType().charAt(0) == 'R')) {
             return new BaseResponse<>(POST_REPORT_INVALID_TYPE);
         }
-        if(postReportReq.getTarget() < 0){
-            return new BaseResponse(POST_REPORT_INVALID_TARGET);
+        if (postReportReq.getTarget() < 0) {
+            return new BaseResponse<>(POST_REPORT_INVALID_TARGET);
         }
-        if(postReportReq.getContent().length() < 1 || postReportReq.getContent().length() > 100 ){
-            return new BaseResponse(POST_REPORT_CONTENT_LENGTH);
+        if (postReportReq.getContent().length() < 1 || postReportReq.getContent().length() > 100) {
+            return new BaseResponse<>(POST_REPORT_CONTENT_LENGTH);
         }
-        try{
+        try {
             Long userIdx = jwtService.getUserIdx();
             itemService.postReport(userIdx, postReportReq);
             return new BaseResponse<>(SUCCESS);
         } catch (BaseException e) {
-            return new BaseResponse(e.getStatus());
+            return new BaseResponse<>(e.getStatus());
         }
     }
 
-
+    @ResponseBody
+    @GetMapping("/recommendations")
+    public BaseResponse<List<GetRecommendRes>> GetRecommendation(@RequestParam() int page) {
+        if (page <= 0) {
+            return new BaseResponse<>(ITEM_INVALID_PAGE);
+        }
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            return new BaseResponse<>(itemProvider.getRecommend(userIdx, page));
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }
 /*
 

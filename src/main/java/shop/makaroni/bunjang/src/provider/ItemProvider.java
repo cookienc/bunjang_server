@@ -231,6 +231,26 @@ public class ItemProvider {
 		return res;
 	}
 
+	public List<GetRecommendRes> getRecommend(Long userIdx, int page) throws BaseException {
+		if(userDao.checkUserIdx(userIdx) == 0){
+			throw new BaseException(INVALID_USER_JWT);
+		}
+		List<GetRecommendRes> res;
+		if(itemDao.checkLog(userIdx) == 0){
+			res = itemDao.getRecommend(0L, page);
+		}
+		else{
+			res = itemDao.getRecommend(userIdx, page);
+		}
+		for (GetRecommendRes each : res) {
+			each.setWishCnt(String.valueOf(itemDao.getItemWishCnt(Long.parseLong(each.getIdx()))));
+			each.setIsWished(itemDao.checkWishList(userIdx, Long.parseLong(each.getIdx())) == 1);
+			each.setImage(String.valueOf(itemDao.getItemImages(Long.parseLong(each.getIdx()))));
+		}
+
+		return res;
+	}
+
 //	public List<GetDealRes> getSale(Long userIdx, String status) {
 //		List<GetDealRes> res = itemDao.getSale(userIdx, status);
 //		for(GetDealRes each : res){

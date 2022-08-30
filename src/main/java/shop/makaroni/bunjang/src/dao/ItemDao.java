@@ -1,6 +1,8 @@
 package shop.makaroni.bunjang.src.dao;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,7 +15,6 @@ import java.util.List;
 @Repository
 public class ItemDao {
 	private JdbcTemplate jdbcTemplate;
-
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -832,14 +833,14 @@ public class ItemDao {
 		String query;
 		page = 6 * (page-1);
 		if(status.equals("E")){
-			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
+			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location), hit\n" +
 					"from Item\n" +
 					"where " + target + " = ?\n" +
 					"  and status in ('P','S','F') limit 6 offset ?;";
 			params = new Object[]{userIdx, page};
 		}
 		else {
-			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
+			query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location), hit\n" +
 					"from Item\n" +
 					"where " + target + " = ?\n" +
 					"  and status = ? limit 6 offset ?;";
@@ -872,6 +873,90 @@ public class ItemDao {
 		return this.jdbcTemplate.queryForObject(query,
 				Long.class,
 				params);
+	}
+
+	public List<GetRecommendRes> getRecommend(Long userIdx, int page) {
+		String query;
+		Object[] params;
+		page = 6 * (page-1);
+		if(userIdx == 0L) {
+			query = "select distinct Item.idx                                  idx,\n" +
+					"                price,\n" +
+					"                name,\n" +
+					"                IF(isnull(location), '지역정보 없음', location) location,\n" +
+					"                safePay,\n" +
+					"                (case\n" +
+					"                     when timestampdiff(minute, updatedAt, now()) < 1\n" +
+					"                         then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
+					"                     when timestampdiff(hour, updatedAt, now()) < 1\n" +
+					"                         then concat(timestampdiff(minute, updatedAt, now()), '분 전')\n" +
+					"                     when timestampdiff(hour, updatedAt, now()) < 24\n" +
+					"                         then concat(timestampdiff(hour, updatedAt, now()), '시간 전')\n" +
+					"                     when timestampdiff(day, updatedAt, now()) < 31\n" +
+					"                         then concat(timestampdiff(day, updatedAt, now()), '일 전')\n" +
+					"                     when timestampdiff(week, updatedAt, now()) < 4\n" +
+					"                         then concat(timestampdiff(week, updatedAt, now()), '주 전')\n" +
+					"                     when timestampdiff(month, updatedAt, now()) < 12\n" +
+					"                         then concat(timestampdiff(month, updatedAt, now()), '개월 전')\n" +
+					"                     else concat(timestampdiff(year, updatedAt, now()), '년 전')\n" +
+					"                    end)                                  updatedAt\n" +
+					"from Item\n" +
+					"limit 6 offset ?;";
+			params = new Object[]{page};
+		}
+		else{
+			query = "select distinct Item.idx                                  idx,\n" +
+					"                price,\n" +
+					"                name,\n" +
+					"                IF(isnull(location), '지역정보 없음', location) location,\n" +
+					"                safePay,\n" +
+					"                (case\n" +
+					"                     when timestampdiff(minute, updatedAt, now()) < 1\n" +
+					"                         then concat(timestampdiff(second, updatedAt, now()), '초 전')\n" +
+					"                     when timestampdiff(hour, updatedAt, now()) < 1\n" +
+					"                         then concat(timestampdiff(minute, updatedAt, now()), '분 전')\n" +
+					"                     when timestampdiff(hour, updatedAt, now()) < 24\n" +
+					"                         then concat(timestampdiff(hour, updatedAt, now()), '시간 전')\n" +
+					"                     when timestampdiff(day, updatedAt, now()) < 31\n" +
+					"                         then concat(timestampdiff(day, updatedAt, now()), '일 전')\n" +
+					"                     when timestampdiff(week, updatedAt, now()) < 4\n" +
+					"                         then concat(timestampdiff(week, updatedAt, now()), '주 전')\n" +
+					"                     when timestampdiff(month, updatedAt, now()) < 12\n" +
+					"                         then concat(timestampdiff(month, updatedAt, now()), '개월 전')\n" +
+					"                     else concat(timestampdiff(year, updatedAt, now()), '년 전')\n" +
+					"                    end)                                  updatedAt\n" +
+					"from Item\n" +
+					"where substr(category, 1, 2) = substr(\n" +
+					"        (select category\n" +
+					"         from Log\n" +
+					"                  left join Item on Log.itemIdx = Item.idx\n" +
+					"         where Item.status != 'D'\n" +
+					"           and userIdx = ?\n" +
+					"         order by Log.createdAt desc\n" +
+					"         limit 1), 1, 2)\n" +
+					"limit 6 offset ?;";
+			params = new Object[]{userIdx, page};
+		}
+		return this.jdbcTemplate.query(query,
+				(rs, rowNum) -> new GetRecommendRes(
+						String.valueOf(rs.getLong("idx")),
+						String.valueOf(rs.getLong("price")),
+						rs.getString("name"),
+						rs.getString("location"),
+						rs.getString("updatedAt"),
+						String.valueOf(rs.getBoolean("safePay")),
+						null,
+						null,
+						null),
+				params);
+
+	}
+
+	public int checkLog(Long userIdx) {
+		String query = "select exists(select idx from Log where userIdx = ?);";
+		return this.jdbcTemplate.queryForObject(query,
+				int.class,
+				userIdx);
 	}
 
 //	public List<GetDealRes> getOrder(Long userIdx, String status) {
