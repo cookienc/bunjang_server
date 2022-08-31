@@ -15,6 +15,7 @@ import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.SuccessStatus;
 import shop.makaroni.bunjang.src.service.FollowService;
 import shop.makaroni.bunjang.utils.auth.Login;
+import shop.makaroni.bunjang.utils.auth.Secured;
 
 import java.net.URI;
 import java.util.List;
@@ -42,11 +43,13 @@ public class FollowController {
 		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.DELETE_FOLLOW_SUCCESS));
 	}
 
+	@Secured
 	@GetMapping("/followers/users/{userIdx}")
 	public ResponseEntity<List<FollowersView>> getFollowers(@PathVariable Long userIdx) {
 		return ResponseEntity.ok(followProvider.getFollowers(userIdx));
 	}
 
+	@Secured
 	@GetMapping("/followings/users/{userIdx}")
 	public ResponseEntity<List<FollowingsView>> getFollowings(@PathVariable Long userIdx) {
 		return ResponseEntity.ok(followProvider.getFollowings(userIdx));
