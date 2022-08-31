@@ -40,7 +40,7 @@ public class KakaoService {
 	@Value("${kakao.password}")
 	private String key;
 
-	@Value("${redirect_uri}")
+	@Value("${kakao.redirect_uri}")
 	private String REDIRECT_URI;
 
 	private final LoginService loginService;

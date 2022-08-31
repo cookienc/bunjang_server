@@ -19,6 +19,7 @@ public enum ErrorCode {
 	MISSING_PARAMETER_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.PLEASE_ENTER_REQUIRED_PARAMETER),
 	INVALID_INPUT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.PLEASE_ENTER_RIGHT_PARAMETER),
 	NOT_MATCH_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_MATCH_PASSWORD),
+	NOT_MATCH_AUTH_CODE_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_MATCH_CODE),
 	NOT_RIGHT_PASSWORD_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_RIGHT_PASSWORD),
 	NOT_EXIST_FOLLOW_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.NOT_EXIST_FOLLOW),
 
@@ -30,6 +31,7 @@ public enum ErrorCode {
 	ALREADY_DELETED_REVIEW_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW),
 	ALREADY_DELETED_REVIEW_COMMENT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW_COMMENT),
 
+	CANNOT_ISSUE_AUTH_CODE_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_ISSUE_AUTH_CODE),
 	CANNOT_ENCODE_PASSWORD(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_ENCODE_PASSWORD),
 	CANNOT_DECODE_PASSWORD(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_DECODE_PASSWORD),
 	CANNOT_PARSING_OBJECT(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_PARSING_OBJECT);
@@ -47,6 +49,7 @@ public enum ErrorCode {
 		public static final String PLEASE_ENTER_REQUIRED_PARAMETER = "필수 파라미터를 넣어주세요.";
 		public static final String PLEASE_ENTER_RIGHT_PARAMETER = "올바른 파라미터를 넣어주세요.";
 		public static final String NOT_MATCH_PASSWORD = "아이디와 비밀번호가 일치하지 않습니다.";
+		public static final String NOT_MATCH_CODE = "코드가 일치 하지 않습니다.";
 		public static final String NOT_RIGHT_PASSWORD = "올바르지 않은 비밀번호 입니다.";
 		public static final String NOT_EXIST_FOLLOW = "팔로우를 먼저 해주세요.";
 
@@ -58,6 +61,7 @@ public enum ErrorCode {
 		public static final String ALREADY_DELETED_REVIEW = "이미 삭제된 리뷰 입니다.";
 		public static final String ALREADY_DELETED_REVIEW_COMMENT = "이미 삭제된 댓글 입니다.";
 
+		public static final String CANNOT_ISSUE_AUTH_CODE = "인증 번호를 발급할 수 없습니다.";
 		public static final String CANNOT_ENCODE_PASSWORD = "비밀번호를 암호화 할 수 없습니다.";
 		public static final String CANNOT_DECODE_PASSWORD = "비밀번호를 복호화 할 수 없습니다.";
 		public static final String CANNOT_PARSING_OBJECT = "객체를 만들 수 없습니다.";

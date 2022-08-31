@@ -13,6 +13,8 @@ import shop.makaroni.bunjang.src.response.exception.AlreadyDeletedException;
 import shop.makaroni.bunjang.src.response.exception.AlreadyHasCommentEx;
 import shop.makaroni.bunjang.src.response.exception.AlreadyNotificationEx;
 import shop.makaroni.bunjang.src.response.exception.AlreadySavedException;
+import shop.makaroni.bunjang.src.response.exception.AuthCodeNotMatchEx;
+import shop.makaroni.bunjang.src.response.exception.CanNotIssueAuthCodeException;
 import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotFindPurchasedItem;
@@ -39,6 +41,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_SAVED_REVIEW;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_DECODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_PURCHASED_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ISSUE_AUTH_CODE_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_PARSING_OBJECT;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DONT_PURCHASE_ITEM_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DO_LOGIN_FIRST_EXCEPTION;
@@ -47,6 +50,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.EMPTY_PARAM_EXCEPTION
 import static shop.makaroni.bunjang.src.response.ErrorCode.INVALID_INPUT_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.MISSING_PARAMETER_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_EXIST_FOLLOW_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_MATCH_AUTH_CODE_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_MATCH_PASSWORD_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_RIGHT_PASSWORD_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NO_SUCH_ELEMENT_EXCEPTION;
@@ -145,6 +149,20 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(DUPLICATE_LOGIN_ID_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(DUPLICATE_LOGIN_ID_EXCEPTION, e.getMessage(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(CanNotIssueAuthCodeException.class)
+	public ResponseEntity<ErrorResponse> canNotIssueAuthCodeExHandler(CanNotIssueAuthCodeException e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(CANNOT_ISSUE_AUTH_CODE_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(CANNOT_ISSUE_AUTH_CODE_EXCEPTION, e.getMessage(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(AuthCodeNotMatchEx.class)
+	public ResponseEntity<ErrorResponse> AuthCodeNotMatchExHandler(AuthCodeNotMatchEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(NOT_MATCH_AUTH_CODE_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(NOT_MATCH_AUTH_CODE_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(DoesNotMatchPasswordEx.class)

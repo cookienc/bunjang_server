@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum SuccessStatus {
-	FOLLOW_SUCCESS(HttpStatus.OK, Messages.FOLLOW_SUCCESS),
 	LOGIN_SUCCESS(HttpStatus.OK, Messages.LOGIN_SUCCESS),
+	ISSUE_AUTH_CODE_SUCCESS(HttpStatus.OK, Messages.ISSUE_AUTH_CODE_SUCCESS),
+	AUTH_CODE_MATCH_SUCCESS(HttpStatus.OK, Messages.AUTH_CODE_MATCH_SUCCESS),
+	FOLLOW_SUCCESS(HttpStatus.OK, Messages.FOLLOW_SUCCESS),
 	PATCH_SUCCESS(HttpStatus.OK, Messages.PATCH_SUCCESS),
 	UPDATE_REVIEW_SUCCESS(HttpStatus.OK, Messages.UPDATE_REVEIEW_SUCCESS),
 	UPDATE_REVIEW_COMMENT_SUCCESS(HttpStatus.OK, Messages.UPDATE_REVEIEW_COMMENT_SUCCESS),
@@ -25,6 +27,8 @@ public enum SuccessStatus {
 
 	private static class Messages {
 		public static String FOLLOW_SUCCESS= "팔로우에 성공 했습니다";
+		public static String ISSUE_AUTH_CODE_SUCCESS= "인증 번호를 전송 했습니다.";
+		public static String AUTH_CODE_MATCH_SUCCESS= "인증 되었습니다.";
 		public static String LOGIN_SUCCESS= "로그인에 성공 했습니다.";
 		public static String PATCH_SUCCESS = "변경되었습니다.";
 		public static String UPDATE_REVEIEW_SUCCESS= "리뷰를 수정 했습니다.";
