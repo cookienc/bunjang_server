@@ -3,9 +3,12 @@ package shop.makaroni.bunjang.src.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
+import shop.makaroni.bunjang.src.dao.ItemDao;
 import shop.makaroni.bunjang.src.dao.SettingDao;
 import shop.makaroni.bunjang.src.domain.setting.model.Address;
+import shop.makaroni.bunjang.src.domain.setting.model.Keyword;
 import shop.makaroni.bunjang.src.domain.setting.model.Notification;
+import shop.makaroni.bunjang.src.provider.ItemProvider;
 import shop.makaroni.bunjang.src.provider.SettingProvider;
 
 import java.util.Objects;
@@ -17,11 +20,13 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 @Transactional
 public class SettingService {
     private final SettingDao settingDao;
-    private final SettingProvider settingProvider;
+    private final ItemDao itemDao;
+    private final ItemProvider itemProvider;
 
-    public SettingService(SettingDao settingDao, SettingProvider settingProvider) {
+    public SettingService(SettingDao settingDao,  ItemProvider itemProvider, ItemDao itemDao) {
         this.settingDao = settingDao;
-        this.settingProvider = settingProvider;
+        this.itemProvider = itemProvider;
+        this.itemDao = itemDao;
     }
 
     public void patchNotification(Long userIdx, Notification req) {
@@ -60,7 +65,7 @@ public class SettingService {
         if(settingDao.checkAddress(idx) == 0){
             throw new BaseException(SETTING_INVALID_ADDR_IDX);
         }
-        if(settingDao.getAddressUser(idx) != userIdx){
+        if(!Objects.equals(settingDao.getAddressUser(idx), userIdx)){
             throw new BaseException(INVALID_USER_JWT);
         }
         Address res = settingDao.getAddress(idx);
@@ -82,5 +87,29 @@ public class SettingService {
         }
 
         settingDao.deleteAddress(idx);
+    }
+
+    public Long postKeyword(Long userIdx, Keyword req) throws BaseException {
+        try{
+            if(req.getCategory() == null) {
+                req.setCategory("E");
+            }
+            else{
+                itemProvider.validateCategory(req.getCategory());
+            }
+            if(req.getMinPrice() == null){
+                req.setMinPrice("0");
+            }
+            if(req.getMaxPrice() == null){
+                req.setMaxPrice("0");
+            }
+            if(settingDao.getKeywordCnt(userIdx) >= 50){
+                throw new BaseException(SETTING_KEYWORD_CAPACITY);
+            }
+            return settingDao.postKeyword(userIdx, req);
+        }
+        catch(BaseException baseException){
+            throw new BaseException(baseException.getStatus());
+        }
     }
 }

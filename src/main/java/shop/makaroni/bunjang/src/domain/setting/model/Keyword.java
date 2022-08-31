@@ -10,9 +10,13 @@ import lombok.Setter;
 public class Keyword {
     private String idx;
     private String keyword;
-    private Boolean notification;
+    private boolean notification;
     private String category;
     private String location;
     private String minPrice;
     private String maxPrice;
+
+    public Object[] getKeywords(Long userIdx){
+        return new Object[]{userIdx, keyword, notification, category, location, minPrice, maxPrice};
+    }
 }

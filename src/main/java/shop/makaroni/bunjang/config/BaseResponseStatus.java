@@ -78,7 +78,9 @@ public enum BaseResponseStatus {
     SETTING_EMPTY_DEFAULT(false, 2066, "기본주소 설정 여부를 입력해주세요"),
     SETTING_INVALID_ADDR_IDX(false ,2067, "배송지 식별자를 확인해주세요"),
     SETTING_ADDRESS_CAPACITY(false, 2068, "배송지는 최대 10개까지 등록 가능합니다"),
-
+    SETTING_INVALID_CATEGORY(false, 2069, "유효하지 않은 카테고리 코드값입니다"),
+    SETTING_INVALID_PRICE(false, 2070, "유효하지 않은 가격 제한 값입니다"),
+    SETTING_KEYWORD_CAPACITY(false, 2071, "키워드는 최대 50개까지 등록 가능합니다"),
 
     /**
      * 3000 : Response 오류

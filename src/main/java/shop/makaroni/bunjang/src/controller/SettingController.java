@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 import static shop.makaroni.bunjang.utils.Itemvalidation.validation.validateAddress;
+import static shop.makaroni.bunjang.utils.Itemvalidation.validation.validateKeyword;
 import static shop.makaroni.bunjang.utils.Itemvalidation.validationRegex.*;
 
 @Transactional
@@ -152,5 +153,21 @@ public class SettingController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
+    @ResponseBody
+    @PostMapping("/keywords")
+    public BaseResponse<HashMap<String, String>> postKeyword(@RequestBody Keyword req) {
+        if(req.getKeyword() == null){
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            validateKeyword(req);
+            Long keywordIdx = settingService.postKeyword(userIdx,req);
+            HashMap<String, String> res = new HashMap<>();
+            res.put("idx", String.valueOf(keywordIdx));
+            return new BaseResponse<>(res);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }

@@ -193,4 +193,12 @@ public class SettingDao {
         String query = "select count(idx) from Keyword where userIdx = ? and status != 'D'";
         return this.jdbcTemplate.queryForObject(query, int.class, userIdx);
     }
+
+    public Long postKeyword(Long userIdx, Keyword req) {
+        String query = "Insert into Keyword(userIdx, keyword,notification,category,location,minPrice,maxPrice) values(?,?,?,?,?,?,?)";
+        Object[] params = req.getKeywords(userIdx);
+        this.jdbcTemplate.update(query, params);
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class);
+    }
 }

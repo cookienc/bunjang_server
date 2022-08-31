@@ -47,6 +47,24 @@ public class validation {
             throw new BaseException(SETTING_INVALID_ADDRESS);
         }
     }
-    
+
+    public static void validateKeyword(Keyword keyword) throws BaseException {
+        if(keyword.getKeyword() != null && (keyword.getKeyword().length() < 1 || keyword.getKeyword().length() > 20)){
+            throw new BaseException(SETTING_INVALID_NAME);
+        }
+        if(keyword.getCategory() != null && !validationRegex.isRegexCategory(keyword.getCategory())){
+            throw new BaseException(SETTING_INVALID_CATEGORY);
+        }
+        if(keyword.getMinPrice() != null && Integer.parseInt(keyword.getMinPrice()) < 0 ){
+            throw new BaseException(SETTING_INVALID_PRICE);
+        }
+        if(keyword.getMaxPrice() != null && Integer.parseInt(keyword.getMaxPrice()) < 0 ){
+                throw new BaseException(SETTING_INVALID_PRICE);
+        }
+        if((keyword.getMinPrice() != null && keyword.getMaxPrice() != null) &&
+                (Integer.parseInt(keyword.getMinPrice()) > Integer.parseInt(keyword.getMaxPrice()))){
+            throw new BaseException(SETTING_INVALID_PRICE);
+        }
+    }
     
 }
