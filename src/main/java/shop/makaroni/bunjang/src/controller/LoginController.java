@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.login.LoginRequest;
-import shop.makaroni.bunjang.src.domain.user.AuthNumber;
 import shop.makaroni.bunjang.src.domain.user.PhoneNumber;
 import shop.makaroni.bunjang.src.domain.user.SmsLoginRequest;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
@@ -69,7 +68,7 @@ public class LoginController {
 	}
 
 	@GetMapping("/sms")
-	public ResponseEntity<ResponseInfoWithCheck> smsLogin(HttpSession session, @Valid @RequestBody AuthNumber authNumber) {
+	public ResponseEntity<ResponseInfoWithCheck> smsLogin(HttpSession session, @RequestParam String authNumber) {
 		boolean isCheck = naverService.checkingCode(session, authNumber);
 		return ResponseEntity.ok().body(ResponseInfoWithCheck.of(SuccessStatus.AUTH_CODE_MATCH_SUCCESS, isCheck));
 	}

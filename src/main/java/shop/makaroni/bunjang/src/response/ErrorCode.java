@@ -32,6 +32,7 @@ public enum ErrorCode {
 	ALREADY_DELETED_REVIEW_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW),
 	ALREADY_DELETED_REVIEW_COMMENT_EXCEPTION(HttpStatus.BAD_REQUEST, Messages.ALREADY_DELETED_REVIEW_COMMENT),
 
+	CANNOT_FIND_AUTH_NUMBER_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_FIND_AUTH_NUMBER),
 	CANNOT_ISSUE_AUTH_CODE_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_ISSUE_AUTH_CODE),
 	CANNOT_ENCODE_PASSWORD(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_ENCODE_PASSWORD),
 	CANNOT_DECODE_PASSWORD(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CANNOT_DECODE_PASSWORD),
@@ -63,6 +64,7 @@ public enum ErrorCode {
 		public static final String ALREADY_DELETED_REVIEW = "이미 삭제된 리뷰 입니다.";
 		public static final String ALREADY_DELETED_REVIEW_COMMENT = "이미 삭제된 댓글 입니다.";
 
+		public static final String CANNOT_FIND_AUTH_NUMBER = "인증 번호를 찾을 수 없습니다.";
 		public static final String CANNOT_ISSUE_AUTH_CODE = "인증 번호를 발급할 수 없습니다.";
 		public static final String CANNOT_ENCODE_PASSWORD = "비밀번호를 암호화 할 수 없습니다.";
 		public static final String CANNOT_DECODE_PASSWORD = "비밀번호를 복호화 할 수 없습니다.";

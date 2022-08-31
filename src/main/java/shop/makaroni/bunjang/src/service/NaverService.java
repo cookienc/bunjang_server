@@ -16,11 +16,11 @@ import shop.makaroni.bunjang.src.domain.login.LoginRequest;
 import shop.makaroni.bunjang.src.domain.sms.MessagesRequest;
 import shop.makaroni.bunjang.src.domain.sms.SendSmsResponse;
 import shop.makaroni.bunjang.src.domain.sms.SmsRequest;
-import shop.makaroni.bunjang.src.domain.user.AuthNumber;
 import shop.makaroni.bunjang.src.domain.user.PhoneNumber;
 import shop.makaroni.bunjang.src.domain.user.SmsLoginRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.SaveUserRequest;
 import shop.makaroni.bunjang.src.response.exception.AuthCodeNotMatchEx;
+import shop.makaroni.bunjang.src.response.exception.CannotFindAuthNumberEx;
 import shop.makaroni.bunjang.src.response.exception.DoAuthorizeFirstEx;
 
 import javax.crypto.Mac;
@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_AUTH_NUMBER_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DO_AUTH_FIRST_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_MATCH_AUTH_CODE_EXCEPTION;
 
@@ -115,16 +116,23 @@ public class NaverService {
 		return encodeBase64String;
 	}
 
-	public boolean checkingCode(HttpSession session, AuthNumber authNumber) {
+	public boolean checkingCode(HttpSession session, String authNumber) {
 		boolean isCheck = false;
 		isCheck = checkAuthCode(session, authNumber);
 		return isCheck;
 	}
 
-	private boolean checkAuthCode(HttpSession session, AuthNumber authNumber) {
-		if (!session.getAttribute(AUTH_NUMBER).equals(Integer.parseInt(authNumber.getAuthNumber()))) {
+	private boolean checkAuthCode(HttpSession session, String authNumber) {
+		String sessionAuth = String.valueOf(session.getAttribute(AUTH_NUMBER));
+
+		if (sessionAuth == null || sessionAuth.isBlank()) {
+			throw new CannotFindAuthNumberEx(CANNOT_FIND_AUTH_NUMBER_EXCEPTION.getMessages());
+		}
+
+		if (!authNumber.equals(sessionAuth)) {
 			throw new AuthCodeNotMatchEx(NOT_MATCH_AUTH_CODE_EXCEPTION.getMessages());
 		}
+
 		return true;
 	}
 

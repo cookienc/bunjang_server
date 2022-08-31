@@ -17,6 +17,7 @@ import shop.makaroni.bunjang.src.response.exception.AuthCodeNotMatchEx;
 import shop.makaroni.bunjang.src.response.exception.CanNotIssueAuthCodeException;
 import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
+import shop.makaroni.bunjang.src.response.exception.CannotFindAuthNumberEx;
 import shop.makaroni.bunjang.src.response.exception.CannotFindPurchasedItem;
 import shop.makaroni.bunjang.src.response.exception.CannotParsingObjectEx;
 import shop.makaroni.bunjang.src.response.exception.DoAuthorizeFirstEx;
@@ -41,6 +42,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_NOTIFICATION_
 import static shop.makaroni.bunjang.src.response.ErrorCode.ALREADY_SAVED_REVIEW;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_DECODE_PASSWORD;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ENCODE_PASSWORD;
+import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_AUTH_NUMBER_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_PURCHASED_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ISSUE_AUTH_CODE_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_PARSING_OBJECT;
@@ -207,6 +209,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(CANNOT_FIND_PURCHASED_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(CANNOT_FIND_PURCHASED_EXCEPTION, e.getMessage(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(CannotFindAuthNumberEx.class)
+	public ResponseEntity<ErrorResponse> cannotFindAuthNumberExHandler(CannotFindAuthNumberEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(CANNOT_FIND_AUTH_NUMBER_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(CANNOT_FIND_AUTH_NUMBER_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(DontPurchaseItemEx.class)
