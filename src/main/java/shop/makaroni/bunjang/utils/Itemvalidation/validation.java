@@ -55,10 +55,12 @@ public class validation {
         if(keyword.getCategory() != null && !validationRegex.isRegexCategory(keyword.getCategory())){
             throw new BaseException(SETTING_INVALID_CATEGORY);
         }
-        if(keyword.getMinPrice() != null && Integer.parseInt(keyword.getMinPrice()) < 0 ){
+        if(keyword.getMinPrice() != null &&
+                (Integer.parseInt(keyword.getMinPrice()) < 0 || Integer.parseInt(keyword.getMinPrice()) >= 1000000000)){
             throw new BaseException(SETTING_INVALID_PRICE);
         }
-        if(keyword.getMaxPrice() != null && Integer.parseInt(keyword.getMaxPrice()) < 0 ){
+        if(keyword.getMaxPrice() != null &&
+                (Integer.parseInt(keyword.getMaxPrice()) < 0 || Integer.parseInt(keyword.getMaxPrice()) >= 1000000000 )){
                 throw new BaseException(SETTING_INVALID_PRICE);
         }
         if((keyword.getMinPrice() != null && keyword.getMaxPrice() != null) &&
