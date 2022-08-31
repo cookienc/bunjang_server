@@ -1,4 +1,4 @@
-package shop.makaroni.bunjang.utils.resolver;
+package shop.makaroni.bunjang.utils.auth;
 
 import lombok.Builder;
 import lombok.Getter;

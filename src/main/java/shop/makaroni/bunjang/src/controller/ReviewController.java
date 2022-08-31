@@ -23,7 +23,7 @@ import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.SuccessStatus;
 import shop.makaroni.bunjang.src.service.ReviewService;
-import shop.makaroni.bunjang.utils.resolver.Login;
+import shop.makaroni.bunjang.utils.auth.Login;
 
 import javax.validation.Valid;
 import java.net.URI;

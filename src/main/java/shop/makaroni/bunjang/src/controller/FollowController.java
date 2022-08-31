@@ -14,7 +14,7 @@ import shop.makaroni.bunjang.src.provider.FollowProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.SuccessStatus;
 import shop.makaroni.bunjang.src.service.FollowService;
-import shop.makaroni.bunjang.utils.resolver.Login;
+import shop.makaroni.bunjang.utils.auth.Login;
 
 import java.net.URI;
 import java.util.List;

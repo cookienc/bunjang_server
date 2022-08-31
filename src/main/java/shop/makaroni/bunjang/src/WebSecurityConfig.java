@@ -7,8 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import shop.makaroni.bunjang.utils.resolver.LoginArgumentResolver;
-import shop.makaroni.bunjang.utils.resolver.QueryStringArgumentResolver;
+import shop.makaroni.bunjang.utils.auth.LoginArgumentResolver;
+import shop.makaroni.bunjang.utils.auth.QueryStringArgumentResolver;
 
 import java.util.List;
 

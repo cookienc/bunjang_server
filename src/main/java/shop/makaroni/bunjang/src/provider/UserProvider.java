@@ -21,7 +21,7 @@ import shop.makaroni.bunjang.src.domain.user.view.StoreSearchView;
 import shop.makaroni.bunjang.src.response.exception.CannotFindPurchasedItem;
 import shop.makaroni.bunjang.src.response.exception.DontPurchaseItemEx;
 import shop.makaroni.bunjang.src.response.exception.DuplicateLoginIdEx;
-import shop.makaroni.bunjang.utils.resolver.PagingCond;
+import shop.makaroni.bunjang.utils.auth.PagingCond;
 
 import java.util.Comparator;
 import java.util.List;

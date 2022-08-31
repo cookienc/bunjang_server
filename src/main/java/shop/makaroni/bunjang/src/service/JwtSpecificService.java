@@ -1,17 +1,11 @@
-package shop.makaroni.bunjang.utils.resolver;
+package shop.makaroni.bunjang.src.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.MethodParameter;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.support.WebDataBinderFactory;
-import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.method.support.ModelAndViewContainer;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.config.secret.Secret;
 import shop.makaroni.bunjang.src.response.exception.CannotParsingObjectEx;
@@ -21,28 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.DO_LOGIN_FIRST_EXCEPTION;
 
-@Slf4j
-@Component
-public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
+@Service
+public class JwtSpecificService {
 
-	@Override
-	public boolean supportsParameter(MethodParameter parameter) {
-		return parameter.getParameterAnnotation(Login.class) != null;
-	}
-
-	@Override
-	public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-		Long userIdx = getUserIdx();
-
-		if (userIdx == null) {
-			throw new DoLoginFirstException(DO_LOGIN_FIRST_EXCEPTION.getMessages());
-		}
-
-		return userIdx;
-	}
-
-	private long getUserIdx() throws BaseException {
+	public long getUserIdx() throws BaseException {
 		String accessToken = getJwt();
 
 		if(accessToken == null || accessToken.length() == 0){
@@ -63,7 +39,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 		return claims.getBody().get("userIdx", Long.class);
 	}
 
-	private String getJwt(){
+	public String getJwt(){
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		return request.getHeader("X-ACCESS-TOKEN");
 	}
