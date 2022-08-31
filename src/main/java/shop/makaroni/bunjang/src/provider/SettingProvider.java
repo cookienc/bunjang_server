@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.SettingDao;
 import shop.makaroni.bunjang.src.domain.setting.model.Address;
+import shop.makaroni.bunjang.src.domain.setting.model.Keyword;
 import shop.makaroni.bunjang.src.domain.setting.model.Notification;
 
 import java.util.List;
@@ -32,5 +33,9 @@ public class SettingProvider {
 
     public Address getAddress(Long addrIdx) {
         return settingDao.getAddress(addrIdx);
+    }
+
+    public List<Keyword> getKeyword(Long userIdx) {
+        return settingDao.getKeyword(userIdx);
     }
 }

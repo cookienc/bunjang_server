@@ -140,6 +140,16 @@ public class SettingController {
         catch(BaseException baseException){
             return new BaseResponse<>(baseException.getStatus());
         }
+    }
 
+    @ResponseBody
+    @GetMapping("/keywords")
+    public BaseResponse<List<Keyword>> getKeywords() {
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            return new BaseResponse<>(settingProvider.getKeyword(userIdx));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 }

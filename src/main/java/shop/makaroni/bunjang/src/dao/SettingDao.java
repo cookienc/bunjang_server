@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import shop.makaroni.bunjang.src.domain.setting.model.Address;
+import shop.makaroni.bunjang.src.domain.setting.model.Keyword;
 import shop.makaroni.bunjang.src.domain.setting.model.Notification;
 
 import javax.sql.DataSource;
@@ -164,5 +165,27 @@ public class SettingDao {
     public void deleteAddress(Long idx) {
         String query = "update Address set status = 'D', updatedAt = CURRENT_TIMESTAMP where idx = ?;";
         this.jdbcTemplate.update(query, idx);
+    }
+
+    public List<Keyword> getKeyword(Long userIdx) {
+        String query = "select idx,\n" +
+                "keyword,\n" +
+                "notification,\n" +
+                "category,\n" +
+                "location,\n" +
+                "minPrice,\n" +
+                "maxPrice\n" +
+                "from Keyword where userIdx = ? and status != 'D'";
+        Object[] params = new Object[]{userIdx};
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new Keyword(
+                    rs.getString("idx"),
+                    rs.getString("keyword"),
+                    rs.getBoolean("notification"),
+                    rs.getString("category"),
+                    rs.getString("location"),
+                    rs.getString("minPrice"),
+                    rs.getString("maxPrice")),
+                params);
     }
 }
