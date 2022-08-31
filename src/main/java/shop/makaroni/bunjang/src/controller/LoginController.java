@@ -46,7 +46,7 @@ public class LoginController {
 	}
 
 	@GetMapping("/kakao")
-	public ResponseEntity<ResponseInfoWithJwt> getJwtWithAuthorizeCode(@RequestBody String code) throws IOException {
+	public ResponseEntity<ResponseInfoWithJwt> getJwtWithAuthorizeCode(@RequestParam String code) throws IOException {
 		String accessToken = kakaoService.getToken(code);
 		String jwt = kakaoService.getJwt(accessToken);
 		return ResponseEntity.ok(ResponseInfoWithJwt.of(LOGIN_SUCCESS, jwt));
