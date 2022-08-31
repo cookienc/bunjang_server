@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.login.LoginRequest;
 import shop.makaroni.bunjang.src.domain.user.AuthNumber;
@@ -45,8 +46,14 @@ public class LoginController {
 	}
 
 	@GetMapping("/kakao")
-	public ResponseEntity<ResponseInfoWithJwt> getJwt(@RequestBody String accessToken) throws IOException {
-//		String accessToken = kakaoService.getToken(code);
+	public ResponseEntity<ResponseInfoWithJwt> getJwtWithAuthorizeCode(@RequestBody String code) throws IOException {
+		String accessToken = kakaoService.getToken(code);
+		String jwt = kakaoService.getJwt(accessToken);
+		return ResponseEntity.ok(ResponseInfoWithJwt.of(LOGIN_SUCCESS, jwt));
+	}
+
+	@GetMapping("/kakao/auth")
+	public ResponseEntity<ResponseInfoWithJwt> getJwt(@RequestParam("token") String accessToken) throws IOException {
 		String jwt = kakaoService.getJwt(accessToken);
 		return ResponseEntity.ok(ResponseInfoWithJwt.of(LOGIN_SUCCESS, jwt));
 	}
