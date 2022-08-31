@@ -15,12 +15,10 @@ import shop.makaroni.bunjang.utils.JwtService;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 import static shop.makaroni.bunjang.utils.Itemvalidation.validation.validateAddress;
 import static shop.makaroni.bunjang.utils.Itemvalidation.validation.validateKeyword;
-import static shop.makaroni.bunjang.utils.Itemvalidation.validationRegex.*;
 
 @Transactional
 @RestController
@@ -53,7 +51,7 @@ public class SettingController {
 
     @ResponseBody
     @PatchMapping("/notifications")
-    public BaseResponse<Notification> patchNotification(Notification notification) {
+    public BaseResponse<Notification> patchNotification(@RequestBody Notification notification) {
         if((notification.getNA0100() != null &&
                 (Integer.parseInt(notification.getNA0100()) < 0 ||
                 Integer.parseInt(notification.getNA0100()) > 23)) ||
@@ -61,10 +59,6 @@ public class SettingController {
                     (Integer.parseInt(notification.getNA0101()) < 0||
                     Integer.parseInt(notification.getNA0101()) > 23))){
             return new BaseResponse<>(SETTING_INVALID_TIME);
-        }
-        if(!notification.getNA01() &&
-                (notification.getNA0101() != null || notification.getNA0100() != null)){
-            return new BaseResponse<>(SETTING_INVALID_SILENCE);
         }
         try {
             Long userIdx = jwtService.getUserIdx();

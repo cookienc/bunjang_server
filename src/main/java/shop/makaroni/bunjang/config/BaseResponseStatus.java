@@ -81,6 +81,7 @@ public enum BaseResponseStatus {
     SETTING_INVALID_CATEGORY(false, 2069, "유효하지 않은 카테고리 코드값입니다"),
     SETTING_INVALID_PRICE(false, 2070, "유효하지 않은 가격 제한 값입니다"),
     SETTING_KEYWORD_CAPACITY(false, 2071, "키워드는 최대 50개까지 등록 가능합니다"),
+    SETTING_EMPTY_SILENCE(false, 2072, "방해금지 시간 설정 활성화시 시작시간과 종료시간을 입력하세요"),
 
     /**
      * 3000 : Response 오류

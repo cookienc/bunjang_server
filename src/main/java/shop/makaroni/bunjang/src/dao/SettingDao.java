@@ -1,5 +1,7 @@
 package shop.makaroni.bunjang.src.dao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Repository
 public class SettingDao {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     private JdbcTemplate jdbcTemplate;
     @Autowired
     public void setDataSource(DataSource dataSource) {
@@ -68,26 +71,28 @@ public class SettingDao {
 
     public void patchNotification(Long userIdx, Notification res) {
         String query = "update Notification\n" +
-                "set NA00 = ?,\n" +
-                "    NA01 = ?,\n" +
+                "set NA00   = ?,\n" +
+                "    NA01   = ?,\n" +
                 "    NA0100 = ?,\n" +
                 "    NA0101 = ?,\n" +
-                "    NB00 = ?,\n" +
-                "    NC00 = ?,\n" +
-                "    NC01 = ?,\n" +
-                "    NC02 = ?,\n" +
-                "    NC03 = ?,\n" +
-                "    NC04 = ?,\n" +
-                "    NC05 = ?,\n" +
-                "    ND00 = ?,\n" +
-                "    ND01 = ?,\n" +
-                "    ND02 = ?,\n" +
-                "    NE00 = ?,\n" +
-                "    NE01 = ?,\n" +
-                "    NF00 = ?,\n" +
-                "    NG00 = ?,\n" +
-                "    NG01 = ?\n" +
-                "where userIdx = ?";
+                "    NB00   = ?,\n" +
+                "    NC00   = ?,\n" +
+                "    NC01   = ?,\n" +
+                "    NC02   = ?,\n" +
+                "    NC03   = ?,\n" +
+                "    NC04   = ?,\n" +
+                "    NC05   = ?,\n" +
+                "    ND00   = ?,\n" +
+                "    ND01   = ?,\n" +
+                "    ND02   = ?,\n" +
+                "    NE00   = ?,\n" +
+                "    NE01   = ?,\n" +
+                "    NF00   = ?,\n" +
+                "    NG00   = ?,\n" +
+                "    NG01   = ?,\n " +
+                "updatedAt = CURRENT_TIMESTAMP \n" +
+                "where userIdx = ?;";
+
         Object[] params = res.getNotification(userIdx);
         this.jdbcTemplate.update(query, params);
     }

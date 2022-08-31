@@ -1,5 +1,8 @@
 package shop.makaroni.bunjang.src.service;
 
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
@@ -19,6 +22,7 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 @Service
 @Transactional
 public class SettingService {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final SettingDao settingDao;
     private final ItemDao itemDao;
     private final ItemProvider itemProvider;
@@ -29,10 +33,20 @@ public class SettingService {
         this.itemDao = itemDao;
     }
 
-    public void patchNotification(Long userIdx, Notification req) {
+    public void patchNotification(Long userIdx, Notification req) throws BaseException {
         Notification res = settingDao.getNotification(userIdx);
         if(req.getNA00() != null){res.setNA00(req.getNA00());}
-        if(req.getNA01() != null){res.setNA01(req.getNA01());}
+        if(req.getNA01() != null){
+            if(req.getNA01() == false &&
+                (req.getNA0100() != null || req.getNA0101() != null)){
+                throw new BaseException(SETTING_INVALID_SILENCE);
+            }
+            res.setNA01(req.getNA01());
+            if(req.getNA01() == true &&
+                    (req.getNA0100() == null || req.getNA0101() == null)){
+                throw new BaseException(SETTING_EMPTY_SILENCE);
+            }
+        }
         if(req.getNA0100() != null){res.setNA0100(req.getNA0100());}
         if(req.getNA0101() != null){res.setNA0101(req.getNA0101());}
         if(req.getNB00() != null){res.setNB00(req.getNB00());}
@@ -49,6 +63,8 @@ public class SettingService {
         if(req.getNE01() != null){res.setNE01(req.getNE01());}
         if(req.getNF00() != null){res.setNF00(req.getNF00());}
         if(req.getNG00() != null){res.setNG00(req.getNG00());}
+        if(req.getNG01() != null){res.setNG01(req.getNG01());}
+
         settingDao.patchNotification(userIdx, res);
     }
 
