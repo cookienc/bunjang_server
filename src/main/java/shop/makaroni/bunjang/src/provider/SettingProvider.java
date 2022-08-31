@@ -15,7 +15,6 @@ import java.util.List;
 
 @Service
 @Transactional
-
 public class SettingProvider {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final SettingDao settingDao;
@@ -36,8 +35,8 @@ public class SettingProvider {
         return settingDao.getAddress(addrIdx);
     }
 
-    public GetKeywordRes getKeyword(Long userIdx) {
-        List<Keyword> keywords =  settingDao.getUserKeyword(userIdx);
+    public GetKeywordRes getKeyword(Long userIdx, Integer page) {
+        List<Keyword> keywords =  settingDao.getUserKeyword(userIdx, page);
         int count = settingDao.getKeywordCnt(userIdx);
         return new GetKeywordRes(String.valueOf(count), keywords);
     }

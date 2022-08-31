@@ -139,10 +139,10 @@ public class SettingController {
 
     @ResponseBody
     @GetMapping("/keywords")
-    public BaseResponse<GetKeywordRes> getKeyword() {
+    public BaseResponse<GetKeywordRes> getKeyword(@RequestParam() Integer page) {
         try {
             Long userIdx = jwtService.getUserIdx();
-            return new BaseResponse<>(settingProvider.getKeyword(userIdx));
+            return new BaseResponse<>(settingProvider.getKeyword(userIdx, page));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

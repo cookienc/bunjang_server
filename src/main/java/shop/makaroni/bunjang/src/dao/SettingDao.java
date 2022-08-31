@@ -172,7 +172,8 @@ public class SettingDao {
         this.jdbcTemplate.update(query, idx);
     }
 
-    public List<Keyword> getUserKeyword(Long userIdx) {
+    public List<Keyword> getUserKeyword(Long userIdx, Integer page) {
+        page = 6 * (page-1);
         String query = "select idx,\n" +
                 "keyword,\n" +
                 "notification,\n" +
@@ -180,8 +181,9 @@ public class SettingDao {
                 "location,\n" +
                 "minPrice,\n" +
                 "maxPrice\n" +
-                "from Keyword where userIdx = ? and status != 'D'";
-        Object[] params = new Object[]{userIdx};
+                "from Keyword where userIdx = ? and status != 'D'" +
+                "limit 6 offset ?";
+        Object[] params = new Object[]{userIdx, page};
         return this.jdbcTemplate.query(query,
                 (rs, rowNum) -> new Keyword(
                     rs.getString("idx"),
