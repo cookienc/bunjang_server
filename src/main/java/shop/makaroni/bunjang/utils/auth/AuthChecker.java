@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Secured
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target({ElementType.METHOD, ElementType.PARAMETER})
 public @interface AuthChecker {
 }

@@ -24,8 +24,10 @@ import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.exception.EmptyParamEx;
 import shop.makaroni.bunjang.src.service.InquiryService;
 import shop.makaroni.bunjang.src.service.UserService;
+import shop.makaroni.bunjang.utils.auth.AuthChecker;
 import shop.makaroni.bunjang.utils.auth.PagingCond;
 import shop.makaroni.bunjang.utils.auth.QueryStringArgResolver;
+import shop.makaroni.bunjang.utils.auth.Secured;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -60,11 +62,13 @@ public class UserController {
         return ResponseEntity.created(URI.create(url)).body(ResponseInfo.of(SAVE_SUCCESS));
     }
 
+    @AuthChecker
     @GetMapping("/{userIdx}")
     public ResponseEntity<MyStoreResponse> getMyStore(@PathVariable Long userIdx) {
         return ResponseEntity.ok(userProvider.getMyStore(userIdx));
     }
 
+    @AuthChecker
     @GetMapping("/{userIdx}/items")
     public ResponseEntity<List<StoreSaleView>> getMyStoreItem(@PathVariable Long userIdx,
                                                               @RequestParam("condition") String condition,
@@ -73,6 +77,7 @@ public class UserController {
         return ResponseEntity.ok(userProvider.getMyStoreItem(userIdx, condition, pagingCond));
     }
 
+    @AuthChecker
     @GetMapping("/{userIdx}/items/search")
     public ResponseEntity<List<StoreSaleView>> getMyStoreItem(@PathVariable Long userIdx,
                                                               @RequestParam(value = "itemName", defaultValue = "") String itemName,
@@ -82,18 +87,21 @@ public class UserController {
         return ResponseEntity.ok(userProvider.searchStoreItemByName(userIdx, itemName, condition, pagingCond));
     }
 
+    @AuthChecker
     @PatchMapping("/{userIdx}")
     public ResponseEntity<ResponseInfo> update(@PathVariable Long userIdx, @Valid @RequestBody PatchUserRequest request) {
         userService.update(userIdx, request);
         return ResponseEntity.ok(ResponseInfo.of(PATCH_SUCCESS));
     }
 
+    @AuthChecker
     @PatchMapping("/d/{userIdx}")
     public ResponseEntity<ResponseInfo> delete(@PathVariable Long userIdx) {
         userService.delete(userIdx);
         return ResponseEntity.ok(ResponseInfo.of(WITHDRAWAL_SUCCESS));
     }
 
+    @AuthChecker
     @PostMapping("/{userIdx}/inquiries/{storeIdx}")
     public ResponseEntity<ResponseInfo> saveInquiry(@PathVariable Long userIdx, @PathVariable Long storeIdx, @Valid @RequestBody InquirySaveRequest request) {
         Long inquiryIdx = inquiryService.save(userIdx, storeIdx, request);
@@ -101,11 +109,13 @@ public class UserController {
         return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_SUCCESS));
     }
 
+    @Secured
     @GetMapping("/stores/{storeIdx}")
     public ResponseEntity<StoreInfoView> getStoreById(@PathVariable Long storeIdx) {
         return ResponseEntity.ok(userProvider.getStoreById(storeIdx));
     }
 
+    @Secured
     @GetMapping("/stores/search")
     public ResponseEntity<List<StoreSearchView>> searchStoreByName(@RequestParam String name) {
         if (name.isBlank()) {
