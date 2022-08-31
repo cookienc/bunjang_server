@@ -18,7 +18,7 @@ import shop.makaroni.bunjang.src.domain.user.User;
 import shop.makaroni.bunjang.src.domain.user.dto.PatchUserRequest;
 import shop.makaroni.bunjang.src.domain.user.dto.PurchasedItemsDto;
 import shop.makaroni.bunjang.src.domain.user.dto.StoreSearchDto;
-import shop.makaroni.bunjang.utils.auth.PagingCond;
+import shop.makaroni.bunjang.utils.PagingCond;
 
 import javax.sql.DataSource;
 import java.util.List;

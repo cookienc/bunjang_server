@@ -3,7 +3,7 @@ package shop.makaroni.bunjang.src.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import shop.makaroni.bunjang.src.domain.item.Item;
-import shop.makaroni.bunjang.utils.auth.PagingCond;
+import shop.makaroni.bunjang.utils.PagingCond;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package shop.makaroni.bunjang.utils.auth;
+package shop.makaroni.bunjang.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -25,8 +25,8 @@ import shop.makaroni.bunjang.src.response.exception.EmptyParamEx;
 import shop.makaroni.bunjang.src.service.InquiryService;
 import shop.makaroni.bunjang.src.service.UserService;
 import shop.makaroni.bunjang.utils.auth.AuthChecker;
-import shop.makaroni.bunjang.utils.auth.PagingCond;
-import shop.makaroni.bunjang.utils.auth.QueryStringArgResolver;
+import shop.makaroni.bunjang.utils.PagingCond;
+import shop.makaroni.bunjang.utils.QueryStringArgResolver;
 import shop.makaroni.bunjang.utils.auth.Secured;
 
 import javax.validation.Valid;

@@ -143,7 +143,7 @@ public class ReviewDao {
 				"           end) as  reviewDate " +
 				"from Review r " +
 				"         inner join User u on u.idx = r.userIdx " +
-				"         inner join Item i on i.idx = r.itemIdx and i.status = 'S'" +
+				"         inner join Item i on i.idx = r.itemIdx " +
 				"where i.sellerIdx = :storeIdx " +
 				"and r.status = 'Y' " +
 				"order by r.createdAt ASC " +

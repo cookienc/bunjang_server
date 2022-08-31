@@ -1,4 +1,4 @@
-package shop.makaroni.bunjang.utils.auth;
+package shop.makaroni.bunjang.utils;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
