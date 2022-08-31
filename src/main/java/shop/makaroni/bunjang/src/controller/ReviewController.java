@@ -24,6 +24,7 @@ import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.SuccessStatus;
 import shop.makaroni.bunjang.src.service.ReviewService;
 import shop.makaroni.bunjang.utils.auth.Login;
+import shop.makaroni.bunjang.utils.auth.Secured;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -44,6 +45,7 @@ public class ReviewController {
 	private final ReviewService reviewService;
 	private final UserProvider userProvider;
 
+	@Secured
 	@GetMapping("/stores/{storeIdx}")
 	public ResponseEntity<List<ReviewSpecificView>> findAll(@PathVariable Long storeIdx,
 															@RequestParam(defaultValue = "0") Integer start,
@@ -64,23 +66,27 @@ public class ReviewController {
 		return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_SUCCESS));
 	}
 
+	@Secured
 	@PatchMapping("/d/{reviewIdx}")
 	public ResponseEntity<ResponseInfo> delete(@PathVariable Long reviewIdx) {
 		reviewService.delete(reviewIdx);
 		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.DELETE_REVIEW_SUCCESS));
 	}
 
+	@Secured
 	@PatchMapping("/{reviewIdx}")
 	public ResponseEntity<ResponseInfo> updateReview(@PathVariable Long reviewIdx, @Valid @RequestBody UpdateReviewRequest request) {
 		reviewService.updateReview(reviewIdx, request);
 		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.UPDATE_REVIEW_SUCCESS));
 	}
 
+	@Secured
 	@GetMapping("/{reviewIdx}")
 	public ResponseEntity<SingleReviewResponse> getReviewById(@PathVariable Long reviewIdx) {
 		return ResponseEntity.ok(reviewProvider.getReviewById(reviewIdx));
 	}
 
+	@Secured
 	@PostMapping("/{reviewIdx}/comments")
 	public ResponseEntity<ResponseInfo> saveReviewComment(@PathVariable Long reviewIdx,
 														  @Valid @RequestBody SaveReviewCommentRequest request) {
@@ -89,17 +95,18 @@ public class ReviewController {
 		return ResponseEntity.created(URI.create(uri)).body(ResponseInfo.of(SAVE_REVIEW_COMMENT_SUCCESS));
 	}
 
+	@Secured
 	@PatchMapping("/{reviewIdx}/comments/d/{commentIdx}")
 	public ResponseEntity<ResponseInfo> deleteComment(@PathVariable Long reviewIdx, @PathVariable Long commentIdx) {
 		reviewService.deleteComment(reviewIdx, commentIdx);
 		return ResponseEntity.ok(ResponseInfo.of(DELETE_REVIEW_COMMENT_SUCCESS));
 	}
 
+	@Secured
 	@PatchMapping("/{reviewIdx}/comments/{commentIdx}")
 	public ResponseEntity<ResponseInfo> updateComment(@PathVariable Long reviewIdx, @PathVariable Long commentIdx,
 													  @Valid @RequestBody UpdateReviewCommentRequest request) {
 		reviewService.updateComment(reviewIdx, commentIdx, request);
 		return ResponseEntity.ok(ResponseInfo.of(UPDATE_REVIEW_COMMENT_SUCCESS));
 	}
-
 }

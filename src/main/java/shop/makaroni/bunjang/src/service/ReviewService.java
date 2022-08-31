@@ -81,6 +81,9 @@ public class ReviewService {
 	}
 
 	private void saveReviewImages(Long reviewIdx, List<String> request) {
+		if (request == null || request.isEmpty()) {
+			return;
+		}
 		request.forEach(image -> reviewDao.saveReviewImage(reviewIdx, image));
 	}
 

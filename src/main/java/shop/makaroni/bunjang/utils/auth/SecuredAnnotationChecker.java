@@ -31,7 +31,7 @@ public class SecuredAnnotationChecker {
 		}
 	}
 
-	@Around("@annotation(shop.makaroni.bunjang.utils.auth.Secured) && args(userIdx,..)")
+	@Around("@annotation(shop.makaroni.bunjang.utils.auth.AuthChecker) && args(userIdx,..)")
 	public Object checkUser(ProceedingJoinPoint joinPoint, Long userIdx) throws Throwable {
 		log.info("userIdx = {}", userIdx);
 
