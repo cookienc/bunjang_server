@@ -15,7 +15,7 @@ import shop.makaroni.bunjang.src.domain.inquiry.Inquiry;
 import shop.makaroni.bunjang.src.domain.inquiry.model.GetInquiryRes;
 import shop.makaroni.bunjang.src.domain.inquiry.model.PostInqueryReq;
 import shop.makaroni.bunjang.src.domain.inquiry.view.InquirySimpleResponse;
-import shop.makaroni.bunjang.src.domain.item.model.GetItemRes;
+
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -32,10 +32,12 @@ public class InquiryDao {
 	}
 
 	public Inquiry save(Inquiry inquiry) {
-		var sql = "insert into Inquiry (userIdx, storeIdx, parentIdx, post) " +
-				"values (:userIdx, :storeIdx, :parentIdx, :post)";
+		var sql = "insert into Inquiry (userIdx, targetIdx, parentIdx, post) " +
+				"values (:userIdx, :targetIdx, :parentIdx, :post)";
 		SqlParameterSource params = getParams(inquiry);
-		insertInquiry(inquiry, sql, params);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		template.update(sql, params, keyHolder);
+		inquiry.changeIdx(keyHolder.getKey().longValue());
 		return inquiry;
 	}
 
@@ -43,16 +45,10 @@ public class InquiryDao {
 	private SqlParameterSource getParams(Inquiry inquiry) {
 		SqlParameterSource params = new MapSqlParameterSource()
 				.addValue("userIdx", inquiry.getUserIdx())
-				.addValue("storeIdx", inquiry.getStoreIdx())
+				.addValue("targetIdx", inquiry.getStoreIdx())
 				.addValue("parentIdx", inquiry.getParentIdx())
 				.addValue("post", inquiry.getPost());
 		return params;
-	}
-
-	private void insertInquiry(Inquiry inquiry, String sql, SqlParameterSource params) {
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		template.update(sql, params, keyHolder);
-		inquiry.changeIdx(keyHolder.getKey().longValue());
 	}
 
 	public List<InquirySimpleResponse> findAllByStoreId(Long storeIdx) {
