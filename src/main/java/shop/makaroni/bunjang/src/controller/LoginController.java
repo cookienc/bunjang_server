@@ -59,7 +59,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/sms/auth")
-	public ResponseEntity<ResponseInfo> getMessages(HttpSession session, @RequestBody PhoneNumber phoneNumber) {
+	public ResponseEntity<ResponseInfo> getMessages(HttpSession session, @Valid @RequestBody PhoneNumber phoneNumber) {
 		try {
 			naverService.sendSms(session, phoneNumber);
 		} catch (Exception e) {
@@ -69,13 +69,13 @@ public class LoginController {
 	}
 
 	@GetMapping("/sms")
-	public ResponseEntity<ResponseInfoWithCheck> smsLogin(HttpSession session, @RequestBody AuthNumber authNumber) {
+	public ResponseEntity<ResponseInfoWithCheck> smsLogin(HttpSession session, @Valid @RequestBody AuthNumber authNumber) {
 		boolean isCheck = naverService.checkingCode(session, authNumber);
 		return ResponseEntity.ok().body(ResponseInfoWithCheck.of(SuccessStatus.AUTH_CODE_MATCH_SUCCESS, isCheck));
 	}
 
 	@PostMapping("/sms")
-	public ResponseEntity<ResponseInfoWithJwt> smsLogin(@RequestBody SmsLoginRequest request) {
+	public ResponseEntity<ResponseInfoWithJwt> smsLogin(@Valid @RequestBody SmsLoginRequest request) {
 		String jwt = naverService.smsLogin(request);
 		return ResponseEntity.ok().body(ResponseInfoWithJwt.of(LOGIN_SUCCESS, jwt));
 	}

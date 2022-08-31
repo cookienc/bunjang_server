@@ -51,7 +51,7 @@ public enum ErrorCode {
 		public static final String PLEASE_ENTER_REQUIRED_PARAMETER = "필수 파라미터를 넣어주세요.";
 		public static final String PLEASE_ENTER_RIGHT_PARAMETER = "올바른 파라미터를 넣어주세요.";
 		public static final String NOT_MATCH_PASSWORD = "아이디와 비밀번호가 일치하지 않습니다.";
-		public static final String NOT_MATCH_CODE = "코드가 일치 하지 않습니다.";
+		public static final String NOT_MATCH_CODE = "인증 번호가 일치 하지 않습니다.";
 		public static final String NOT_RIGHT_PASSWORD = "올바르지 않은 비밀번호 입니다.";
 		public static final String NOT_EXIST_FOLLOW = "팔로우를 먼저 해주세요.";
 
