@@ -10,6 +10,7 @@ public enum ErrorCode {
 	DONT_PURCHASE_ITEM_EXCEPTION(HttpStatus.UNAUTHORIZED, Messages.DONT_PURCHASE_ITEM),
 	UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, Messages.UNAUTHORIZED_ACCESS),
 	DO_LOGIN_FIRST_EXCEPTION(HttpStatus.UNAUTHORIZED, Messages.DO_LOGIN_FIRST),
+	DO_AUTH_FIRST_EXCEPTION(HttpStatus.UNAUTHORIZED, Messages.DO_AUTH_FIRST),
 
 	NO_SUCH_ELEMENT_EXCEPTION(HttpStatus.NOT_FOUND, Messages.NO_ELEMENT),
 
@@ -40,6 +41,7 @@ public enum ErrorCode {
 		public static final String DONT_PURCHASE_ITEM = "구매한 상품이 없습니다.";
 		public static final String UNAUTHORIZED_ACCESS = "잘못된 접근입니다.";
 		public static final String DO_LOGIN_FIRST = "로그인을 먼저 해주세요.";
+		public static final String DO_AUTH_FIRST = "인증을 먼저 해주세요.";
 
 		public static final String NO_ELEMENT = "결과 값을 찾을 수 없습니다.";
 

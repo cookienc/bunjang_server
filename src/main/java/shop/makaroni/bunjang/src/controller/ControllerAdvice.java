@@ -19,6 +19,7 @@ import shop.makaroni.bunjang.src.response.exception.CannotDecodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotEncodeEx;
 import shop.makaroni.bunjang.src.response.exception.CannotFindPurchasedItem;
 import shop.makaroni.bunjang.src.response.exception.CannotParsingObjectEx;
+import shop.makaroni.bunjang.src.response.exception.DoAuthorizeFirstEx;
 import shop.makaroni.bunjang.src.response.exception.DoLoginFirstException;
 import shop.makaroni.bunjang.src.response.exception.DoesNotMatchPasswordEx;
 import shop.makaroni.bunjang.src.response.exception.DontPurchaseItemEx;
@@ -44,6 +45,7 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_PURCHASED
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ISSUE_AUTH_CODE_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_PARSING_OBJECT;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DONT_PURCHASE_ITEM_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.ErrorCode.DO_AUTH_FIRST_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DO_LOGIN_FIRST_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.DUPLICATE_LOGIN_ID_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.EMPTY_PARAM_EXCEPTION;
@@ -72,6 +74,13 @@ public class ControllerAdvice {
 		printLog(e, request);
 		return ResponseEntity.status(INVALID_INPUT_EXCEPTION.getStatus())
 				.body(ErrorResponse.of(INVALID_INPUT_EXCEPTION, e.getMessage(), request.getRequestURI()));
+	}
+
+	@ExceptionHandler(DoAuthorizeFirstEx.class)
+	public ResponseEntity<ErrorResponse> doAuthorizeExHandler(DoAuthorizeFirstEx e, HttpServletRequest request) {
+		printLog(e, request);
+		return ResponseEntity.status(DO_AUTH_FIRST_EXCEPTION.getStatus())
+				.body(ErrorResponse.of(DO_AUTH_FIRST_EXCEPTION, e.getMessage(), request.getRequestURI()));
 	}
 
 	@ExceptionHandler(DoLoginFirstException.class)

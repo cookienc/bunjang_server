@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.login.LoginRequest;
 import shop.makaroni.bunjang.src.domain.user.AuthNumber;
 import shop.makaroni.bunjang.src.domain.user.PhoneNumber;
+import shop.makaroni.bunjang.src.domain.user.SmsLoginRequest;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.ResponseInfoWithCheck;
 import shop.makaroni.bunjang.src.response.ResponseInfoWithJwt;
@@ -50,7 +51,7 @@ public class LoginController {
 		return ResponseEntity.ok(ResponseInfoWithJwt.of(LOGIN_SUCCESS, jwt));
 	}
 
-	@PostMapping("/sms")
+	@PostMapping("/sms/auth")
 	public ResponseEntity<ResponseInfo> getMessages(HttpSession session, @RequestBody PhoneNumber phoneNumber) {
 		try {
 			naverService.sendSms(session, phoneNumber);
@@ -64,5 +65,11 @@ public class LoginController {
 	public ResponseEntity<ResponseInfoWithCheck> smsLogin(HttpSession session, @RequestBody AuthNumber authNumber) {
 		boolean isCheck = naverService.checkingCode(session, authNumber);
 		return ResponseEntity.ok().body(ResponseInfoWithCheck.of(SuccessStatus.AUTH_CODE_MATCH_SUCCESS, isCheck));
+	}
+
+	@PostMapping("/sms")
+	public ResponseEntity<ResponseInfoWithJwt> smsLogin(@RequestBody SmsLoginRequest request) {
+		String jwt = naverService.smsLogin(request);
+		return ResponseEntity.ok().body(ResponseInfoWithJwt.of(LOGIN_SUCCESS, jwt));
 	}
 }

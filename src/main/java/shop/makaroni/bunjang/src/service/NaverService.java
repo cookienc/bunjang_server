@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,12 +12,16 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import shop.makaroni.bunjang.src.domain.login.LoginRequest;
 import shop.makaroni.bunjang.src.domain.sms.MessagesRequest;
 import shop.makaroni.bunjang.src.domain.sms.SendSmsResponse;
 import shop.makaroni.bunjang.src.domain.sms.SmsRequest;
 import shop.makaroni.bunjang.src.domain.user.AuthNumber;
 import shop.makaroni.bunjang.src.domain.user.PhoneNumber;
+import shop.makaroni.bunjang.src.domain.user.SmsLoginRequest;
+import shop.makaroni.bunjang.src.domain.user.dto.SaveUserRequest;
 import shop.makaroni.bunjang.src.response.exception.AuthCodeNotMatchEx;
+import shop.makaroni.bunjang.src.response.exception.DoAuthorizeFirstEx;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static shop.makaroni.bunjang.src.response.ErrorCode.DO_AUTH_FIRST_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_MATCH_AUTH_CODE_EXCEPTION;
 
 @Slf4j
@@ -45,15 +49,18 @@ public class NaverService {
 	private final LoginService loginService;
 
 	@Value("${naver.serviceId}")
-	String serviceId;
+	private String serviceId;
 
 	@Value("${naver.accessKey}")
-	String accessKey;
+	private String accessKey;
 
 	@Value("${naver.secretKey}")
-	String secretKey;
+	private String secretKey;
 
-	public SendSmsResponse sendSms(HttpSession session, PhoneNumber recipientPhoneNumber) throws ParseException, JsonProcessingException, UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, URISyntaxException {
+	@Value("${naver.password}")
+	private String password;
+
+	public SendSmsResponse sendSms(HttpSession session, PhoneNumber recipientPhoneNumber) throws JsonProcessingException, UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, URISyntaxException {
 		Long time = System.currentTimeMillis();
 		List<MessagesRequest> messages = new ArrayList<>();
 		messages.add(new MessagesRequest(recipientPhoneNumber.getPhoneNumber(), getContent(session)));
@@ -119,6 +126,24 @@ public class NaverService {
 			throw new AuthCodeNotMatchEx(NOT_MATCH_AUTH_CODE_EXCEPTION.getMessages());
 		}
 		return true;
+	}
+
+	public String smsLogin(SmsLoginRequest request) {
+		if (!request.getIsChecked()) {
+			throw new DoAuthorizeFirstEx(DO_AUTH_FIRST_EXCEPTION.getMessages());
+		}
+
+		String id = createId(request.getBirthNumber(), request.getPhoneNumber());
+
+		if (loginService.alreadySignUp(id)) {
+			return loginService.login(new LoginRequest(id, password));
+		}
+
+		return loginService.saveAndLogin(new SaveUserRequest(id, password));
+	}
+
+	private String createId(String birthNumber, String phoneNumber) {
+		return "sms" + birthNumber.substring(1, 4) + phoneNumber.substring(3, 7);
 	}
 
 	private int randomNumber(HttpSession session) {
