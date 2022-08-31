@@ -32,8 +32,8 @@ public class InquiryDao {
 	}
 
 	public Inquiry save(Inquiry inquiry) {
-		var sql = "insert into Inquiry (userIdx, targetIdx, parentIdx, post) " +
-				"values (:userIdx, :targetIdx, :parentIdx, :post)";
+		var sql = "insert into Inquiry (userIdx, targetIdx, parentIdx, post, type) " +
+				"values (:userIdx, :targetIdx, :parentIdx, :post, :type)";
 		SqlParameterSource params = getParams(inquiry);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		template.update(sql, params, keyHolder);
@@ -47,7 +47,8 @@ public class InquiryDao {
 				.addValue("userIdx", inquiry.getUserIdx())
 				.addValue("targetIdx", inquiry.getStoreIdx())
 				.addValue("parentIdx", inquiry.getParentIdx())
-				.addValue("post", inquiry.getPost());
+				.addValue("post", inquiry.getPost())
+				.addValue("type", "S");
 		return params;
 	}
 
