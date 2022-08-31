@@ -206,4 +206,19 @@ public class SettingDao {
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class);
     }
+
+    public int checkKeyword(Long idx) {
+        String query = "select exists(select idx from Keyword where idx = ? and status!='D')";
+        return this.jdbcTemplate.queryForObject(query,int.class,idx);
+    }
+
+    public Long getKeywordUser(Long idx) {
+        String query = "select userIdx from Keyword where idx = ? and status != 'D'";
+        return this.jdbcTemplate.queryForObject(query,Long.class,idx);
+    }
+
+    public void deleteKeyword(Long idx) {
+        String query = "update Keyword set status = 'D', updatedAt = CURRENT_TIMESTAMP where idx = ?;";
+        this.jdbcTemplate.update(query, idx);
+    }
 }

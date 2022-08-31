@@ -164,4 +164,23 @@ public class SettingController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    @ResponseBody
+    @DeleteMapping("/keywords/{idx}")
+    public BaseResponse<HashMap<String, String>> DeleteKeyword(@PathVariable("idx") Long idx) {
+        if(idx <= 0){
+            return new BaseResponse<>(SETTING_INVALID_KEYWORD_IDX);
+        }
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            settingService.deleteKeyword(userIdx, idx);
+            HashMap<String, String> res = new HashMap<>();
+            res.put("idx", String.valueOf(idx));
+            return new BaseResponse<>(res);
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
+
 }

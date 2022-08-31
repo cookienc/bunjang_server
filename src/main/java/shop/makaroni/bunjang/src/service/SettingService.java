@@ -128,4 +128,15 @@ public class SettingService {
             throw new BaseException(baseException.getStatus());
         }
     }
+
+    public void deleteKeyword(Long userIdx, Long idx) throws BaseException {
+        if(settingDao.checkKeyword(idx) == 0){
+            throw new BaseException(SETTING_INVALID_KEYWORD_IDX);
+        }
+        if(!Objects.equals(settingDao.getKeywordUser(idx), userIdx)){
+            throw new BaseException(INVALID_USER_JWT);
+        }
+
+        settingDao.deleteKeyword(idx);
+    }
 }
