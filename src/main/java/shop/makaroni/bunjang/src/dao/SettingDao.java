@@ -91,7 +91,7 @@ public class SettingDao {
         this.jdbcTemplate.update(query, params);
     }
 
-    public List<Address> getAddress(Long userIdx) {
+    public List<Address> getUserAddress(Long userIdx) {
         String query = "select idx,\n" +
                 "       name,\n" +
                 "       phoneNum,\n" +
@@ -109,5 +109,55 @@ public class SettingDao {
                         rs.getString("detail"),
                         rs.getBoolean("isDefault")),
                 userIdx);
+    }
+
+    public Long postAddress(Long userIdx, Address req) {
+        String query = "Insert into Address(userIdx, name, phoneNum, address, detail, isDefault) values(?,?,?,?,?,?);";
+        Object[] params = new Object[]{userIdx, req.getName(), req.getPhoneNum(), req.getAddress(), req.getDetail(), req.getIsDefault()};
+        this.jdbcTemplate.update(query, params);
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class);
+    }
+
+    public void deleteAddrDefault(Long userIdx, Long addrIdx) {
+        String query = "update Address set isDefault=false, updatedAt = CURRENT_TIMESTAMP where userIdx = ? and idx != ?";
+        Object[] params = new Object[]{userIdx, addrIdx};
+        this.jdbcTemplate.update(query, params);
+    }
+
+    public Address getAddress(Long addrIdx) {
+        String query = "select idx,\n" +
+                "       name,\n" +
+                "       phoneNum,\n" +
+                "       address,\n" +
+                "       detail,\n" +
+                "       isDefault\n" +
+                "from Address\n" +
+                "where idx = ? and status != 'D';";
+        return this.jdbcTemplate.queryForObject(query,
+                (rs, rowNum) -> new Address(
+                        rs.getString("idx"),
+                        rs.getString("name"),
+                        rs.getString("phoneNum"),
+                        rs.getString("address"),
+                        rs.getString("detail"),
+                        rs.getBoolean("isDefault")),
+                addrIdx);
+    }
+
+    public void patchAddress(Long idx, Address res) {
+        String query = "update Address set name = ?, phoneNum = ?, address = ?, detail = ?, isDefault = ?, updatedAt = CURRENT_TIMESTAMP where idx = ?;";
+        Object[] params = res.getAddress(idx);
+        this.jdbcTemplate.update(query, params);
+    }
+
+    public int checkAddress(Long idx) {
+        String query = "select exists(select idx from Address where idx = ?)";
+        return this.jdbcTemplate.queryForObject(query, int.class, idx);
+    }
+
+    public Long getAddressUser(Long idx) {
+        String query = "select userIdx from Address where idx = ?";
+        return this.jdbcTemplate.queryForObject(query, Long.class, idx);
     }
 }

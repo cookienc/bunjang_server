@@ -2,9 +2,13 @@ package shop.makaroni.bunjang.src.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.src.dao.SettingDao;
+import shop.makaroni.bunjang.src.domain.setting.model.Address;
 import shop.makaroni.bunjang.src.domain.setting.model.Notification;
 import shop.makaroni.bunjang.src.provider.SettingProvider;
+
+import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 
 @Service
@@ -39,5 +43,28 @@ public class SettingService {
         if(req.getNF00() != null){res.setNF00(req.getNF00());}
         if(req.getNG00() != null){res.setNG00(req.getNG00());}
         settingDao.patchNotification(userIdx, res);
+    }
+
+    public Long postAddress(Long userIdx, Address req) {
+        Long addrIdx = settingDao.postAddress(userIdx, req);
+        settingDao.deleteAddrDefault(userIdx, addrIdx);
+        return addrIdx;
+    }
+
+    public void patchAddress(Long userIdx, Long idx, Address req) throws BaseException {
+        if(settingDao.checkAddress(idx) == 0){
+            throw new BaseException(SETTING_INVALID_ADDR_IDX);
+        }
+        if(settingDao.getAddressUser(idx) != userIdx){
+            throw new BaseException(INVALID_USER_JWT);
+        }
+        Address res = settingDao.getAddress(idx);
+        if(req.getIdx() != null){res.setIdx(req.getIdx());}
+        if(req.getName() != null){res.setName(req.getName());}
+        if(req.getPhoneNum() != null){res.setPhoneNum(req.getPhoneNum());}
+        if(req.getAddress() != null){res.setAddress(req.getAddress());}
+        if(req.getDetail() != null){res.setDetail(req.getDetail());}
+        if(req.getIsDefault() != null){res.setIsDefault(req.getIsDefault());}
+        settingDao.patchAddress(idx, res);
     }
 }

@@ -72,6 +72,13 @@ public enum BaseResponseStatus {
     //Setting
     SETTING_INVALID_TIME(false, 2061, "유효하지 않은 시간 설정입니다"),
     SETTING_INVALID_SILENCE(false, 2062, "방해금지 시간 설정을 활성화하지 않은 경우 시작시간과 종료시간을 설정할 수 없습니다"),
+    SETTING_INVALID_ADDR_NAME(false, 2063, "이름은 1자 이상 20자 이하로 입력해주세요"),
+    SETTING_INVALID_PHONE_NUM(false, 2064, "유효하지 않은 전화번호입니다"),
+    SETTING_INVALID_ADDRESS(false, 2065, "주소 및 상세주소를 입력해주세요"),
+    SETTING_EMPTY_DEFAULT(false, 2066, "기본주소 설정 여부를 입력해주세요"),
+    SETTING_INVALID_ADDR_IDX(false ,2067, "배송지 식별자를 확인해주세요"),
+
+
     /**
      * 3000 : Response 오류
      */

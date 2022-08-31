@@ -31,6 +31,11 @@ public class validationRegex {
         Matcher reviewMatcher = reviewPattern.matcher(type);
         return (itemMatcher.find() || reviewMatcher.find());
     }
-
+    public static boolean isRegexPhoneNumber(String phoneNum){
+        String regex = "^(01[01]\\d{7,8})$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(phoneNum);
+        return matcher.find();
+    }
 
 }

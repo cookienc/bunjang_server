@@ -26,7 +26,11 @@ public class SettingProvider {
         return settingDao.getNotification(userIdx);
     }
 
-    public List<Address> getAddress(Long userIdx) {
-        return settingDao.getAddress(userIdx);
+    public List<Address> getUserAddress(Long userIdx) {
+        return settingDao.getUserAddress(userIdx);
+    }
+
+    public Address getAddress(Long addrIdx) {
+        return settingDao.getAddress(addrIdx);
     }
 }

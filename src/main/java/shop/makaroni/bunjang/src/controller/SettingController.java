@@ -13,9 +13,13 @@ import shop.makaroni.bunjang.src.provider.SettingProvider;
 import shop.makaroni.bunjang.src.service.SettingService;
 import shop.makaroni.bunjang.utils.JwtService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
+import static shop.makaroni.bunjang.utils.Itemvalidation.validation.validateAddress;
+import static shop.makaroni.bunjang.utils.Itemvalidation.validationRegex.*;
 
 @Transactional
 @RestController
@@ -74,9 +78,50 @@ public class SettingController {
     public BaseResponse<List<Address>> getAddress() {
         try {
             Long userIdx = jwtService.getUserIdx();
-            return new BaseResponse<>(settingProvider.getAddress(userIdx));
+            return new BaseResponse<>(settingProvider.getUserAddress(userIdx));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+
+    @ResponseBody
+    @PostMapping("/addresses")
+    public BaseResponse<HashMap<String, String>> postAddress(@RequestBody Address req) {
+        if(req.getName() == null || req.getPhoneNum() == null || req.getAddress() == null ||
+                req.getDetail() == null || req.getIsDefault() == null){
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            validateAddress(req);
+            Long addrIdx = settingService.postAddress(userIdx,req);
+            HashMap<String, String> res = new HashMap<>();
+            res.put("idx", String.valueOf(addrIdx));
+            return new BaseResponse<>(res);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    @ResponseBody
+    @PatchMapping("/addresses/{idx}")
+    public BaseResponse<HashMap<String, String>> patchAddress(@PathVariable("idx") Long idx,
+                                                            @RequestBody Address req) {
+        if(idx <= 0){
+            return new BaseResponse<>(SETTING_INVALID_ADDR_IDX);
+        }
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            validateAddress(req);
+            settingService.patchAddress(userIdx, idx, req);
+
+            HashMap<String, String> res = new HashMap<>();
+            res.put("idx", String.valueOf(idx));
+            return new BaseResponse<>(res);
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+
     }
 }

@@ -14,4 +14,8 @@ public class Address {
     private String address;
     private String detail;
     private Boolean isDefault;
+
+    public Object[] getAddress(Long idx){
+        return new Object[]{name, phoneNum, address, detail, isDefault, idx};
+    }
 }
