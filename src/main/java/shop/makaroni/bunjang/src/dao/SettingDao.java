@@ -188,4 +188,9 @@ public class SettingDao {
                     rs.getString("maxPrice")),
                 params);
     }
+
+    public int getKeywordCnt(Long userIdx) {
+        String query = "select count(idx) from Keyword where userIdx = ? and status != 'D'";
+        return this.jdbcTemplate.queryForObject(query, int.class, userIdx);
+    }
 }

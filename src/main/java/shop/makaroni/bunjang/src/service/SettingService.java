@@ -47,7 +47,10 @@ public class SettingService {
         settingDao.patchNotification(userIdx, res);
     }
 
-    public Long postAddress(Long userIdx, Address req) {
+    public Long postAddress(Long userIdx, Address req) throws BaseException {
+        if(settingDao.getUserAddress(userIdx).size() >= 10){
+            throw new BaseException(SETTING_ADDRESS_CAPACITY);
+        }
         Long addrIdx = settingDao.postAddress(userIdx, req);
         settingDao.deleteAddrDefault(userIdx, addrIdx);
         return addrIdx;

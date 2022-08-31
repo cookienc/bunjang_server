@@ -1,6 +1,5 @@
 package shop.makaroni.bunjang.utils.Itemvalidation;
 import shop.makaroni.bunjang.config.BaseException;
-import shop.makaroni.bunjang.config.BaseResponse;
 import shop.makaroni.bunjang.src.domain.item.model.*;
 import shop.makaroni.bunjang.src.domain.setting.model.*;
 
@@ -39,7 +38,7 @@ public class validation {
 
     public static void validateAddress(Address address) throws BaseException {
         if(address.getName() != null && (address.getName().length() < 1 || address.getName().length() > 20)){
-            throw new BaseException(SETTING_INVALID_ADDR_NAME);
+            throw new BaseException(SETTING_INVALID_NAME);
         }
         if(address.getPhoneNum() != null && (!isRegexPhoneNumber(address.getPhoneNum()))){
             throw new BaseException(SETTING_INVALID_PHONE_NUM);
