@@ -42,13 +42,13 @@ public class FollowController {
 		return ResponseEntity.ok(ResponseInfo.of(SuccessStatus.DELETE_FOLLOW_SUCCESS));
 	}
 
-	@GetMapping("/followers")
-	public ResponseEntity<List<FollowersView>> getFollowers(@Login Long userIdx) {
+	@GetMapping("/followers/users/{userIdx}")
+	public ResponseEntity<List<FollowersView>> getFollowers(@PathVariable Long userIdx) {
 		return ResponseEntity.ok(followProvider.getFollowers(userIdx));
 	}
 
-	@GetMapping("/followings")
-	public ResponseEntity<List<FollowingsView>> getFollowings(@Login Long userIdx) {
+	@GetMapping("/followings/users/{userIdx}")
+	public ResponseEntity<List<FollowingsView>> getFollowings(@PathVariable Long userIdx) {
 		return ResponseEntity.ok(followProvider.getFollowings(userIdx));
 	}
 }
