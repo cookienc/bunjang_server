@@ -183,4 +183,26 @@ public class SettingController {
         }
     }
 
+    @ResponseBody
+    @PatchMapping("/keywords/{idx}")
+    public BaseResponse<HashMap<String, String>> patchKeyword(@PathVariable("idx") Long idx,
+                                                              @RequestBody Keyword req) {
+        if (idx <= 0) {
+            return new BaseResponse<>(SETTING_INVALID_KEYWORD_IDX);
+        }
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            validateKeyword(req);
+            if(req.getKeyword() != null){
+                return new BaseResponse<>(SETTING_KEYWORD_IMMUTABLE);
+            }
+            settingService.patchKeyword(userIdx, idx, req);
+
+            HashMap<String, String> res = new HashMap<>();
+            res.put("idx", String.valueOf(idx));
+            return new BaseResponse<>(res);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
 }

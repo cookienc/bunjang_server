@@ -172,7 +172,7 @@ public class SettingDao {
         this.jdbcTemplate.update(query, idx);
     }
 
-    public List<Keyword> getKeyword(Long userIdx) {
+    public List<Keyword> getUserKeyword(Long userIdx) {
         String query = "select idx,\n" +
                 "keyword,\n" +
                 "notification,\n" +
@@ -220,5 +220,34 @@ public class SettingDao {
     public void deleteKeyword(Long idx) {
         String query = "update Keyword set status = 'D', updatedAt = CURRENT_TIMESTAMP where idx = ?;";
         this.jdbcTemplate.update(query, idx);
+    }
+
+    public Keyword getKeyword(Long idx) {
+        String query = "select idx,\n" +
+                "keyword,\n" +
+                "notification,\n" +
+                "category,\n" +
+                "location,\n" +
+                "minPrice,\n" +
+                "maxPrice\n" +
+                "from Keyword where idx = ? and status != 'D'";
+        Object[] params = new Object[]{idx};
+        return this.jdbcTemplate.queryForObject(query,
+                (rs, rowNum) -> new Keyword(
+                        rs.getString("idx"),
+                        rs.getString("keyword"),
+                        rs.getBoolean("notification"),
+                        rs.getString("category"),
+                        rs.getString("location"),
+                        rs.getString("minPrice"),
+                        rs.getString("maxPrice")),
+                params);
+    }
+
+    public void patchKeyword(Long idx, Keyword res) {
+        String query = "update Keyword set notification = ?, category = ?, location = ?, minPrice = ?, maxPrice = ?, updatedAt = CURRENT_TIMESTAMP\n" +
+                "where idx = ?; \n";
+        Object[] params = {res.getNotification(), res.getCategory(), res.getLocation(), res.getMinPrice(), res.getMaxPrice(), idx};
+        this.jdbcTemplate.update(query, params);
     }
 }

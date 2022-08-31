@@ -10,7 +10,7 @@ import lombok.Setter;
 public class Keyword {
     private String idx;
     private String keyword;
-    private boolean notification;
+    private Boolean notification;
     private String category;
     private String location;
     private String minPrice;

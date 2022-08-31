@@ -1,6 +1,5 @@
 package shop.makaroni.bunjang.src.service;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import shop.makaroni.bunjang.src.domain.setting.model.Address;
 import shop.makaroni.bunjang.src.domain.setting.model.Keyword;
 import shop.makaroni.bunjang.src.domain.setting.model.Notification;
 import shop.makaroni.bunjang.src.provider.ItemProvider;
-import shop.makaroni.bunjang.src.provider.SettingProvider;
 
 import java.util.Objects;
 
@@ -138,5 +136,27 @@ public class SettingService {
         }
 
         settingDao.deleteKeyword(idx);
+    }
+
+    public void patchKeyword(Long userIdx, Long idx, Keyword req) throws BaseException {
+        if(settingDao.checkKeyword(idx) == 0){
+            throw new BaseException(SETTING_INVALID_KEYWORD_IDX);
+        }
+        if(!Objects.equals(settingDao.getKeywordUser(idx), userIdx)){
+            throw new BaseException(INVALID_USER_JWT);
+        }
+        if(settingDao.getKeywordCnt(userIdx) >= 50){
+            throw new BaseException(SETTING_KEYWORD_CAPACITY);
+        }
+        Keyword res = settingDao.getKeyword(idx);
+        if(req.getNotification() != null){res.setNotification(req.getNotification());}
+        if(req.getLocation() != null){res.setLocation(req.getLocation());}
+        if(req.getMinPrice() != null){res.setMinPrice(req.getMinPrice());}
+        if(req.getMaxPrice() != null){res.setMaxPrice(req.getMaxPrice());}
+        if(req.getCategory() != null){
+            itemProvider.validateCategory(req.getCategory());
+            res.setCategory(req.getCategory());
+        }
+        settingDao.patchKeyword(idx, res);
     }
 }

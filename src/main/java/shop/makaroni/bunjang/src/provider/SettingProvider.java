@@ -37,7 +37,7 @@ public class SettingProvider {
     }
 
     public GetKeywordRes getKeyword(Long userIdx) {
-        List<Keyword> keywords =  settingDao.getKeyword(userIdx);
+        List<Keyword> keywords =  settingDao.getUserKeyword(userIdx);
         int count = settingDao.getKeywordCnt(userIdx);
         return new GetKeywordRes(String.valueOf(count), keywords);
     }

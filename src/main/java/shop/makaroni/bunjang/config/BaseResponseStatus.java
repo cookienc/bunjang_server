@@ -83,6 +83,7 @@ public enum BaseResponseStatus {
     SETTING_KEYWORD_CAPACITY(false, 2071, "키워드는 최대 50개까지 등록 가능합니다"),
     SETTING_EMPTY_SILENCE(false, 2072, "방해금지 시간 설정 활성화시 시작시간과 종료시간을 입력하세요"),
     SETTING_INVALID_KEYWORD_IDX(false, 2073, "키워드 식별자를 확인해 주세요"),
+    SETTING_KEYWORD_IMMUTABLE(false, 2074, "키워드는 수정 불가능합니다"),
 
     /**
      * 3000 : Response 오류
