@@ -124,4 +124,22 @@ public class SettingController {
         }
 
     }
+    @ResponseBody
+    @DeleteMapping("/addresses/{idx}")
+    public BaseResponse<HashMap<String, String>> DeleteAddress(@PathVariable("idx") Long idx) {
+        if(idx <= 0){
+            return new BaseResponse<>(SETTING_INVALID_ADDR_IDX);
+        }
+        try {
+            Long userIdx = jwtService.getUserIdx();
+            settingService.deleteAddress(userIdx, idx);
+            HashMap<String, String> res = new HashMap<>();
+            res.put("idx", String.valueOf(idx));
+            return new BaseResponse<>(res);
+        }
+        catch(BaseException baseException){
+            return new BaseResponse<>(baseException.getStatus());
+        }
+
+    }
 }

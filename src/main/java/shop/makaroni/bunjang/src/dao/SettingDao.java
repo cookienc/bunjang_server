@@ -160,4 +160,9 @@ public class SettingDao {
         String query = "select userIdx from Address where idx = ?";
         return this.jdbcTemplate.queryForObject(query, Long.class, idx);
     }
+
+    public void deleteAddress(Long idx) {
+        String query = "update Address set status = 'D', updatedAt = CURRENT_TIMESTAMP where idx = ?;";
+        this.jdbcTemplate.update(query, idx);
+    }
 }

@@ -8,6 +8,8 @@ import shop.makaroni.bunjang.src.domain.setting.model.Address;
 import shop.makaroni.bunjang.src.domain.setting.model.Notification;
 import shop.makaroni.bunjang.src.provider.SettingProvider;
 
+import java.util.Objects;
+
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 
@@ -66,5 +68,16 @@ public class SettingService {
         if(req.getDetail() != null){res.setDetail(req.getDetail());}
         if(req.getIsDefault() != null){res.setIsDefault(req.getIsDefault());}
         settingDao.patchAddress(idx, res);
+    }
+
+    public void deleteAddress(Long userIdx, Long idx) throws BaseException {
+        if(settingDao.checkAddress(idx) == 0){
+            throw new BaseException(SETTING_INVALID_ADDR_IDX);
+        }
+        if(!Objects.equals(settingDao.getAddressUser(idx), userIdx)){
+            throw new BaseException(INVALID_USER_JWT);
+        }
+
+        settingDao.deleteAddress(idx);
     }
 }
