@@ -25,7 +25,7 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-@Transactional
+//@Transactional
 public class ImageService {
 
     private final AmazonS3Client amazonS3Client;

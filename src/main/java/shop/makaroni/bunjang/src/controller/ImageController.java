@@ -27,7 +27,7 @@ public class ImageController {
 
     @PostMapping("")
     public BaseResponse<HashMap<String, String>> postFile(@RequestParam() Long item,
-                                                            @RequestPart() List<MultipartFile> files) throws BaseException {
+                                                            @RequestPart(value = "files") List<MultipartFile> files) throws BaseException {
 
         if (item <= 0) {
             return new BaseResponse<>(ITEM_NO_EXIST);
@@ -45,7 +45,7 @@ public class ImageController {
 
     @PatchMapping("")
     public BaseResponse<HashMap<String, String>> patchFile(@RequestParam() Long item,
-                                                            @RequestPart() List<MultipartFile> files) throws BaseException {
+                                                            @RequestPart(value = "files") List<MultipartFile> files) throws BaseException {
 
         if (item <= 0) {
             return new BaseResponse<>(ITEM_NO_EXIST);
