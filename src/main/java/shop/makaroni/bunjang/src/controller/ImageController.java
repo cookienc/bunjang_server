@@ -51,10 +51,11 @@ public class ImageController {
             return new BaseResponse<>(ITEM_NO_EXIST);
         }
         try {
+            Long userIdx = jwtService.getUserIdx();
             if (!jwtService.validateJWT(jwtService.getJwt())) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            return new BaseResponse<>(imageService.modifyFile(String.valueOf(item), files));
+            return new BaseResponse<>(imageService.modifyFile(userIdx, String.valueOf(item), files));
         }
         catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());

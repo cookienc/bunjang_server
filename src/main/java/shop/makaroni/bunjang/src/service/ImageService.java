@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
@@ -58,8 +59,8 @@ public class ImageService {
                 throw new BaseException(POST_IMAGE_UPLOAD_FAIL);
             }
         }
-        for(String url : fileUrls){
-            itemDao.setImage(Long.valueOf(itemIdx),url);
+        for (String url : fileUrls) {
+            itemDao.setImage(Long.valueOf(itemIdx), url);
         }
         HashMap<String, String> res = new HashMap<>();
         res.put("idx", itemIdx);
@@ -83,7 +84,10 @@ public class ImageService {
         return itemIdx + IDX_PREFIX + fileName + TIME_SEPARATOR + now + fileExtension;
     }
 
-    public HashMap<String, String> modifyFile(String itemIdx, List<MultipartFile> files) throws BaseException {
+    public HashMap<String, String> modifyFile(Long userIdx, String itemIdx, List<MultipartFile> files) throws BaseException {
+        if(!Objects.equals(itemDao.getSellerIdx(Long.valueOf(itemIdx)), userIdx)){
+            throw new BaseException(INVALID_USER_JWT);
+        }
         itemService.deleteAllImages(Long.valueOf(itemIdx));
         return uploadFile(itemIdx, files);
     }
