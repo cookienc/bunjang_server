@@ -272,7 +272,7 @@ public class ReviewDao {
 
 	public void changeReviewCommentStatus(Long reviewIdx) {
 		var sql = "update Review " +
-				"set hasComment = 1 " +
+				"set hasComment = 0 " +
 				"where idx = :reviewIdx " +
 				"and status = 'Y'";
 		template.update(sql, Map.of("reviewIdx", reviewIdx));
