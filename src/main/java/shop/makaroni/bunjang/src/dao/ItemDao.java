@@ -681,7 +681,7 @@ public class ItemDao {
 	public String getPrice(Long idx) {
 		String query = "select format(price,0) price from Item where idx = ?";
 		return String.valueOf(this.jdbcTemplate.queryForObject(query,
-				int.class,
+				String.class,
 				idx));
 	}
 
