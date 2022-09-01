@@ -1,5 +1,6 @@
 package shop.makaroni.bunjang.src.provider;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,12 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 
 @Service
-@Transactional
+@Transactional()
 public class ItemProvider {
 	private final ItemDao itemDao;
 	private final UserDao userDao;
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	public ItemProvider(ItemDao itemDao, UserDao userDao) {
 		this.itemDao = itemDao;

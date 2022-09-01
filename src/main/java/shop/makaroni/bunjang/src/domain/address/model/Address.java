@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AddrClient {
-    private String x;
-    private String y;
-    private String name;
+public class Address {
+    String name;
+    String x;
+    String y;
 }
