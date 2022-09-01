@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.src.domain.login.LoginRequest;
 import shop.makaroni.bunjang.src.domain.user.PhoneNumber;
 import shop.makaroni.bunjang.src.domain.user.SmsLoginRequest;
+import shop.makaroni.bunjang.src.provider.UserProvider;
 import shop.makaroni.bunjang.src.response.ResponseInfo;
 import shop.makaroni.bunjang.src.response.ResponseInfoWithCheck;
 import shop.makaroni.bunjang.src.response.ResponseInfoWithJwt;
@@ -26,6 +27,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 
 import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ISSUE_AUTH_CODE_EXCEPTION;
+import static shop.makaroni.bunjang.src.response.SuccessStatus.CHECK_LOGIN_ID_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.LOGIN_SUCCESS;
 
 @Slf4j
@@ -34,9 +36,16 @@ import static shop.makaroni.bunjang.src.response.SuccessStatus.LOGIN_SUCCESS;
 @RequiredArgsConstructor
 public class LoginController {
 
+	private final UserProvider userProvider;
 	private final LoginService loginService;
 	private final KakaoService kakaoService;
 	private final NaverService naverService;
+
+	@GetMapping
+	public ResponseEntity<ResponseInfo> checkDuplicateLoginId(@RequestParam String loginId) {
+		userProvider.checkDuplicateLoginId(loginId);
+		return ResponseEntity.ok(ResponseInfo.of(CHECK_LOGIN_ID_SUCCESS));
+	}
 
 	@PostMapping
 	public ResponseEntity<ResponseInfoWithJwt> login(@Valid @RequestBody LoginRequest loginRequest) {
