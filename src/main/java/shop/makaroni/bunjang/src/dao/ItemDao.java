@@ -859,14 +859,14 @@ public class ItemDao {
 		String query;
 		page = 6 * (page-1);
 		if(status.equals("E")){
-			query = "select idx itemIdx, name, format(price,0) price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location), hit\n" +
+			query = "select idx itemIdx, name, format(price,0) price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location) location, hit\n" +
 					"from Item\n" +
 					"where " + target + " = ?\n" +
 					"  and status in ('P','S','F') limit 6 offset ?;";
 			params = new Object[]{userIdx, page};
 		}
 		else {
-			query = "select idx itemIdx, name, format(price,0) price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location), hit\n" +
+			query = "select idx itemIdx, name, format(price,0) price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, IF(isnull(location), '지역정보 없음', location) location, hit\n" +
 					"from Item\n" +
 					"where " + target + " = ?\n" +
 					"  and status = ? limit 6 offset ?;";
