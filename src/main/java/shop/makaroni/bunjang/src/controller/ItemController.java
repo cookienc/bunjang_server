@@ -95,7 +95,7 @@ public class ItemController {
             if (dist == null) {
                 dist = 0;
             }
-            if (!(dist == 2 || dist == 4 || dist == 6 || dist == 10)) {
+            if (dist!= 0 && !(dist == 2 || dist == 4 || dist == 6 || dist == 10)){
                 throw new BaseException(ITEM_INVALID_REGION_DIST);
             }
             return new BaseResponse<>(itemProvider.getSearch(name, sort, page, x, y, dist));
