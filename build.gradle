@@ -20,11 +20,13 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/libs-milestone'}
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:19.0.0'
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
 
+    implementation 'org.jetbrains:annotations:19.0.0'
 
     // Spring Boot Starter
     testImplementation ('org.springframework.boot:spring-boot-starter-test')
