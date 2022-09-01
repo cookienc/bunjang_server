@@ -237,7 +237,7 @@ public class ItemDao {
 					"                   on Item.idx = img.itemIdx\n" +
 					"where name like ?\n" + distQuery + "\n" +
 					"  and status != 'D'\n" +
-					"order by price asc\n" +
+					"order by Item.price asc\n" +
 					"limit 6 offset ?;";
 			if(dist != 0){
 				reqParams = new Object[]{param[4], y,x,y,dist,page};
@@ -267,7 +267,7 @@ public class ItemDao {
 					"                    group by ItemImage.status, itemIdx) img\n" +
 					"                   on Item.idx = img.itemIdx\n" +
 					"where name like ?\n" + distQuery + "\n" +
-					"  and Item.status != 'D' order by price desc limit 6 offset ?;";
+					"  and Item.status != 'D' order by Item.price desc limit 6 offset ?;";
 			if(dist != 0) {
 				reqParams = new Object[]{param[4], y,x,y,dist,page};
 			}
