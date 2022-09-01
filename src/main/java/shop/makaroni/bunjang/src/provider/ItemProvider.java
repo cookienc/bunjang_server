@@ -87,9 +87,9 @@ public class ItemProvider {
 		return itemDao.getItemImages(itemIdx);
 	}
 
-	public List<GetSearchRes> getSearch(String name, char sort, int page) throws BaseException {
+	public List<GetSearchRes> getSearch(String name, char sort, int page, Double x, Double y, Integer dist) throws BaseException {
 		try {
-			return itemDao.getSearchRes(name, sort, page);
+			return itemDao.getSearchRes(name, sort, page, x, y, dist);
 		} catch (Exception exception) {
 			throw new BaseException(RESPONSE_ERROR);
 		}

@@ -34,8 +34,9 @@ public class ItemService {
 		// category validation
 		itemProvider.validateCategory(itemReq.getCategory());
 
-		// brand validation
 		Long itemIdx = itemDao.createItem(sellerIdx, itemReq);
+
+		// brand validation
 		List<String> tags = itemDao.getItemTags(itemIdx);
 		setBrand(itemIdx, tags);
 

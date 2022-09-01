@@ -24,9 +24,11 @@ public class ItemReq {
     private String location;
     private Integer isAd;
     private Integer inspection;
+    private Double x;
+    private Double y;
 
     public Object[] getPostItemReq(Long sellerIdx){
         return new Object[]{sellerIdx, name, category, 0, price, delivery, content, stock, isNew,
-                exchange, safePay, inspection, location, isAd, 0};
+                exchange, safePay, inspection, location, isAd, 0, x, y};
     }
 }

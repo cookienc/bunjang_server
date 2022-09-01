@@ -72,7 +72,10 @@ public class ItemController {
     @GetMapping("")
     public BaseResponse<List<GetSearchRes>> getSearch(@RequestParam() String name,
                                                       @RequestParam(required = false, defaultValue = "C") char sort,
-                                                      @RequestParam() int page) {
+                                                      @RequestParam() int page,
+                                                      @RequestParam(required = false) Double x,
+                                                      @RequestParam(required = false) Double y,
+                                                      @RequestParam(required = false) Integer dist){
         try {
             if (!jwtService.validateJWT(jwtService.getJwt())) {
                 return new BaseResponse<>(INVALID_USER_JWT);
@@ -86,7 +89,16 @@ public class ItemController {
             if (sort != 'C' && sort != 'R' && sort != 'L' && sort != 'H') {
                 throw new BaseException(ITEM_INVALID_SORT);
             }
-            return new BaseResponse<>(itemProvider.getSearch(name, sort, page));
+            if( !((x != null && y != null && dist != null) || (x == null && y == null && dist == null))){
+                throw new BaseException(ITEM_INVALID_REGION);
+            }
+            if (dist == null) {
+                dist = 0;
+            }
+            if (!(dist == 2 || dist == 4 || dist == 6 || dist == 10)) {
+                throw new BaseException(ITEM_INVALID_REGION_DIST);
+            }
+            return new BaseResponse<>(itemProvider.getSearch(name, sort, page, x, y, dist));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -231,6 +243,14 @@ public class ItemController {
         try {
             Long sellerIdx = jwtService.getUserIdx();
             validateItems(itemReq);
+            if (!((itemReq.getX() != null && itemReq.getY() != null && itemReq.getLocation() != null) ||
+                    (itemReq.getX() == null && itemReq.getY() == null && itemReq.getLocation() == null))) {
+                throw new BaseException(ITEM_INVALID_REGION);
+            }
+            if (itemReq.getX() == null && itemReq.getY() == null) {
+                itemReq.setX((double) 0);
+                itemReq.setY((double) 0);
+            }
             ItemRes itemRes = itemService.createItem(sellerIdx, itemReq);
             return new BaseResponse<>(itemRes);
         } catch (BaseException baseException) {

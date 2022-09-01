@@ -156,17 +156,23 @@ public class ItemDao {
 				itemIdx);
 	}
 
-	public List<GetSearchRes> getSearchRes(String name, char sort, int page){
+	public List<GetSearchRes> getSearchRes(String name, char sort, int page, Double x, Double y, Integer dist){
 		String query;
+		String distQuery = "";
 		Object[] reqParams;
 		String[] param={name, name+"%", "%"+name+"%", "%"+name, "%"+name+"%"};
+		if(dist!=0){
+			distQuery = "and\n" +
+					"        (6371*acos(cos(radians(?))*cos(radians(y))*cos(radians(x)\n" +
+					"            -radians(?))+sin(radians(?))*sin(radians(y)))) <= ? and x!=0 and y!=0";
+		}
 		page = 6 * (page-1);
 		if (sort == 'C') {
 			query = "select Item.idx itemIdx, path, format(price,0) price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select itemIdx, min(path) path " +
 					"					from ItemImage where status !='D' group by itemIdx ) img on Item.idx = img.itemIdx\n" +
-					"where name like ? and status != 'D'\n" +
+					"where name like ? and status != 'D'\n"+ distQuery + "\n"+
 					"order by (case\n" +
 					"              when name = ? then 0\n" +
 					"              when name like ? then 1\n" +
@@ -175,8 +181,12 @@ public class ItemDao {
 					"              else 4\n" +
 					"    end)\n" +
 					"limit 6 offset ?;";
-			reqParams = new Object[]{param[4], param[0], param[1], param[2], param[3], page};
-
+			if(dist != 0){
+				reqParams = new Object[]{param[4], y,x,y,dist, param[0], param[1], param[2], param[3], page};
+			}
+			else {
+				reqParams = new Object[]{param[4], param[0], param[1], param[2], param[3], page};
+			}
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
 							String.valueOf(rs.getInt("itemIdx")),
@@ -192,12 +202,18 @@ public class ItemDao {
 
 		}
 		else if(sort == 'R'){
-			reqParams = new Object[]{param[4], page};
+			if(dist != 0){
+				reqParams = new Object[]{param[4], y,x,y,dist,page};
+			}
+			else {
+				reqParams = new Object[]{param[4], page};
+			}
+
 			query = "select Item.idx itemIdx, path, format(price,0) price, name, safePay, isAd, Item.status status\n" +
 					"from Item\n" +
 					"         left join (select itemIdx, min(path) path from ItemImage where status = 'Y' group by itemIdx) img\n" +
 					"                   on Item.idx = img.itemIdx\n" +
-					"where name like ?\n" +
+					"where name like ?\n" +  distQuery + "\n" +
 					"  and status != 'D'\n" +
 					"order by Item.updatedAt desc\n" +
 					"limit 6 offset ?;\n";
@@ -219,11 +235,16 @@ public class ItemDao {
 					"from Item\n" +
 					"         left join (select itemIdx, min(path) path from ItemImage where status = 'Y' group by itemIdx) img\n" +
 					"                   on Item.idx = img.itemIdx\n" +
-					"where name like ?\n" +
+					"where name like ?\n" + distQuery + "\n" +
 					"  and status != 'D'\n" +
 					"order by price asc\n" +
 					"limit 6 offset ?;";
-			reqParams = new Object[]{param[4], page};
+			if(dist != 0){
+				reqParams = new Object[]{param[4], y,x,y,dist,page};
+			}
+			else {
+				reqParams = new Object[]{param[4], page};
+			}
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
 							String.valueOf(rs.getInt("itemIdx")),
@@ -245,9 +266,14 @@ public class ItemDao {
 					"                    where status != 'D'\n" +
 					"                    group by ItemImage.status, itemIdx) img\n" +
 					"                   on Item.idx = img.itemIdx\n" +
-					"where name like ?\n" +
-					"  and Item.status != 'D' order by price desc limit 6 offset ?;;";
-			reqParams = new Object[]{param[4], page};
+					"where name like ?\n" + distQuery + "\n" +
+					"  and Item.status != 'D' order by price desc limit 6 offset ?;";
+			if(dist != 0) {
+				reqParams = new Object[]{param[4], y,x,y,dist,page};
+			}
+			else{
+				reqParams = new Object[]{param[4], page};
+			}
 			return this.jdbcTemplate.query(query,
 					(rs, rowNum) -> new GetSearchRes(
 							String.valueOf(rs.getInt("itemIdx")),
@@ -487,8 +513,8 @@ public class ItemDao {
 	public Long createItem(Long sellerIdx, ItemReq itemReq) {
 		String query =
 				"Insert into Item(sellerIdx, name, category, brandIdx, price, delivery, content, stock, isNew, exchange, safePay,\n" +
-						"                 inspection, location, isAd, buyerIdx)\n" +
-						"                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);";
+						"                 inspection, location, isAd, buyerIdx, x, y)\n" +
+						"                 values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?);";
 		Object[] params = itemReq.getPostItemReq(sellerIdx);
 		this.jdbcTemplate.update(query, params);
 		String lastInsertIdQuery = "select last_insert_id()";
