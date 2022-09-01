@@ -112,6 +112,20 @@ public class ItemService {
 		if(itemReq.getInspection() != null){
 			patchInspection(itemIdx, itemReq.getInspection());
 		}
+		if(itemReq.getX() != null){
+			patchX(itemIdx, itemReq.getX());
+		}
+		if(itemReq.getY() != null){
+			patchY(itemIdx, itemReq.getY());
+		}
+	}
+
+	private void patchY(Long itemIdx, Double y) {
+		itemDao.updateY(itemIdx, y);
+	}
+
+	private void patchX(Long itemIdx, Double x) {
+		itemDao.updateX(itemIdx, x);
 	}
 
 	private void patchContent(Long itemIdx, String content) throws BaseException{

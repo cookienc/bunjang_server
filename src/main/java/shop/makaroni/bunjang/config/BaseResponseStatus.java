@@ -40,7 +40,7 @@ public enum BaseResponseStatus {
     POST_ITEM_INVALID_CATEGORY(false, 2017, "유효하지 않은 카테고리 코드값입니다"),
     POST_ITEM_INVALID_PRICE(false,2018, "금액은 100원이상 100000000이하 입력해주세요"),
     POST_ITEM_INVALID_SAFEPAY(false, 2019, "유효하지 않은 안전결제 상태값입니다"),
-    POST_ITEM_INVALID_REGION(false, 2020, "지역의 위도와 경도 모두 입력하세요"),
+    POST_ITEM_INVALID_REGION(false, 2020, "지역의 위도,경도,주소 모두 입력하세요"),
 
     // items
     ITEM_NO_EXIST(false, 2021, "존재하지 않는 상품 아이디 값입니다."),

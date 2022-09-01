@@ -245,7 +245,7 @@ public class ItemController {
             validateItems(itemReq);
             if (!((itemReq.getX() != null && itemReq.getY() != null && itemReq.getLocation() != null) ||
                     (itemReq.getX() == null && itemReq.getY() == null && itemReq.getLocation() == null))) {
-                throw new BaseException(ITEM_INVALID_REGION);
+                throw new BaseException(POST_ITEM_INVALID_REGION);
             }
             if (itemReq.getX() == null && itemReq.getY() == null) {
                 itemReq.setX((double) 0);
@@ -268,6 +268,10 @@ public class ItemController {
         try {
             Long sellerIdx = jwtService.getUserIdx();
             validateItems(itemReq);
+            if (!((itemReq.getX() != null && itemReq.getY() != null && itemReq.getLocation() != null) ||
+                    (itemReq.getX() == null && itemReq.getY() == null && itemReq.getLocation() == null))) {
+                throw new BaseException(POST_ITEM_INVALID_REGION);
+            }
             itemService.patchItem(idx, sellerIdx, itemReq);
             return new BaseResponse<>(itemProvider.getItem(idx));
         } catch (BaseException baseException) {

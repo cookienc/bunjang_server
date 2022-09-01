@@ -985,6 +985,18 @@ public class ItemDao {
 				userIdx);
 	}
 
+	public void updateY(Long itemIdx, Double y) {
+		String query = "update Item set y=? where idx = ?;";
+		Object[] params = new Object[]{y, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+
+	public void updateX(Long itemIdx, Double x) {
+		String query = "update Item set x=? where idx = ?;";
+		Object[] params = new Object[]{x, itemIdx};
+		this.jdbcTemplate.update(query, params);
+	}
+
 //	public List<GetDealRes> getOrder(Long userIdx, String status) {
 //		String query = "select idx itemIdx, name, price, date_format(updatedAt, '%Y년 %m월 %e일') updatedAt, location, hit\n" +
 //				"from Item\n" +
