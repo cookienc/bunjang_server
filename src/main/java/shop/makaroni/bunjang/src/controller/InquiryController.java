@@ -17,7 +17,6 @@ import java.util.List;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
-@Transactional
 @RestController
 @RequestMapping("/inquiries")
 public class InquiryController {

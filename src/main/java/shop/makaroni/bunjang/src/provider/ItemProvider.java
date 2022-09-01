@@ -55,6 +55,7 @@ public class ItemProvider {
 		List<GetItemRes> getItemRes;
 		try {
 			getItemRes = itemDao.getItems();
+			logger.info(String.valueOf(getItemRes.size()));
 			for (GetItemRes eachRes : getItemRes) {
 				eachRes.setWish(getItemWishCnt(Long.parseLong(eachRes.getIdx())));
 				eachRes.setWish(getItemWishCnt(Long.parseLong(eachRes.getIdx())));

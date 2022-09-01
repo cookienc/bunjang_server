@@ -14,7 +14,7 @@ import shop.makaroni.bunjang.src.domain.setting.model.Notification;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class SettingProvider {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final SettingDao settingDao;

@@ -19,8 +19,6 @@ import java.util.List;
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 import static shop.makaroni.bunjang.utils.Itemvalidation.validation.validateAddress;
 import static shop.makaroni.bunjang.utils.Itemvalidation.validation.validateKeyword;
-
-@Transactional
 @RestController
 @RequestMapping("/settings")
 public class SettingController {
