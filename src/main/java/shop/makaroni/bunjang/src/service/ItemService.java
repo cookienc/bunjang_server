@@ -41,9 +41,9 @@ public class ItemService {
 		setBrand(itemIdx, tags);
 
 		// add images & tags
-		for(String image : itemReq.getImages()){
-			itemDao.setImage(itemIdx,image);
-		}
+//		for(String image : itemReq.getImages()){
+//			itemDao.setImage(itemIdx,image);
+//		}
 		for(String tag : itemReq.getTags()){
 			itemDao.setTags(itemIdx,tag);
 		}
@@ -68,9 +68,9 @@ public class ItemService {
 			throw new BaseException(INVALID_USER_JWT);
 		}
 
-		if (itemReq.getImages() != null) {
-			patchImages(itemIdx, itemReq.getImages());
-		}
+//		if (itemReq.getImages() != null) {
+//			patchImages(itemIdx, itemReq.getImages());
+//		}
 		if (itemReq.getName() != null) {
 			patchName(itemIdx, itemReq.getName());
 		}

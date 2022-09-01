@@ -10,7 +10,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class ItemReq {
-    private List<String> images;
     private String name;
     private String category;
     private List<String> tags;

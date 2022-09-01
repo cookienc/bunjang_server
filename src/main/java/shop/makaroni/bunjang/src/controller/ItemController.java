@@ -237,9 +237,9 @@ public class ItemController {
     @ResponseBody
     @PostMapping("/sellers")
     public BaseResponse<ItemRes> CreateItem(@RequestBody ItemReq itemReq) {
-        if (itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()) {
-            return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
-        }
+//        if (itemReq.getImages().get(0).equals("") || itemReq.getImages().isEmpty()) {
+//            return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
+//        }
         try {
             Long sellerIdx = jwtService.getUserIdx();
             validateItems(itemReq);
@@ -262,9 +262,9 @@ public class ItemController {
     @PatchMapping("/{idx}/sellers")
     public BaseResponse<GetItemRes> PatchItem(@PathVariable("idx") Long idx,
                                               @RequestBody ItemReq itemReq) {
-        if (itemReq.getImages() != null && (itemReq.getImages().isEmpty() || itemReq.getImages().get(0).equals(""))) {
-            return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
-        }
+//        if (itemReq.getImages() != null && (itemReq.getImages().isEmpty() || itemReq.getImages().get(0).equals(""))) {
+//            return new BaseResponse<>(POST_ITEM_EMPTY_IMAGE);
+//        }
         try {
             Long sellerIdx = jwtService.getUserIdx();
             validateItems(itemReq);

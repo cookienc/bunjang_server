@@ -28,11 +28,14 @@ public enum BaseResponseStatus {
     // users
     USERS_EMPTY_NAME(false, 2008, "사용자의 상점 이름을 입력하세요"),
     USERS_IMAGE(false, 2009, "사용자의 상점 이미지 경로를 입력하세요."),
+    POST_IMAGE_COUNT(false, 2009, "사진은 최대 12장까지 업로드 가능합니다"),
     USERS_INVALID_IDX(false, 2010, "유저 아이디 값을 확인해주세요."),
 
 
     // [POST] /Item
-    POST_ITEM_INVALID_SELLER(false, 2012, "판매자 아이디를 확인해주세요"),
+    POST_IMAGE_UPLOAD_FAIL(false, 2011,"이미지 업로드를 실패했습니다."),
+
+    POST_IMAGE_SIZE_EXCEED(false, 2012, "업로드 가능한 이미지 파일 용량을 초과하였습니다."),
     POST_ITEM_INVALID_CONTENT(false, 2013, "상품 설명은 10글자 이상 200글자 이하로 입력해주세요"),
     POST_ITEM_INVALID_STOCK(false, 2014, "수량은 1개 이상 입력해주세요"),
     POST_ITEM_INVALID_NAME(false, 2015, "상품명은 2글자 이상 40자 이하로 입력해주세요"),
