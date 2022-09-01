@@ -1,7 +1,6 @@
 package shop.makaroni.bunjang.src.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +16,6 @@ import java.net.URI;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.DELETE_NOTIFICATION_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_NOTIFICATION_SUCCESS;
 
-@Slf4j
 @RestController
 @RequestMapping("/notifications")
 @RequiredArgsConstructor

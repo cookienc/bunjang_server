@@ -1,8 +1,6 @@
 package shop.makaroni.bunjang.utils;
 
 
-import shop.makaroni.bunjang.config.BaseException;
-import shop.makaroni.bunjang.config.secret.Secret;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -10,11 +8,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import shop.makaroni.bunjang.config.BaseException;
+import shop.makaroni.bunjang.config.secret.Secret;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.EMPTY_JWT;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INVALID_JWT;
 
 @Service
 public class JwtService {

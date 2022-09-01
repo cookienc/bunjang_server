@@ -1,9 +1,22 @@
 package shop.makaroni.bunjang.utils.Itemvalidation;
-import shop.makaroni.bunjang.config.BaseException;
-import shop.makaroni.bunjang.src.domain.item.model.*;
-import shop.makaroni.bunjang.src.domain.setting.model.*;
 
-import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
+import shop.makaroni.bunjang.config.BaseException;
+import shop.makaroni.bunjang.src.domain.item.model.ItemReq;
+import shop.makaroni.bunjang.src.domain.setting.model.Address;
+import shop.makaroni.bunjang.src.domain.setting.model.Keyword;
+
+import static shop.makaroni.bunjang.config.BaseResponseStatus.POST_ITEM_INVALID_CATEGORY;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.POST_ITEM_INVALID_CONTENT;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.POST_ITEM_INVALID_NAME;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.POST_ITEM_INVALID_PRICE;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.POST_ITEM_INVALID_SAFEPAY;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.POST_ITEM_INVALID_STOCK;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.REQUEST_ERROR;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_INVALID_ADDRESS;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_INVALID_CATEGORY;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_INVALID_NAME;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_INVALID_PHONE_NUM;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_INVALID_PRICE;
 import static shop.makaroni.bunjang.utils.Itemvalidation.validationRegex.isRegexPhoneNumber;
 
 public class validation {

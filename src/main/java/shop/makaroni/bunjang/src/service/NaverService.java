@@ -3,7 +3,6 @@ package shop.makaroni.bunjang.src.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -39,7 +38,6 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_FIND_AUTH_NUMB
 import static shop.makaroni.bunjang.src.response.ErrorCode.DO_AUTH_FIRST_EXCEPTION;
 import static shop.makaroni.bunjang.src.response.ErrorCode.NOT_MATCH_AUTH_CODE_EXCEPTION;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor

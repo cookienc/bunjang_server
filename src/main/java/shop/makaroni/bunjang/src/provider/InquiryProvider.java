@@ -4,18 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.config.BaseException;
-import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 import shop.makaroni.bunjang.src.dao.InquiryDao;
 import shop.makaroni.bunjang.src.dao.ItemDao;
 import shop.makaroni.bunjang.src.dao.UserDao;
 import shop.makaroni.bunjang.src.domain.inquiry.model.GetInquiryRes;
-import shop.makaroni.bunjang.src.domain.inquiry.model.PostInqueryReq;
 import shop.makaroni.bunjang.src.domain.inquiry.view.InquirySimpleResponse;
 import shop.makaroni.bunjang.src.domain.inquiry.view.InquirySimpleView;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INQUIRY_INVALID_TARGET;
 
 
 

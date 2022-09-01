@@ -13,7 +13,10 @@ import shop.makaroni.bunjang.src.domain.inquiry.model.PostInqueryReq;
 
 import java.util.HashMap;
 
-import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INQUIRY_INVALID_PARENTIDX;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INQUIRY_INVALID_TARGET;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INVALID_USER_JWT;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.REQUEST_ERROR;
 
 @Service
 @Transactional

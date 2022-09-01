@@ -3,11 +3,19 @@ package shop.makaroni.bunjang.src.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.config.BaseResponse;
-import shop.makaroni.bunjang.src.domain.inquiry.model.*;
+import shop.makaroni.bunjang.src.domain.inquiry.model.GetInquiryRes;
+import shop.makaroni.bunjang.src.domain.inquiry.model.PostInqueryReq;
 import shop.makaroni.bunjang.src.provider.InquiryProvider;
 import shop.makaroni.bunjang.src.service.InquiryService;
 import shop.makaroni.bunjang.utils.JwtService;
@@ -15,7 +23,11 @@ import shop.makaroni.bunjang.utils.JwtService;
 import java.util.HashMap;
 import java.util.List;
 
-import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INQUIRY_INVALID_TARGET;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INQUIRY_INVALID_TYPE;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INQUIRY_POST;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INVALID_USER_JWT;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.REQUEST_ERROR;
 
 @RestController
 @RequestMapping("/inquiries")

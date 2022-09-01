@@ -1,7 +1,6 @@
 package shop.makaroni.bunjang.src.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +29,6 @@ import static shop.makaroni.bunjang.src.response.ErrorCode.CANNOT_ISSUE_AUTH_COD
 import static shop.makaroni.bunjang.src.response.SuccessStatus.CHECK_LOGIN_ID_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.LOGIN_SUCCESS;
 
-@Slf4j
 @RestController
 @RequestMapping("/login")
 @RequiredArgsConstructor

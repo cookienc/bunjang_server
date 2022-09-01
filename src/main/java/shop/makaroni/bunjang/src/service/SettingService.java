@@ -14,7 +14,13 @@ import shop.makaroni.bunjang.src.provider.ItemProvider;
 
 import java.util.Objects;
 
-import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.INVALID_USER_JWT;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_ADDRESS_CAPACITY;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_EMPTY_SILENCE;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_INVALID_ADDR_IDX;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_INVALID_KEYWORD_IDX;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_INVALID_SILENCE;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.SETTING_KEYWORD_CAPACITY;
 
 
 @Service

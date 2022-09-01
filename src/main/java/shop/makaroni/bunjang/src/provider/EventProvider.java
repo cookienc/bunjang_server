@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.makaroni.bunjang.src.dao.EventDao;
-import shop.makaroni.bunjang.src.domain.event.view.EventBannerView;
 import shop.makaroni.bunjang.src.domain.event.dto.EventBannerDto;
 import shop.makaroni.bunjang.src.domain.event.dto.EventInfoDto;
+import shop.makaroni.bunjang.src.domain.event.view.EventBannerView;
 import shop.makaroni.bunjang.src.domain.event.view.EventInfoView;
 
 import java.util.List;

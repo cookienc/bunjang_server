@@ -1,7 +1,6 @@
 package shop.makaroni.bunjang.src.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,7 +34,6 @@ import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_REVIEW_COMME
 import static shop.makaroni.bunjang.src.response.SuccessStatus.SAVE_SUCCESS;
 import static shop.makaroni.bunjang.src.response.SuccessStatus.UPDATE_REVIEW_COMMENT_SUCCESS;
 
-@Slf4j
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
