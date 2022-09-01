@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.src.dao.ItemDao;
@@ -24,6 +25,7 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class ImageService {
 
     private final AmazonS3Client amazonS3Client;
