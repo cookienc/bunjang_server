@@ -1,8 +1,17 @@
 # 번개장터 
 + 기간 : 2022.08.20~2022.09.02
-+ 내용 : 중고거래 어플 백엔드 개발
++ 내용 : 중고거래 어플 백엔드 개발, 클라이언트와 협업
+<br></br>
++ API 명세서 : https://docs.google.com/spreadsheets/d/1MB0Sbl8Hq7Tr7LwspUTx0OcmT3Zyw-8sed1CSANKfbw/edit?usp=sharing
++ ERD : https://aquerytool.com/aquerymain/index/?rurl=7f216f64-c16d-411b-8ad0-679db3e7a93d&
+(Password : 3f6twx)
 
-## 개발일지
+![ERD](ERD.png)
+
+<details>
+## <summary> 개발일지 </summary>
+<div markdown="1">
+
 ###  2022/08/20
 ### 에단
 - [x] 서버 구축
@@ -167,3 +176,15 @@
 - [x] 주소 검색 API(외부 API 활용) 추가
 - [x] 상품 조회/등록시 직거래 가능 지역의 위도/경도 추가
 - [x] 상품 검색시 지역 및 반경 선택 가능하도록 수정
+  
+---
+###  2022/09/02
+### 에단
+- [x] 마무리, 시연 영상 촬영
+
+### 워니
+- [x] AWS S3 연결
+- [x] 기능 정리
+ 
+</div>
+</details>
