@@ -49,7 +49,7 @@ public class ImageService {
             }
             validateFileExists(multipartFile);
 
-            String fileName = buildFileName(itemIdx, multipartFile.getOriginalFilename());
+            String fileName = buildFileName(itemIdx, Objects.requireNonNull(multipartFile.getOriginalFilename()));
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(multipartFile.getContentType());
 
