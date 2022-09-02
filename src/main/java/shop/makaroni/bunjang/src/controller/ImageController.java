@@ -18,11 +18,11 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.ITEM_NO_EXIST;
 @RequestMapping("/images")
 public class ImageController {
     private final ImageService imageService;
-    @Autowired
-    JwtService jwtService;
+    private final JwtService jwtService;
 
-    public ImageController(ImageService imageService) {
+    public ImageController(ImageService imageService, JwtService jwtService) {
         this.imageService = imageService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("")
