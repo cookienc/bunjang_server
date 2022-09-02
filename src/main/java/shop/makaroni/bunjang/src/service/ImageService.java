@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import shop.makaroni.bunjang.config.BaseException;
 import shop.makaroni.bunjang.src.dao.ItemDao;
@@ -24,7 +23,6 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-//@Transactional
 public class ImageService {
 
     private final AmazonS3Client amazonS3Client;
@@ -38,7 +36,7 @@ public class ImageService {
 
     public HashMap<String, String> uploadFile(String itemIdx, List<MultipartFile> multipartFiles) throws BaseException {
         List<String> fileUrls = new ArrayList<>();
-        if(itemDao.checkItemIdx(Long.valueOf(itemIdx)) == 0){
+        if (itemDao.checkItemIdx(Long.valueOf(itemIdx)) == 0) {
             throw new BaseException(ITEM_NO_EXIST);
         }
 
@@ -85,10 +83,6 @@ public class ImageService {
         return itemIdx + IDX_PREFIX + fileName + TIME_SEPARATOR + now + fileExtension;
     }
 
-//    public HashMap<String, String> modifyFile(Long userIdx, String itemIdx, List<MultipartFile> files) throws BaseException {
-//        if(!Objects.equals(itemDao.getSellerIdx(Long.valueOf(itemIdx)), userIdx)){
-//            throw new BaseException(INVALID_USER_JWT);
-//        }
     public HashMap<String, String> modifyFile(String itemIdx, List<MultipartFile> files) throws BaseException {
         itemService.deleteAllImages(Long.valueOf(itemIdx));
         return uploadFile(itemIdx, files);
