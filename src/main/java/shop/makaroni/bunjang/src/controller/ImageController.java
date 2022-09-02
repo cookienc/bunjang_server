@@ -52,9 +52,6 @@ public class ImageController {
         }
         try {
             Long userIdx = jwtService.getUserIdx();
-            if (!jwtService.validateJWT(jwtService.getJwt())) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
             return new BaseResponse<>(imageService.modifyFile(userIdx, String.valueOf(item), files));
         }
         catch (BaseException baseException) {
