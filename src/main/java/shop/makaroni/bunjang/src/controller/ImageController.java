@@ -1,5 +1,6 @@
 package shop.makaroni.bunjang.src.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,8 +12,7 @@ import shop.makaroni.bunjang.utils.JwtService;
 import java.util.HashMap;
 import java.util.List;
 
-import static shop.makaroni.bunjang.config.BaseResponseStatus.INVALID_USER_JWT;
-import static shop.makaroni.bunjang.config.BaseResponseStatus.ITEM_NO_EXIST;
+import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
 @RestController
 @RequestMapping("/images")
@@ -51,8 +51,8 @@ public class ImageController {
             return new BaseResponse<>(ITEM_NO_EXIST);
         }
         try {
-            Long userIdx = jwtService.getUserIdx();
-            return new BaseResponse<>(imageService.modifyFile(userIdx, String.valueOf(item), files));
+//            Long userIdx = jwtService.getUserIdx();
+            return new BaseResponse<>(imageService.modifyFile(String.valueOf(item), files));
         }
         catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());

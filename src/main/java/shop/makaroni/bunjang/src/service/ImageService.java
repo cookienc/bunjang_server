@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import static shop.makaroni.bunjang.config.BaseResponseStatus.*;
 
@@ -49,7 +48,7 @@ public class ImageService {
             }
             validateFileExists(multipartFile);
 
-            String fileName = buildFileName(itemIdx, Objects.requireNonNull(multipartFile.getOriginalFilename()));
+            String fileName = buildFileName(itemIdx, multipartFile.getOriginalFilename());
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(multipartFile.getContentType());
 
@@ -86,10 +85,11 @@ public class ImageService {
         return itemIdx + IDX_PREFIX + fileName + TIME_SEPARATOR + now + fileExtension;
     }
 
-    public HashMap<String, String> modifyFile(Long userIdx, String itemIdx, List<MultipartFile> files) throws BaseException {
-        if(!Objects.equals(itemDao.getSellerIdx(Long.valueOf(itemIdx)), userIdx)){
-            throw new BaseException(INVALID_USER_JWT);
-        }
+//    public HashMap<String, String> modifyFile(Long userIdx, String itemIdx, List<MultipartFile> files) throws BaseException {
+//        if(!Objects.equals(itemDao.getSellerIdx(Long.valueOf(itemIdx)), userIdx)){
+//            throw new BaseException(INVALID_USER_JWT);
+//        }
+    public HashMap<String, String> modifyFile(String itemIdx, List<MultipartFile> files) throws BaseException {
         itemService.deleteAllImages(Long.valueOf(itemIdx));
         return uploadFile(itemIdx, files);
     }
