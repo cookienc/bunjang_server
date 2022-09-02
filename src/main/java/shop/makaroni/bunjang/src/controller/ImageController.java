@@ -15,6 +15,7 @@ import static shop.makaroni.bunjang.config.BaseResponseStatus.INVALID_USER_JWT;
 import static shop.makaroni.bunjang.config.BaseResponseStatus.ITEM_NO_EXIST;
 
 @RestController
+@ResponseBody
 @RequestMapping("/images")
 public class ImageController {
     private final ImageService imageService;
