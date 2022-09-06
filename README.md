@@ -1,17 +1,19 @@
 > 본 템플릿의 저작권은 (주)소프트스퀘어드에 있습니다. 상업적 용도의 사용을 금합니다
 
 # 번개장터 
-+ 기간 : 2022.08.20~2022.09.02
-+ 내용 : 중고거래 어플 백엔드 개발, 클라이언트와 협업
-<br></br>
-+ API 명세서 : https://docs.google.com/spreadsheets/d/1MB0Sbl8Hq7Tr7LwspUTx0OcmT3Zyw-8sed1CSANKfbw/edit?usp=sharing
-+ ERD : https://aquerytool.com/aquerymain/index/?rurl=7f216f64-c16d-411b-8ad0-679db3e7a93d&
+⚡️ 기간 : 2022.08.20~2022.09.02
+
+⚡️ 내용 : 중고거래 서비스 백엔드 개발, 클라이언트와 협업
+[(클라이언트 - ios 깃헙 링크)](https://github.com/RebeccaHa9511/Bungae)
+
++ API 명세서 : <https://url.kr/ycdeoj>
++ ERD : <https://url.kr/phzu34>
 (Password : 3f6twx)
 
 ![ERD](ERD.png)
 
 <details>
-## <summary> 개발일지 </summary>
+<summary> 개발일지 </summary>
 <div markdown="1">
 
 ###  2022/08/20
