@@ -3,9 +3,10 @@
 # 번개장터 
 ⚡️ 기간 : 2022.08.20~2022.09.02
 
-⚡️ 내용 : 중고거래 서비스 백엔드 개발, 클라이언트와 협업
+⚡️ 내용 : 중고거래 서비스 스프링 API 서버 개발, 클라이언트와 협업
 [(클라이언트 - ios 깃헙 링크)](https://github.com/RebeccaHa9511/Bungae)
 
++ 역할 : 회원, 팔로우 시스템, 리뷰 기능 개발
 + API 명세서 : <https://url.kr/ycdeoj>
 + ERD : <https://url.kr/phzu34>
 (Password : 3f6twx)
